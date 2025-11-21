@@ -1,0 +1,16 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-6);
+    padding: var(--spacing-4) 0;
+}
+
+.emptyState {
+    text-align: center;
+    padding: var(--spacing-12);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--color-border);
+}

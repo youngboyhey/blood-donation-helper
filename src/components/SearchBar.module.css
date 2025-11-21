@@ -1,0 +1,11 @@
+.searchBar {
+    display: flex;
+    gap: var(--spacing-2);
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.input {
+    flex: 1;
+}

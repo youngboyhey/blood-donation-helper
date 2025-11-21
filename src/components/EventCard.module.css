@@ -1,0 +1,115 @@
+.eventCard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    gap: var(--spacing-4);
+    align-items: flex-start;
+}
+
+.dateBadge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-2);
+    min-width: 60px;
+    border: 1px solid var(--color-border);
+}
+
+.dateMonth {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.dateDay {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+}
+
+.titleArea {
+    flex: 1;
+}
+
+.title {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-1);
+    color: var(--color-text-main);
+}
+
+.meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.giftSection {
+    background-color: rgba(230, 57, 70, 0.05);
+    /* Primary color with low opacity */
+    padding: var(--spacing-3);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--color-primary);
+}
+
+.giftLabel {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.giftContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-1);
+}
+
+.giftName {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-main);
+}
+
+.giftValue {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-success);
+}
+
+.giftQuantity {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--spacing-2);
+    border-top: 1px solid var(--color-border);
+}
+
+.tags {
+    display: flex;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+}
+
+.tag {
+    font-size: var(--font-size-sm);
+    color: var(--color-secondary);
+    background-color: var(--color-background);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+}

@@ -33,21 +33,21 @@ const SOURCES = [
         type: 'fb',
         id: 'taichung',
         name: '台中捐血中心',
-        url: 'https://www.facebook.com/tcblood',
+        url: 'https://www.facebook.com/tcblood/photos',
         city: '台中市'
     },
     {
         type: 'fb',
         id: 'kaohsiung',
         name: '高雄捐血中心',
-        url: 'https://www.facebook.com/ksblood',
+        url: 'https://www.facebook.com/TBSFksblood/photos',
         city: '高雄市'
     },
     {
         type: 'fb',
         id: 'tainan',
         name: '台南捐血中心',
-        url: 'https://www.facebook.com/tnblood',
+        url: 'https://www.facebook.com/tnblood/photos',
         city: '台南市'
     }
 ];
@@ -76,7 +76,7 @@ async function fetchHTMLWithPuppeteer(url) {
 }
 
 async function fetchFacebookImages(source) {
-    console.log(`[Facebook] 正在抓取粉絲頁: ${source.name} (${source.url})`);
+    console.log(`[Facebook] 正在抓取粉絲頁相簿: ${source.name} (${source.url})`);
     const browser = await puppeteer.launch({
         headless: "new",
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-notifications']
@@ -88,44 +88,76 @@ async function fetchFacebookImages(source) {
     try {
         await page.goto(source.url, { waitUntil: 'networkidle2', timeout: 60000 });
 
-        // 嘗試關閉登入彈窗 (如果有的話)
+        // 嘗試關閉登入彈窗
         try {
             const closeButtonSelector = 'div[aria-label="Close"], div[aria-label="關閉"]';
             await page.waitForSelector(closeButtonSelector, { timeout: 5000 });
             await page.click(closeButtonSelector);
         } catch (e) {
-            // 忽略，可能沒有彈窗
+            // 忽略
         }
 
-        // 滾動頁面以加載更多貼文
-        console.log('[Facebook] 滾動頁面載入貼文...');
-        for (let i = 0; i < 3; i++) {
-            await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-            await new Promise(r => setTimeout(r, 2000));
-        }
+        // 滾動頁面以加載
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await new Promise(r => setTimeout(r, 2000));
 
-        // 提取圖片
-        const imageUrls = await page.evaluate(() => {
-            const images = Array.from(document.querySelectorAll('img'));
-            return images
-                .map(img => img.src)
-                .filter(src => {
-                    // 過濾掉小圖示、頭像等
-                    // FB 貼文圖片通常包含 'scontent' 且尺寸較大
-                    // 這裡簡單用 URL 特徵和自然寬度過濾 (如果能獲取的話)
-                    return src.includes('https://') &&
-                        (src.includes('scontent') || src.includes('fbcdn')) &&
-                        !src.includes('emoji') &&
-                        !src.includes('icon');
-                });
+        // 1. 抓取相片連結 (從 /photos 頁面)
+        const photoLinks = await page.evaluate(() => {
+            const links = Array.from(document.querySelectorAll('a'));
+            return links
+                .map(a => a.href)
+                .filter(href => href.includes('/photo') || href.includes('/photos/'))
+                .filter(href => !href.includes('album')) // 盡量避開相簿連結，找單張相片
+                .slice(0, 6); // 只抓最新的 6 張
         });
 
-        // 進一步過濾重複和明顯無效的圖
-        const uniqueImages = [...new Set(imageUrls)].slice(0, 5); // 限制處理前 5 張最新圖片，避免過多
+        console.log(`[Facebook] 找到 ${photoLinks.length} 個相片連結，準備進入詳情頁抓取大圖...`);
 
-        console.log(`[Facebook] 找到 ${uniqueImages.length} 張潛在圖片`);
+        const highResImages = [];
+
+        // 2. 逐一進入詳情頁抓大圖
+        for (const link of photoLinks) {
+            try {
+                console.log(`[Facebook] 正在讀取相片詳情: ${link}`);
+                const newPage = await browser.newPage();
+                await newPage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+                await newPage.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
+
+                // 嘗試抓取大圖
+                const imgUrl = await newPage.evaluate(() => {
+                    // 優先嘗試 meta tag
+                    const metaImg = document.querySelector('meta[property="og:image"]');
+                    if (metaImg) return metaImg.content;
+
+                    // 其次找最大的 img
+                    const images = Array.from(document.querySelectorAll('img'));
+                    let maxArea = 0;
+                    let bestImg = null;
+                    images.forEach(img => {
+                        const area = img.naturalWidth * img.naturalHeight;
+                        if (area > maxArea && img.src.includes('https')) {
+                            maxArea = area;
+                            bestImg = img.src;
+                        }
+                    });
+                    return bestImg;
+                });
+
+                if (imgUrl) {
+                    console.log(`[Facebook] 找到大圖: ${imgUrl.substring(0, 50)}...`);
+                    highResImages.push(imgUrl);
+                }
+                await newPage.close();
+                // 避免請求過快
+                await new Promise(r => setTimeout(r, 1000));
+
+            } catch (err) {
+                console.error(`[Facebook] 讀取詳情頁失敗: ${link}`, err);
+            }
+        }
+
         await browser.close();
-        return uniqueImages;
+        return [...new Set(highResImages)];
 
     } catch (error) {
         console.error(`[Facebook] 抓取失敗 ${source.name}:`, error);
@@ -236,6 +268,7 @@ async function analyzeContentWithAI(item, sourceContext) {
 
         let prompt = '';
         let parts = [];
+        const today = new Date().toISOString().split('T')[0];
 
         if (isImage) {
             const base64Image = await fetchImageAsBase64(item.url);
@@ -243,11 +276,11 @@ async function analyzeContentWithAI(item, sourceContext) {
 
             prompt = `請分析這張捐血活動海報。
 來源脈絡：這張海報來自「${sourceContext.name}」，地點通常位於「${sourceContext.city}」及其周邊縣市（例如新竹中心涵蓋桃園、苗栗；台北中心涵蓋新北）。
+今天是 ${today}，請特別留意活動日期。
 
-嚴格區分：這張圖片是「單一活動海報」還是「多地點總表」？
-
-1. 如果是「多地點總表」(包含多個不同地點、列表形式、密密麻麻的文字)，請直接回傳 null。
-2. 只有當圖片是針對「單一特定地點」或「單一特定活動」的宣傳海報，且包含具體的「贈品資訊」(例如：送全聯禮券、紀念傘、電影票等) 時，才提取資料。
+嚴格區分：
+1. 如果是「多地點總表」或「過期活動」(日期在 ${today} 之前)，請回傳 null。
+2. 只有當圖片是「單一活動海報」且日期是「今天或未來」的活動，才提取資料。
 
 請以 JSON 格式回傳以下欄位 (若無資料請填 null):
 {
@@ -270,10 +303,13 @@ async function analyzeContentWithAI(item, sourceContext) {
             // 文字分析模式
             prompt = `請分析以下捐血活動公告文字。
 來源脈絡：來自「${sourceContext.name}」，地點通常位於「${sourceContext.city}」及其周邊縣市（例如新竹中心涵蓋桃園、苗栗；台北中心涵蓋新北）。
+今天是 ${today}，請特別留意活動日期。
 
 請從文字中提取「單一」或「多個」捐血活動資訊。
-注意：如果文字包含多個不同時間地點的活動，請回傳一個 JSON 陣列 (Array of Objects)。
-如果只有一個活動，也請回傳包含一個物件的陣列。
+注意：
+1. 只提取日期在「今天或未來」的活動。
+2. 如果文字包含多個不同時間地點的活動，請回傳一個 JSON 陣列 (Array of Objects)。
+3. 如果只有一個活動，也請回傳包含一個物件的陣列。
 
 文字內容：
 ${item.content}
@@ -308,7 +344,6 @@ ${item.content}
 
         try {
             const parsed = JSON.parse(jsonStr);
-            // 統一回傳陣列
             return Array.isArray(parsed) ? parsed : [parsed];
         } catch (e) {
             console.error("JSON 解析失敗:", text);
@@ -323,6 +358,8 @@ ${item.content}
 
 async function updateEvents() {
     const allNewEvents = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     for (const source of SOURCES) {
         console.log(`\n=== 開始處理來源: ${source.name} ===`);
@@ -331,7 +368,6 @@ async function updateEvents() {
         if (source.type === 'web') {
             items = await fetchWebImages(source);
         } else if (source.type === 'fb') {
-            // FB 仍然只抓圖片，但需包裝成統一格式
             const imageUrls = await fetchFacebookImages(source);
             items = imageUrls.map(url => ({ type: 'image', url }));
         }
@@ -345,6 +381,15 @@ async function updateEvents() {
                 for (const eventData of eventDataList) {
                     if (!eventData) continue;
 
+                    // 日期過濾：只保留今天以後的活動
+                    if (eventData.date) {
+                        const eventDate = new Date(eventData.date);
+                        if (eventDate < today) {
+                            console.log(`[跳過] 過期活動: ${eventData.title} (${eventData.date})`);
+                            continue;
+                        }
+                    }
+
                     if (item.type === 'image') {
                         eventData.posterUrl = item.url;
                         if (eventData.gift) {
@@ -354,7 +399,6 @@ async function updateEvents() {
                     eventData.sourceUrl = item.url || source.url;
                     eventData.id = Date.now() + Math.random();
 
-                    // 簡單過濾無效資料
                     if (eventData.date && eventData.location) {
                         allNewEvents.push(eventData);
                         console.log(`[成功] 提取活動: ${eventData.title} (${eventData.location})`);
@@ -370,11 +414,6 @@ async function updateEvents() {
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
-
-        // 讀取現有資料以保留 (可選，目前策略是覆蓋或合併？)
-        // 這裡我們選擇覆蓋，因為這是每日更新的腳本。
-        // 但為了避免清空舊資料，我們應該考慮合併。
-        // 暫時策略：覆蓋，因為舊資料會過期。
 
         fs.writeFileSync(outputPath, JSON.stringify(allNewEvents, null, 2));
         console.log(`\n總共成功更新 ${allNewEvents.length} 筆活動資料！`);

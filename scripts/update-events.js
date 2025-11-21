@@ -14,6 +14,29 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const TARGET_URL = 'https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284';
 const BASE_URL = 'https://www.tp.blood.org.tw';
 
+async function listAvailableModels() {
+    try {
+        console.log("正在列出可用模型...");
+        const apiKey = process.env.GEMINI_API_KEY;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.models) {
+            console.log("可用模型列表:");
+            data.models.forEach(model => {
+                if (model.supportedGenerationMethods.includes("generateContent")) {
+                    console.log(`- ${model.name}`);
+                }
+            });
+        } else {
+            console.log("無法取得模型列表:", data);
+        }
+    } catch (error) {
+        console.error("列出模型失敗:", error);
+    }
+}
+
 async function fetchHTMLWithPuppeteer(url) {
     console.log(`[Puppeteer] Launching browser to fetch: ${url}`);
     const browser = await puppeteer.launch({
@@ -164,6 +187,8 @@ const updateEvents = async () => {
             console.error('錯誤: 未設定 GEMINI_API_KEY 環境變數');
             process.exit(1);
         }
+
+        await listAvailableModels();
 
         const detailPageUrl = await getLatestEventPage();
         const imageUrls = await extractImagesFromPage(detailPageUrl);

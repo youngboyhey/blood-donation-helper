@@ -242,7 +242,7 @@ async function analyzeContentWithAI(item, sourceContext) {
             if (!base64Image) return null;
 
             prompt = `請分析這張捐血活動海報。
-來源脈絡：這張海報來自「${sourceContext.name}」，地點通常位於「${sourceContext.city}」。
+來源脈絡：這張海報來自「${sourceContext.name}」，地點通常位於「${sourceContext.city}」及其周邊縣市（例如新竹中心涵蓋桃園、苗栗；台北中心涵蓋新北）。
 
 嚴格區分：這張圖片是「單一活動海報」還是「多地點總表」？
 
@@ -254,22 +254,22 @@ async function analyzeContentWithAI(item, sourceContext) {
   "title": "活動標題",
   "date": "日期 (YYYY-MM-DD)",
   "time": "時間 (HH:MM-HH:MM)",
-  "location": "地點 (請盡量完整，若海報只寫地標，請結合來源城市 '${sourceContext.city}' 推斷完整地址)",
-  "city": "縣市 (預設: ${sourceContext.city})",
+  "location": "地點 (請盡量完整，若海報只寫地標，請結合來源城市推斷完整地址)",
+  "city": "縣市 (請務必從地點判斷，例如：桃園市、苗栗縣、新北市。若無法判斷才填 ${sourceContext.city})",
   "district": "行政區 (例如: 大安區, 板橋區)",
   "organizer": "主辦單位 (預設: ${sourceContext.name})",
   "gift": {
     "name": "贈品名稱 (包含所有贈品項目)",
     "image": "圖片URL (程式會自動填入)"
   },
-  "tags": ["AI辨識", "自動更新", "${sourceContext.city}"]
+  "tags": ["AI辨識", "自動更新", "縣市名稱(請填入實際判斷的縣市)"]
 }
 `;
             parts = [prompt, { inlineData: { data: base64Image, mimeType: "image/jpeg" } }];
         } else {
             // 文字分析模式
             prompt = `請分析以下捐血活動公告文字。
-來源脈絡：來自「${sourceContext.name}」，地點通常位於「${sourceContext.city}」。
+來源脈絡：來自「${sourceContext.name}」，地點通常位於「${sourceContext.city}」及其周邊縣市（例如新竹中心涵蓋桃園、苗栗；台北中心涵蓋新北）。
 
 請從文字中提取「單一」或「多個」捐血活動資訊。
 注意：如果文字包含多個不同時間地點的活動，請回傳一個 JSON 陣列 (Array of Objects)。
@@ -285,14 +285,14 @@ ${item.content}
     "date": "日期 (YYYY-MM-DD)",
     "time": "時間 (HH:MM-HH:MM)",
     "location": "地點 (請盡量完整)",
-    "city": "縣市 (預設: ${sourceContext.city})",
+    "city": "縣市 (請務必從地點判斷，例如：桃園市、苗栗縣、新北市。若無法判斷才填 ${sourceContext.city})",
     "district": "行政區 (例如: 大安區, 板橋區)",
     "organizer": "主辦單位 (預設: ${sourceContext.name})",
     "gift": {
       "name": "贈品名稱 (若文中未提及具體贈品，請填 null)",
       "image": null
     },
-    "tags": ["AI辨識", "自動更新", "${sourceContext.city}"]
+    "tags": ["AI辨識", "自動更新", "縣市名稱(請填入實際判斷的縣市)"]
   }
 ]
 `;

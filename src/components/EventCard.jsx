@@ -26,7 +26,6 @@ const EventCard = ({ event, onClick }) => {
                 <div className={styles.giftLabel}>贈品亮點</div>
                 <div className={styles.giftContent}>
                     <span className={styles.giftName}>{gift.name}</span>
-                    <span className={styles.giftValue}>價值 ${gift.value}</span>
                 </div>
                 <div className={styles.giftQuantity}>數量: {gift.quantity}</div>
             </div>

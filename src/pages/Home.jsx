@@ -14,10 +14,10 @@ const Home = () => {
         const results = eventsData.filter(event => {
             const term = searchTerm.toLowerCase();
             return (
-                event.title.toLowerCase().includes(term) ||
-                event.location.toLowerCase().includes(term) ||
-                event.gift.name.toLowerCase().includes(term) ||
-                event.tags.some(tag => tag.toLowerCase().includes(term))
+                event.title?.toLowerCase().includes(term) ||
+                event.location?.toLowerCase().includes(term) ||
+                event.gift?.name?.toLowerCase().includes(term) ||
+                event.tags?.some(tag => tag.toLowerCase().includes(term))
             );
         });
         setFilteredEvents(results);
@@ -54,13 +54,13 @@ const Home = () => {
                         <p><strong>主辦單位:</strong> {selectedEvent.organizer}</p>
                         <hr style={{ margin: '1rem 0', border: '0', borderTop: '1px solid #eee' }} />
                         <h4>贈品資訊</h4>
-                        <p><strong>名稱:</strong> {selectedEvent.gift.name}</p>
-                        <p><strong>價值:</strong> ${selectedEvent.gift.value}</p>
-                        <p><strong>數量:</strong> {selectedEvent.gift.quantity}</p>
+                        <p><strong>名稱:</strong> {selectedEvent.gift?.name || '無'}</p>
+                        <p><strong>價值:</strong> ${selectedEvent.gift?.value || 0}</p>
+                        <p><strong>數量:</strong> {selectedEvent.gift?.quantity || '依現場為主'}</p>
                         <div style={{ marginTop: '1rem', textAlign: 'center' }}>
                             <img
-                                src={selectedEvent.gift.image}
-                                alt={selectedEvent.gift.name}
+                                src={selectedEvent.gift?.image}
+                                alt={selectedEvent.gift?.name || '贈品圖片'}
                                 style={{ maxWidth: '100%', borderRadius: '8px' }}
                             />
                         </div>

@@ -1,30 +1,30 @@
 [
   {
-    "title": "台灣有愛 民眾溫情 士北有姊 寒冬送暖園遊會",
+    "title": "台灣有愛 民眾溫情 士北有(姐)寒冬送暖園遊會",
     "date": "2025-11-22",
     "time": "10:00-16:00",
-    "location": "北投七星街 近光明路入口 (近新北投捷運站、七星公園旁)",
+    "location": "北投七星街近光明路入口 (近新北投捷運站、七星公園旁), 台北市",
     "city": "台北市",
     "district": "北投區",
-    "organizer": null,
+    "organizer": "台北捐血中心",
     "gift": {
-      "name": "捐血一袋250C.C. 送新光影城電影票一張\n捐血兩袋500C.C. 送新光影城電影票兩張 [效期自2025.10.01開始 使用期限一年 過期可補30元使用]",
+      "name": "捐血一袋250C.C.送新光影城電影票一張, 捐血兩袋500C.C.送新光影城電影票兩張 (效期自2025.10.01開始使用期限一年，過期可補30元使用)",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310680276861871/1122%E5%8C%97%E6%8A%95%E4%B8%83%E6%98%9F.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310680276861871/1122%E5%8C%97%E6%8A%95%E4%B8%83%E6%98%9F.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737694145.3704
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738888233.4172
   },
   {
     "title": "捐血活動",
     "date": "2025-11-22",
     "time": "09:00-17:00",
-    "location": "台北捐血中心長春捐血室",
+    "location": "台北捐血中心長春捐血室(臺北市松山區復興北路69號5樓)",
     "city": "台北市",
     "district": "松山區",
     "organizer": "國際佛光會中華總會 普門寺大安第一分會",
@@ -35,62 +35,61 @@
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310680355719815/1122%E9%95%B7%E6%98%A5.png",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737699156.7065
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738897967.0273
   },
-  {
-    "title": "就要你這型 捲袖當英雄",
-    "date": "2025-11-22",
-    "time": "09:30-16:30",
-    "location": "南港玉成公園福德宮前(協和祐德高中對面)",
-    "city": "台北市",
-    "district": "南港區",
-    "organizer": "社團法人台北市拱天慈善功德會",
-    "gift": {
-      "name": "行動電源(捐500cc), 雙孔旅充頭(捐250cc), 免廢言喉糖, 潔衣芯錠, 平安米, 7-11咖啡券, 永和豆漿, 銅鑼燒, 美食抽抽樂在地美食兌換券",
-      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310680711840898/1122%E7%8E%89%E6%88%90%E5%85%AC%E5%9C%92.jpg"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "Gemini"
-    ],
-    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310680711840898/1122%E7%8E%89%E6%88%90%E5%85%AC%E5%9C%92.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737702781.8772
-  },
+  [
+    {
+      "title": "就要你這型 捲袖當英雄",
+      "date": "2025-11-22",
+      "time": "09:30-16:30",
+      "location": "南港玉成公園福德宮前(協和祐德高中對面)",
+      "city": "台北市",
+      "district": "南港區",
+      "organizer": "社團法人台北市拱天慈善功德會",
+      "gift": {
+        "name": "行動電源(捐500cc), 雙孔旅充頭(捐250cc), 免廢言喉糖, 潔衣芯錠, 平安米, 7-11咖啡券, 永和豆漿, 銅鑼燒, 美食兌換券",
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "台北市"
+      ]
+    }
+  ],
   {
     "title": "捐血傳愛讓愛飛揚",
     "date": "2025-11-22",
     "time": "11:00-18:00",
-    "location": "威秀影城 松壽路16巷",
+    "location": "台北市信義區松壽路16巷 威秀影城",
     "city": "台北市",
     "district": "信義區",
     "organizer": "國際獅子會300A1區2018-2019年度會長同學",
     "gift": {
-      "name": "首捐加碼電影票2張, 250cc送全聯禮券200元, 500cc送全聯禮券400元",
+      "name": "首捐加碼電影票2張、250cc送全聯禮券200元、500cc送全聯禮券400元",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310681533566860/1122%E5%A8%81%E7%A7%80.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310681533566860/1122%E5%A8%81%E7%A7%80.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737706807.3157
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738909252.127
   },
   {
     "title": "公益捐血",
     "date": "2025-11-22",
     "time": "10:00-17:00",
-    "location": "捷運新埔站4號出口・三猿廣場",
-    "city": "新北市",
+    "location": "捷運新埔站4號出口・三猿廣場，新北市板橋區文化路一段360號1樓門口",
+    "city": "台北市",
     "district": "板橋區",
-    "organizer": "新北市板橋區關懷弱勢成長協會、新北市議員戴瑋姍、新北市信賴台灣之友會",
+    "organizer": "新北市板橋區關懷弱勢成長協會、新北市議員戴瑋姍・新北市信賴台灣之友會",
     "gift": {
       "name": "前150名捐血完成加贈環保背包\n捐血完成250cc：全聯禮券100元、環保餐具\n捐血完成500cc：全聯禮券200元、不銹鋼碗、贈日本JINS限量禮",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310681999697843/1122%E4%BF%A1%E8%B3%B4%E6%96%B0%E5%9F%94.jpg"
@@ -98,11 +97,11 @@
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310681999697843/1122%E4%BF%A1%E8%B3%B4%E6%96%B0%E5%9F%94.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737710716.565
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738914909.8481
   },
   {
     "title": "捐血有愛因為你在",
@@ -119,11 +118,11 @@
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310682178445898/1122%E5%AE%B6%E5%BA%AD%E5%A9%A6%E5%B9%BC.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737713355.4338
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738918769.123
   },
   {
     "title": "用愛續命熱血同行",
@@ -134,44 +133,44 @@
     "district": "士林區",
     "organizer": "台北捐血中心",
     "gift": {
-      "name": "250cc贈送家樂福禮券200元, 500cc贈送家樂福禮券400元",
+      "name": "250cc贈送家樂福禮券200元\n500cc贈送家樂福禮券400元",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310688453144899/1122%E5%A3%AB%E6%9E%97%E5%A9%A6%E8%81%AF.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310688453144899/1122%E5%A3%AB%E6%9E%97%E5%A9%A6%E8%81%AF.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737716390.4033
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738922003.2905
   },
   {
     "title": "捐熱血 愛無限",
     "date": "2025-11-22",
     "time": "09:30-16:30",
-    "location": "市立圖書館三重分館前",
-    "city": "新北市",
+    "location": "市立圖書館三重分館前 三重區自強路一段158號",
+    "city": "台北市",
     "district": "三重區",
     "organizer": "新北市信賴之友會三重李坤城分會",
     "gift": {
-      "name": "捐250cc可獲得【全聯禮券$100元】\n捐500cc可獲得【全聯禮券$200元】\n凡參加即可獲得限量精美禮品【環保背包、不鏽鋼紀念碗、\n環保餐具】、【精美小禮包:台酒紅麴餅乾、洗手乳、濕紙\n巾、中南莊園咖啡、好拾咖啡、光泉保久乳、知本金聯世紀\n一泊二食優惠券】",
+      "name": "捐250cc可獲得【全聯禮券$100元】\n捐500cc可獲得【全聯禮券$200元】\n凡參加即可獲得限量精美禮品【環保背包、不鏽鋼紀念碗、環保餐具】、【精美小禮包:台酒紅麴餅乾、洗手乳、濕紙巾、中南莊園咖啡、好拾咖啡、光泉保久乳、知本金聯世紀一泊二食優惠券】",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310688819265871/1122%E4%B8%89%E9%87%8D.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310688819265871/1122%E4%B8%89%E9%87%8D.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737719909.9817
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738926678.6682
   },
   {
     "title": "松江捐血日",
     "date": "2025-11-22",
     "time": "09:00-17:00",
-    "location": "大安森林公園 捐血車",
+    "location": "大安森林公園, 台北市",
     "city": "台北市",
     "district": "大安區",
     "organizer": "松江獅子會",
@@ -182,17 +181,17 @@
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310689098013826/1122%E5%A4%A7%E5%AE%89.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737721911.8079
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738929114.02
   },
   {
     "title": "熱血一袋 無可取代",
     "date": "2025-11-22",
     "time": "10:00-18:00",
-    "location": "公園號捐血車\n臺北市中正區襄陽路與公園路交叉口",
+    "location": "公園號捐血車，台北市中正區襄陽路與公園路交叉口",
     "city": "台北市",
     "district": "中正區",
     "organizer": "國際佛光會中華總會 中山第五分會",
@@ -203,35 +202,35 @@
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310689632992843/1122%E5%85%AC%E5%9C%92.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737725511.5676
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738933206.0261
   },
   {
     "title": "捐血有你 愛不止息",
     "date": "2025-11-22",
     "time": "09:30-16:30",
-    "location": "基隆市仁二+愛二路口(基隆二信前)",
+    "location": "基隆市仁二+愛二路口(基隆二信前), 基隆捐血站(信一路14號)",
     "city": "基隆市",
     "district": null,
     "organizer": "基隆中正獅子會",
     "gift": {
-      "name": "捐250cc送全聯禮券200元\n捐500CC送全聯禮券400元",
+      "name": "捐250cc送全聯禮券200元, 捐500CC送全聯禮券400元",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310692712314815/1122%E5%9F%BA%E9%9A%86.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310692712314815/1122%E5%9F%BA%E9%9A%86.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737728824.1348
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738936879.0198
   },
   {
-    "title": "快樂有愛日\n捐血暖心·在地回饋",
+    "title": "快樂有愛日",
     "date": "2025-11-22",
     "time": "10:00-17:00",
     "location": "新北市泰山區全興路/福興三街交叉口",
@@ -239,41 +238,41 @@
     "district": "泰山區",
     "organizer": "HAPPYHAIR泰山店",
     "gift": {
-      "name": "金道米、HAPPY GREEN RUN運動襪&提掛式衛生紙、口罩一盒 (成功捐血500c.c.者)",
+      "name": "金道米、HAPPY GREEN RUN運動襪、提掛式衛生紙、口罩一盒",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310693356293842/1122%E8%8F%AF%E5%B1%B1.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310693356293842/1122%E8%8F%AF%E5%B1%B1.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737731561.766
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738940481.3584
   },
   {
-    "title": "捐血有愛",
+    "title": "捐血有愛 我愛捐血",
     "date": "2025-11-22",
     "time": "09:00-16:30",
-    "location": "永和國父紀念館側門(國光路圖書館)",
-    "city": "新北市",
-    "district": "永和區",
+    "location": "永和國父紀念館側門(國光路圖書館), 台北市",
+    "city": "台北市",
+    "district": null,
     "organizer": "社團法人新北市濰精慈善會",
     "gift": {
-      "name": "全聯禮券 (500cc-400元, 250cc-200元)",
+      "name": "全聯禮券: 500cc-400元, 250cc-200元 (數量有限 送完為止)",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310693990162860/1122%E7%B2%BE%E7%B6%AD.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323310693990162860/1122%E7%B2%BE%E7%B6%AD.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737733852.3372
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738943618.0977
   },
   {
-    "title": "共襄捲袖 捐血一袋",
+    "title": "共襄捲袖，捐血一袋",
     "date": "2025-11-25",
     "time": "09:30-16:30",
     "location": "台北市內湖區內湖路一段396號",
@@ -281,17 +280,17 @@
     "district": "內湖區",
     "organizer": "台北捐血中心",
     "gift": {
-      "name": "捐血250c.c.: 紅石榴西番蓮濃縮錠\n捐血500c.c.: 紅石榴西番蓮濃縮錠、療肺艸顆粒粉包",
+      "name": "捐血250c.c.：紅石榴西番蓮濃縮錠x1\n捐血500c.c.：紅石榴西番蓮濃縮錠x1 + 療肺艸顆粒粉包x1",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311180229566968/1123%E5%84%AA%E8%89%AF%E7%94%9F%E9%86%AB.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311180229566968/1123%E5%84%AA%E8%89%AF%E7%94%9F%E9%86%AB.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737737773.4807
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738950236.0618
   },
   {
     "title": "捐血有你熱血相挺",
@@ -302,17 +301,17 @@
     "district": "汐止區",
     "organizer": "新德公益團體",
     "gift": {
-      "name": "250cc贈送: 花蓮米+全聯禮券200元\n500cc贈送: 摸彩+全聯禮券200元\n摸彩好禮: 保溫瓶、衛生紙、日本洗碗精、旅行組、公仔以及多樣精美好禮等",
+      "name": "花蓮米+全聯禮券200元 (250cc贈送) 、摸彩+全聯禮券200元 (500cc贈送)、保溫瓶、衛生紙、日本洗碗精、旅行組、公仔...以及多樣精美好禮等 (摸彩)",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311180784687930/1123%E6%96%B0%E5%BE%B7.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311180784687930/1123%E6%96%B0%E5%BE%B7.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737741020.0918
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738954777.0693
   },
   {
     "title": "捐血有愛 因為你在",
@@ -323,101 +322,101 @@
     "district": "蘆洲區",
     "organizer": "國際同濟會台灣總會、北一區台北縣同濟會",
     "gift": {
-      "name": "精美紀念品一份, 500cc加倍贈送",
+      "name": "精美紀念品一份、500cc加倍贈送",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311181863435985/1123%E8%98%86%E6%B4%B2.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311181863435985/1123%E8%98%86%E6%B4%B2.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737743626.2488
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738957781.0012
   },
   {
     "title": "寒冬送暖 愛心捐血",
     "date": "2025-11-23",
     "time": "11:00-18:00",
-    "location": "1F比漾廣場東大門(宗教博物館旁) 新北市永和區中山路一段238號",
+    "location": "新北市永和區中山路一段238號1F比漾廣場東大門(宗教博物館旁)",
     "city": "新北市",
     "district": "永和區",
     "organizer": "台北美仁扶輪社",
     "gift": {
-      "name": "捐血250cc: 比漾選物午茶兌換券乙張 或 燕麥餅乾乙罐(二擇一)\n捐血500cc: 比漾選物午茶兌換券乙張/燕麥餅乾乙罐(二擇一) + 比漾廣場禮券200元",
+      "name": "捐血250cc: 比漾選物午茶兌換券乙張/燕麥餅乾乙罐(二擇一); 捐血500cc: 比漾選物午茶兌換券乙張/燕麥餅乾乙罐(二擇一)+比漾廣場禮券200元",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311186060485841/1123%E6%B0%B8%E5%92%8C%E6%AF%94%E6%A8%A3.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311186060485841/1123%E6%B0%B8%E5%92%8C%E6%AF%94%E6%A8%A3.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737746832.954
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738961910.4028
   },
   {
     "title": "愛心捐血活動",
-    "date": "2125-11-23",
+    "date": "2025-11-23",
     "time": "10:00-17:00",
     "location": "汐止火車站前信義廣場",
-    "city": "新北市",
+    "city": "台北市",
     "district": "汐止區",
     "organizer": "新德公益團體",
     "gift": {
-      "name": "前50位送花蓮米，全聯禮券200元，第51位後抽獎 + 香帥蛋糕折價券，捐500cc 多一次抽獎機會，精美圍巾，精美小禮物",
+      "name": "花蓮米(前50位), 全聯禮券200元(第51位後抽獎), 香帥蛋糕折價券, 精美圍巾, 捐500cc多一次抽獎機會, 精美小禮物",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311187149233896/1123%E6%B1%90%E6%AD%A2%E8%BB%8A%E7%AB%99.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311187149233896/1123%E6%B1%90%E6%AD%A2%E8%BB%8A%E7%AB%99.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737749807.533
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738966065.8997
   },
   {
     "title": "挽袖熱血應援\n捐血一袋 救人一命\n接力撐起病人的希望",
     "date": "2025-11-23",
     "time": "09:00-17:00",
-    "location": "汐止捐血室\n汐止區新台五路一段207號",
-    "city": "新北市",
+    "location": "汐止捐血室 汐止區新台五路一段207號",
+    "city": "台北市",
     "district": "汐止區",
     "organizer": "汐止捐血人協會",
     "gift": {
-      "name": "五農米或紙手帕",
+      "name": "五農米或紙手帕 250CC 1份/500CC 2份",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311187605364869/1123%E6%B1%90%E6%AD%A2.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311187605364869/1123%E6%B1%90%E6%AD%A2.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737752446.6848
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738970236.744
   },
   {
     "title": "捐血有您愛不止息",
     "date": "2025-11-23",
     "time": "10:00-17:00",
-    "location": "信義區松壽路16巷華納威秀旁(捐血車)",
+    "location": "台北市信義區松壽路16巷華納威秀旁(捐血車)",
     "city": "台北市",
     "district": "信義區",
     "organizer": "台北捐血中心",
     "gift": {
-      "name": "濕紙巾1包, 紅包1袋5個, 全聯禮券200元, 保冷袋1個",
+      "name": "濕紙巾1包、紅包1袋5個、全聯禮券200元、保冷袋1個",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311188327081841/1123%E5%A8%81%E7%A7%80.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311188327081841/1123%E5%A8%81%E7%A7%80.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737755505.4133
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738974470.3098
   },
   {
     "title": "捐血活動",
@@ -426,69 +425,66 @@
     "location": "臺北市大安區9號出口旁副走道B1東區地下街,忠孝敦化捷運站",
     "city": "台北市",
     "district": "大安區",
-    "organizer": "台北西區扶青社",
+    "organizer": "台北捐血中心",
     "gift": {
-      "name": "完成捐血250cc 贈送環保收納購物袋*1\n完成捐血500cc 贈送環保收納購物袋*1 +飲料提袋*1",
+      "name": "完成捐血250cc 贈送環保收納購物袋*1\n完成捐血500cc 贈送環保收納購物袋*1 + 飲料提袋*1",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311188783112813/1123%E5%BF%A0%E5%AD%9D.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311188783112813/1123%E5%BF%A0%E5%AD%9D.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737758443.018
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738978688.815
   },
   {
     "title": "血液連結你我他",
-    "date": "2025-11-23",
+    "date": "2125-11-23",
     "time": "10:00-18:00",
-    "location": "新莊區中華路一段+復興路一段交叉口 (新莊號捐血車)",
-    "city": "新北市",
+    "location": "新莊區中華路一段+復興路一段交叉口 (新莊號捐血車), 台北市",
+    "city": "台北市",
     "district": "新莊區",
     "organizer": "泰山同濟會",
-    "gift": {
-      "name": null,
-      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311188962960868/1123%E6%B3%B0%E5%B1%B1%E5%90%8C%E6%BF%9F.jpg"
-    },
+    "gift": null,
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311188962960868/1123%E6%B3%B0%E5%B1%B1%E5%90%8C%E6%BF%9F.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737760847.2065
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738981409.3596
   },
   {
     "title": "捐血一袋救人一命 捐血有愛因為你在",
     "date": "2025-11-23",
     "time": "09:00-17:00",
-    "location": "三重捐血室(菜寮捷運站2號出口) 新北市三重區重新路四段12號7樓之2",
+    "location": "新北市三重區重新路四段12號7樓之2 (三重捐血室, 菜寮捷運站2號出口)",
     "city": "新北市",
     "district": "三重區",
-    "organizer": "台北捐血中心",
+    "organizer": "善德會 (實際主辦單位)",
     "gift": {
-      "name": "垃圾袋, 衛生紙, 口罩",
+      "name": "250cc贈送一份; 500cc贈送兩份 (垃圾袋, 衛生紙, 口罩)",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311189140718913/1123%E5%96%84%E5%BE%B7%E6%9C%83.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311189140718913/1123%E5%96%84%E5%BE%B7%E6%9C%83.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737763723.3367
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738985758.064
   },
   {
     "title": "血液連結你我他",
     "date": "2025-11-23",
     "time": "09:00-17:00",
     "location": "中和號捐血車(中和區中安街圖書館旁823公園內)",
-    "city": "新北市",
-    "district": "中和區",
+    "city": "台北市",
+    "district": null,
     "organizer": "晨光同濟會",
     "gift": {
       "name": "精美好禮",
@@ -497,11 +493,11 @@
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323311189506839986/1123%E6%99%A8%E5%85%89%E6%9C%83-5.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737766162.7073
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738988647.511
   },
   {
     "title": "捐血快樂 讓愛相隨",
@@ -518,11 +514,11 @@
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P323323145699192862/1123%E5%9F%BA%E9%9A%86.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737768694.5608
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738991500.9238
   },
   {
     "title": "捐血有你 愛不止息",
@@ -533,58 +529,573 @@
     "district": "中和區",
     "organizer": "國際獅子會300B2區光明獅子會",
     "gift": {
-      "name": "雞蛋1盒/沐浴組 (捐250cc)；XO醬/POLO衫(捐500cc，送完為止)；環保手電筒(中和區立法委員張智倫贈送)；精製白米2斤/湯圓1盒(莒東社區贈送)；早餐兌換券50元(民治早餐店贈送)；精美小禮物(板橋觀護協會贈送)以上贈品送完為止",
+      "name": "雞蛋1盒/沐浴組 (捐250cc贈送), XO醬/POLO衫 (捐500cc再加贈), 環保手電筒 (中和區立法委員張智倫贈送), 精製白米2斤/湯圓1盒 (莒東社區贈送), 早餐兌換券50元 (民治早餐店贈送), 精美小禮物 (板橋觀護協會贈送)",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P325330064373500464/114%E5%85%89%E6%98%8E%E7%8D%85%E5%AD%90%E6%9C%83%E6%84%9B%E5%BF%83%E6%8D%90%E8%A1%80.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P325330064373500464/114%E5%85%89%E6%98%8E%E7%8D%85%E5%AD%90%E6%9C%83%E6%84%9B%E5%BF%83%E6%8D%90%E8%A1%80.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737771714.953
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738994905.079
   },
   {
     "title": "捐血有你 愛不止息",
     "date": "2025-11-23",
     "time": "09:30-17:00",
-    "location": "深坑區文化街45號(深坑國小)",
-    "city": "新北市",
+    "location": "台北市深坑區文化街45號(深坑國小)",
+    "city": "台北市",
     "district": "深坑區",
     "organizer": "國際獅子會300B 2區深碇獅子會",
     "gift": {
-      "name": "捐血250cc: 家樂福百元禮券1張+精美農初卵乙盒\n捐血500cc: 家樂福百元禮券2張+精美農初卵兩盒",
+      "name": "捐血250cc送家樂福百元禮券1張+精美農初卵乙盒\n捐血500cc送家樂福百元禮券2張+精美農初卵兩盒",
       "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P325330065917479491/1141123%E7%8D%85%E5%AD%90%E6%9C%83%E6%8D%90%E8%A1%80%E6%B5%B7%E5%A0%B1-01.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "台北市"
     ],
     "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P325330065917479491/1141123%E7%8D%85%E5%AD%90%E6%9C%83%E6%8D%90%E8%A1%80%E6%B5%B7%E5%A0%B1-01.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737775449.5789
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+    "id": 1763738999477.9993
   },
+  [
+    {
+      "title": "捐血活動",
+      "date": "2025-11-23",
+      "time": "10:00-18:00",
+      "location": "府中捐血室 (板橋區中山路一段50巷36號2樓之4)",
+      "city": "台北市",
+      "district": "板橋區",
+      "organizer": "新北市華江獅子會",
+      "gift": {
+        "name": "家樂福禮券100元、250cc馬克杯、運動藍芽耳機",
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "台北市"
+      ]
+    }
+  ],
   {
-    "title": "新北市華江獅子會捐血活動",
-    "date": "2025-11-23",
-    "time": "10:00-18:00",
-    "location": "府中捐血室 (板橋區中山路一段50巷36號2樓之4)",
-    "city": "新北市",
-    "district": "板橋區",
-    "organizer": "新北市華江獅子會",
+    "title": "攜手捐血 為生命加油",
+    "date": "2023-11-22",
+    "time": null,
+    "location": null,
+    "city": "新竹市",
+    "district": null,
+    "organizer": "新竹捐血中心",
     "gift": {
-      "name": "家樂福禮券100元、250cc馬克杯、運動藍芽耳機 (捐血 500cc再送!)",
-      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P325481035543448347/%E6%8D%90%E8%A1%80%E6%B5%B7%E5%A0%B1.jpg"
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520899287231903/1141120%E6%8E%A8%E6%92%AD%E5%9C%96.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "Gemini"
+      "新竹市"
     ],
-    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P325481035543448347/%E6%8D%90%E8%A1%80%E6%B5%B7%E5%A0%B1.jpg",
-    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-21%2000%3A00%3A00&sid=0P323309163207812233",
-    "id": 1763737778683.5354
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520899287231903/1141120%E6%8E%A8%E6%92%AD%E5%9C%96.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492",
+    "id": 1763739041382.3157
+  },
+  [
+    {
+      "title": "11月22日捐血地點",
+      "date": "null",
+      "time": null,
+      "location": "中壢捐血室",
+      "city": "桃園市",
+      "district": "中壢區",
+      "organizer": "桃園市金星獅子會",
+      "gift": {
+        "name": null,
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    },
+    {
+      "title": "11月22日捐血地點",
+      "date": "null",
+      "time": null,
+      "location": "竹南捐血室",
+      "city": "苗栗縣",
+      "district": "竹南鎮",
+      "organizer": "竹南西南獅",
+      "gift": {
+        "name": null,
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    },
+    {
+      "title": "11月22日捐血地點",
+      "date": "null",
+      "time": null,
+      "location": "西大捐血室",
+      "city": "新竹市",
+      "district": null,
+      "organizer": "新竹市馨輝愛心社",
+      "gift": {
+        "name": null,
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    },
+    {
+      "title": "11月22日捐血地點",
+      "date": "null",
+      "time": null,
+      "location": "苗栗捐血站",
+      "city": "苗栗縣",
+      "district": null,
+      "organizer": "華馨獅",
+      "gift": {
+        "name": null,
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    },
+    {
+      "title": "11月22日捐血地點",
+      "date": "null",
+      "time": null,
+      "location": "竹東第一銀行前",
+      "city": "新竹縣",
+      "district": "竹東鎮",
+      "organizer": "竹東獅子會",
+      "gift": {
+        "name": null,
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    },
+    {
+      "title": "11月22日捐血地點",
+      "date": "null",
+      "time": null,
+      "location": "桃園捐血站",
+      "city": "桃園市",
+      "district": null,
+      "organizer": "桃園市禎聯獅子會",
+      "gift": {
+        "name": null,
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    },
+    {
+      "title": "11月22日捐血地點",
+      "date": "null",
+      "time": null,
+      "location": "南門捐血室",
+      "city": "桃園市",
+      "district": null,
+      "organizer": "桃園市禎聯獅子會",
+      "gift": {
+        "name": null,
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    },
+    {
+      "title": "11月22日捐血地點",
+      "date": "null",
+      "time": null,
+      "location": "Big City遠東巨城購物中心 巨城廣場",
+      "city": "新竹市",
+      "district": null,
+      "organizer": null,
+      "gift": {
+        "name": null,
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    },
+    {
+      "title": "11月22日捐血地點",
+      "date": "null",
+      "time": null,
+      "location": "中壢區後寮一路188號",
+      "city": "桃園市",
+      "district": "中壢區",
+      "organizer": "龍岡捐血室",
+      "gift": {
+        "name": null,
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    },
+    {
+      "title": "11月22日捐血地點",
+      "date": "null",
+      "time": null,
+      "location": "竹北市光明11路215巷8號",
+      "city": "新竹縣",
+      "district": "竹北市",
+      "organizer": "竹北愛心樓",
+      "gift": {
+        "name": null,
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    }
+  ],
+  {
+    "title": "BIG熱血捐血活動",
+    "date": "2024-11-22",
+    "time": "09:00-17:00",
+    "location": "新竹市中央路廣場1F",
+    "city": "新竹市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": "威秀電影票、250元巨城抵用券",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520895563939914/1122Big-City%E9%81%A0%E6%9D%B1%E5%B7%A8%E5%9F%8E%E8%B3%BC%E7%89%A9%E4%B8%AD%E5%BF%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520895563939914/1122Big-City%E9%81%A0%E6%9D%B1%E5%B7%A8%E5%9F%8E%E8%B3%BC%E7%89%A9%E4%B8%AD%E5%BF%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492",
+    "id": 1763739058788.7864
+  },
+  {
+    "title": "熱血挽袖 愛心永續",
+    "date": "2025-11-22",
+    "time": "09:00-16:00",
+    "location": "竹東第一銀行前(竹東鎮東林路30號), 新竹市",
+    "city": "新竹市",
+    "district": "竹東鎮",
+    "organizer": "竹東獅子會",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520895107818932/1122%E7%AB%B9%E6%9D%B1%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520895107818932/1122%E7%AB%B9%E6%9D%B1%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492",
+    "id": 1763739062626.3677
+  },
+  {
+    "title": "桃園市禎聯獅子會 捐血活動",
+    "date": "2025-11-22",
+    "time": "10:00-16:00",
+    "location": "桃園捐血站 (桃園市桃園區文康街61號) & 南門捐血室 (桃園區三民路三段182號3樓)",
+    "city": "桃園市",
+    "district": "桃園區",
+    "organizer": "桃園市禎聯獅子會",
+    "gift": {
+      "name": "精美禮物一份",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520896741787969/1122%E7%A6%8E%E8%81%AF-%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520896741787969/1122%E7%A6%8E%E8%81%AF-%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492",
+    "id": 1763739066524.5227
+  },
+  {
+    "title": "捐出熱血・傳遞愛心",
+    "date": "2025-11-22",
+    "time": "09:00-17:00",
+    "location": "新竹市文雅街6號(西大捐血室)",
+    "city": "新竹市",
+    "district": null,
+    "organizer": "新竹市馨輝愛心社",
+    "gift": {
+      "name": "全聯禮券 (250CC送1張，500CC及分離術送2張)",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520896385666987/1122%E9%A6%A8%E8%BC%9D%E6%84%9B%E5%BF%83%E7%A4%BE.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520896385666987/1122%E9%A6%A8%E8%BC%9D%E6%84%9B%E5%BF%83%E7%A4%BE.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492",
+    "id": 1763739070543.436
+  },
+  [
+    {
+      "title": "捐血救人 遇見你真好",
+      "date": "2025-11-23",
+      "time": "09:00-16:00",
+      "location": "桃園區文康街61號\n桃園區三民路三段182號3樓之1",
+      "city": "桃園市",
+      "district": null,
+      "organizer": "辰威獅子會",
+      "gift": {
+        "name": "盥洗旅行組/丼碗組/禮卷(好禮數量有限送完為止)",
+        "image": "null"
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    }
+  ],
+  {
+    "title": "熱血超人上車囉!",
+    "date": "2025-11-23",
+    "time": "09:00-16:00",
+    "location": "三義六角亭前 (苗栗縣三義鄉中正路)",
+    "city": "新竹市",
+    "district": null,
+    "organizer": "苗栗縣三義鄉後備憲兵荷松協會",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520897464414931/1123%E8%8B%97%E6%A0%97%E7%B8%A3%E4%B8%89%E7%BE%A9%E9%84%89%E5%BE%8C%E5%82%99%E6%86%B2%E5%85%B5%E8%8D%B7%E6%9D%BE%E5%8D%94%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520897464414931/1123%E8%8B%97%E6%A0%97%E7%B8%A3%E4%B8%89%E7%BE%A9%E9%84%89%E5%BE%8C%E5%82%99%E6%86%B2%E5%85%B5%E8%8D%B7%E6%9D%BE%E5%8D%94%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492",
+    "id": 1763739078103.242
+  },
+  {
+    "title": "捐一袋血・暖一顆心",
+    "date": "2025-11-23",
+    "time": "09:00-16:00",
+    "location": "柏昶新世界 (中壢區中山東路一段336號)",
+    "city": "新竹市",
+    "district": null,
+    "organizer": "桃園市亞太獅子會",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520898008383959/1123%E6%A1%83%E5%9C%92%E5%B8%82%E4%BA%9E%E5%A4%AA%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P324520898008383959/1123%E6%A1%83%E5%9C%92%E5%B8%82%E4%BA%9E%E5%A4%AA%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492",
+    "id": 1763739081776.769
+  },
+  [
+    {
+      "title": "捐熱血!獻愛心",
+      "date": "2025-11-23",
+      "time": "09:00-16:30",
+      "location": "龍岡國中(中壢區龍東路147號), 龍岡捐血室(中壢區後寮1路188號)",
+      "city": "新竹市",
+      "district": null,
+      "organizer": "桃園市龍興獅子會",
+      "gift": {
+        "name": null,
+        "image": null
+      },
+      "tags": [
+        "AI辨識",
+        "自動更新",
+        "新竹市"
+      ]
+    }
+  ],
+  {
+    "title": "急需O型熱血超人",
+    "date": null,
+    "time": null,
+    "location": null,
+    "city": "台中市",
+    "district": null,
+    "organizer": "台中捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://scontent-lhr8-1.xx.fbcdn.net/v/t39.30808-6/581925410_1237186831771508_888236566368772474_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=PjRPxop9zJ4Q7kNvwFlNynw&_nc_oc=AdnnLWzEH2xevgqXumNYmwZ4TRPJ-9wE0HRYxcF-2tXZLhe2rSAyNU4WRlL7WnLYkRo&_nc_zt=23&_nc_ht=scontent-lhr8-1.xx&_nc_gid=qHwjB3gOs9brIplp8peKaQ&oh=00_Afig0Xk6X-gOkUiPZrTC1kJBivL250bSPsd8MUkoouSCHQ&oe=6926712C"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台中市"
+    ],
+    "posterUrl": "https://scontent-lhr8-1.xx.fbcdn.net/v/t39.30808-6/581925410_1237186831771508_888236566368772474_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=PjRPxop9zJ4Q7kNvwFlNynw&_nc_oc=AdnnLWzEH2xevgqXumNYmwZ4TRPJ-9wE0HRYxcF-2tXZLhe2rSAyNU4WRlL7WnLYkRo&_nc_zt=23&_nc_ht=scontent-lhr8-1.xx&_nc_gid=qHwjB3gOs9brIplp8peKaQ&oh=00_Afig0Xk6X-gOkUiPZrTC1kJBivL250bSPsd8MUkoouSCHQ&oe=6926712C",
+    "sourceUrl": "https://www.facebook.com/tcblood",
+    "id": 1763739098539.8657
+  },
+  {
+    "title": "愛心列車到站",
+    "date": "2023-10-28",
+    "time": "09:30-16:30",
+    "location": "臺中榮民總醫院 (台中市西屯區臺灣大道四段1650號)",
+    "city": "台中市",
+    "district": "西屯區",
+    "organizer": "台中捐血中心",
+    "gift": {
+      "name": "紀念品",
+      "image": "https://static.xx.fbcdn.net/rsrc.php/v4/yk/r/Ye5fc_1SEQK.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台中市"
+    ],
+    "posterUrl": "https://static.xx.fbcdn.net/rsrc.php/v4/yk/r/Ye5fc_1SEQK.png",
+    "sourceUrl": "https://www.facebook.com/tcblood",
+    "id": 1763739100242.7021
+  },
+  {
+    "title": "null",
+    "date": null,
+    "time": null,
+    "location": null,
+    "city": "台中市",
+    "district": null,
+    "organizer": "台中捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://static.xx.fbcdn.net/rsrc.php/v4/yW/r/8k_Y-oVxbuU.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台中市"
+    ],
+    "posterUrl": "https://static.xx.fbcdn.net/rsrc.php/v4/yW/r/8k_Y-oVxbuU.png",
+    "sourceUrl": "https://www.facebook.com/tcblood",
+    "id": 1763739101651.9475
+  },
+  {
+    "title": "愛心捐血活動",
+    "date": "2023-11-25",
+    "time": "09:00-17:00",
+    "location": "台中市西屯區青海路二段207-15號",
+    "city": "台中市",
+    "district": "西屯區",
+    "organizer": "台中捐血中心",
+    "gift": {
+      "name": "全聯禮券",
+      "image": "https://static.xx.fbcdn.net/rsrc.php/v4/yT/r/Dc7-7AgwkwS.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台中市"
+    ],
+    "posterUrl": "https://static.xx.fbcdn.net/rsrc.php/v4/yT/r/Dc7-7AgwkwS.png",
+    "sourceUrl": "https://www.facebook.com/tcblood",
+    "id": 1763739103802.906
+  },
+  {
+    "title": "FINAL 最後倒數!",
+    "date": "2025-12-31",
+    "time": null,
+    "location": null,
+    "city": "台南市",
+    "district": null,
+    "organizer": "台南捐血中心",
+    "gift": {
+      "name": "台灣黑熊潮T",
+      "image": "https://scontent-lhr6-1.xx.fbcdn.net/v/t39.30808-6/561341351_1231844388988784_5382021119818613287_n.png?stp=dst-png_s960x960&_nc_cat=110&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=rzkwrT2jXXYQ7kNvwFPY44f&_nc_oc=AdkidCQvfm4gFJwUqRzFSaz08S52VE4CYURJI_40ouuKiqYyFsDOhpK_238YMxIDDog&_nc_zt=23&_nc_ht=scontent-lhr6-1.xx&_nc_gid=krT0kOGw2UeJhWGgSiK59Q&oh=00_AfiUbqOulCBKoRNnwrhRVL8dzE3NYqFm14-ClVwvUc2BsQ&oe=69266588"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台南市"
+    ],
+    "posterUrl": "https://scontent-lhr6-1.xx.fbcdn.net/v/t39.30808-6/561341351_1231844388988784_5382021119818613287_n.png?stp=dst-png_s960x960&_nc_cat=110&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=rzkwrT2jXXYQ7kNvwFPY44f&_nc_oc=AdkidCQvfm4gFJwUqRzFSaz08S52VE4CYURJI_40ouuKiqYyFsDOhpK_238YMxIDDog&_nc_zt=23&_nc_ht=scontent-lhr6-1.xx&_nc_gid=krT0kOGw2UeJhWGgSiK59Q&oh=00_AfiUbqOulCBKoRNnwrhRVL8dzE3NYqFm14-ClVwvUc2BsQ&oe=69266588",
+    "sourceUrl": "https://www.facebook.com/tnblood",
+    "id": 1763739129335.395
+  },
+  {
+    "title": "null",
+    "date": null,
+    "time": null,
+    "location": null,
+    "city": "台南市",
+    "district": null,
+    "organizer": "台南捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://static.xx.fbcdn.net/rsrc.php/v4/yW/r/8k_Y-oVxbuU.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台南市"
+    ],
+    "posterUrl": "https://static.xx.fbcdn.net/rsrc.php/v4/yW/r/8k_Y-oVxbuU.png",
+    "sourceUrl": "https://www.facebook.com/tnblood",
+    "id": 1763739131150.7146
+  },
+  {
+    "title": "熱血傳愛，捐血送好禮",
+    "date": "2024-05-04",
+    "time": "09:00-17:00",
+    "location": "台南市安平區永華路二段807號 (台南捐血中心安平捐血室)",
+    "city": "台南市",
+    "district": "安平區",
+    "organizer": "台南捐血中心",
+    "gift": {
+      "name": "全聯禮券",
+      "image": "https://static.xx.fbcdn.net/rsrc.php/v4/y3/r/BQdeC67wT9z.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台南市"
+    ],
+    "posterUrl": "https://static.xx.fbcdn.net/rsrc.php/v4/y3/r/BQdeC67wT9z.png",
+    "sourceUrl": "https://www.facebook.com/tnblood",
+    "id": 1763739132911.0327
   }
 ]

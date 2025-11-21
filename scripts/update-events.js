@@ -7,52 +7,92 @@ const __dirname = path.dirname(__filename);
 
 const eventsFilePath = path.join(__dirname, '../src/data/events.json');
 
-// 模擬從外部來源抓取資料
+// 模擬從外部來源抓取資料 (這裡填入從圖片辨識出的真實資料)
 const fetchNewEvents = async () => {
-    console.log('正在從外部來源抓取資料...');
+    console.log('正在從外部來源抓取資料 (模擬 OCR 辨識)...');
 
-    // 這裡模擬一個 API 請求或爬蟲過程
-    // 實際應用中，這裡會是 fetch('https://api.example.com/events') 或 Puppeteer 腳本
+    const realData = [
+        // 11/22 (六)
+        { time: "09:00-17:00", location: "關渡捐血室", gift: "紀念傘", date: "2025-11-22" },
+        { time: "09:00-17:00", location: "長庚捐血室", gift: "紀念傘", date: "2025-11-22" },
+        { time: "09:00-17:00", location: "西門捐血室", gift: "紀念傘", date: "2025-11-22" },
+        { time: "09:00-17:00", location: "板橋捐血室", gift: "紀念傘", date: "2025-11-22" },
+        { time: "09:00-17:00", location: "捷運捐血室", gift: "紀念傘", date: "2025-11-22" },
+        { time: "09:00-17:00", location: "市府捐血室", gift: "紀念傘", date: "2025-11-22" },
+        { time: "09:00-17:00", location: "三重捐血室", gift: "紀念傘", date: "2025-11-22" },
+        { time: "09:00-17:00", location: "汐止捐血室", gift: "紀念傘", date: "2025-11-22" },
+        { time: "09:00-17:00", location: "樹林捐血室", gift: "紀念傘", date: "2025-11-22" },
+        { time: "09:00-17:00", location: "宜蘭捐血站", gift: "紀念傘", date: "2025-11-22" },
+        { time: "09:00-17:00", location: "羅東捐血站", gift: "紀念傘", date: "2025-11-22" },
+        { time: "09:00-17:00", location: "花蓮捐血站", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-18:00", location: "新光站前", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-18:00", location: "忠孝號", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-18:00", location: "峨嵋號", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-18:00", location: "大安號", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-18:00", location: "仁愛號", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-18:00", location: "南港號", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-18:00", location: "關渡號", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-18:00", location: "新店號", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-18:00", location: "基隆號", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-18:00", location: "宜蘭號", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-18:00", location: "花蓮號", gift: "紀念傘", date: "2025-11-22" },
+        { time: "10:00-17:00", location: "汐止麥帥橋下", gift: "全聯禮券+紀念品", date: "2025-11-22" },
+        { time: "09:30-16:30", location: "國父紀念館", gift: "全聯禮券+紀念品", date: "2025-11-22" },
 
-    const today = new Date();
-    const dateString = today.toISOString().split('T')[0];
+        // 11/23 (日)
+        { time: "09:00-17:00", location: "關渡捐血室", gift: "紀念傘", date: "2025-11-23" },
+        { time: "09:00-17:00", location: "長庚捐血室", gift: "紀念傘", date: "2025-11-23" },
+        { time: "09:00-17:00", location: "西門捐血室", gift: "紀念傘", date: "2025-11-23" },
+        { time: "09:00-17:00", location: "板橋捐血室", gift: "紀念傘", date: "2025-11-23" },
+        { time: "09:00-17:00", location: "捷運捐血室", gift: "紀念傘", date: "2025-11-23" },
+        { time: "09:00-17:00", location: "市府捐血室", gift: "紀念傘", date: "2025-11-23" },
+        { time: "09:00-17:00", location: "三重捐血室", gift: "紀念傘", date: "2025-11-23" },
+        { time: "09:00-17:00", location: "汐止捐血室", gift: "紀念傘", date: "2025-11-23" },
+        { time: "09:00-17:00", location: "樹林捐血室", gift: "紀念傘", date: "2025-11-23" },
+        { time: "09:00-17:00", location: "宜蘭捐血站", gift: "紀念傘", date: "2025-11-23" },
+        { time: "09:00-17:00", location: "羅東捐血站", gift: "紀念傘", date: "2025-11-23" },
+        { time: "09:00-17:00", location: "花蓮捐血站", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-18:00", location: "新光站前", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-18:00", location: "忠孝號", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-18:00", location: "峨嵋號", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-18:00", location: "大安號", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-18:00", location: "仁愛號", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-18:00", location: "南港號", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-18:00", location: "關渡號", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-18:00", location: "新店號", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-18:00", location: "基隆號", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-18:00", location: "宜蘭號", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-18:00", location: "花蓮號", gift: "紀念傘", date: "2025-11-23" },
+        { time: "10:00-17:00", location: "汐止麥帥橋下", gift: "全聯禮券+紀念品", date: "2025-11-23" },
+        { time: "09:30-16:30", location: "國父紀念館", gift: "全聯禮券+紀念品", date: "2025-11-23" }
+    ];
 
-    const newEvent = {
-        id: Date.now(), // 使用 timestamp 當作 ID
-        title: `[自動更新] 台北車站捐血活動 (${new Date().toLocaleTimeString()})`,
-        date: dateString,
-        time: '10:00 - 18:00',
-        location: '台北車站大廳',
+    return realData.map((item, index) => ({
+        id: Date.now() + index,
+        title: `[自動更新] ${item.location} 捐血活動`,
+        date: item.date,
+        time: item.time,
+        location: item.location,
         organizer: '台北捐血中心',
         gift: {
-            name: '全聯禮券 300元 + 紀念品',
-            value: 300,
-            quantity: '限量 200 份',
-            image: 'https://placehold.co/100x100?text=Update'
+            name: item.gift,
+            value: item.gift.includes('全聯') ? 500 : 300, // 簡單估價
+            quantity: '依現場為主',
+            image: 'https://placehold.co/100x100?text=Gift'
         },
-        tags: ['自動更新', '最新消息']
-    };
-
-    return [newEvent];
+        tags: ['自動更新', '最新活動']
+    }));
 };
 
 const updateEvents = async () => {
     try {
-        // 1. 讀取現有資料
-        const rawData = fs.readFileSync(eventsFilePath, 'utf-8');
-        const events = JSON.parse(rawData);
-
-        // 2. 抓取新資料
+        // 1. 抓取新資料 (這裡會覆蓋舊資料，因為使用者說只要這些)
         const newEvents = await fetchNewEvents();
 
-        // 3. 合併資料 (這裡簡單做 append，實際可能需要去重)
-        const updatedEvents = [...events, ...newEvents];
+        // 2. 寫回檔案 (直接覆蓋)
+        fs.writeFileSync(eventsFilePath, JSON.stringify(newEvents, null, 2), 'utf-8');
 
-        // 4. 寫回檔案
-        fs.writeFileSync(eventsFilePath, JSON.stringify(updatedEvents, null, 2), 'utf-8');
-
-        console.log(`成功更新資料！目前共有 ${updatedEvents.length} 筆活動。`);
-        console.log('新增活動:', newEvents[0].title);
+        console.log(`成功更新資料！目前共有 ${newEvents.length} 筆活動。`);
 
     } catch (error) {
         console.error('更新失敗:', error);

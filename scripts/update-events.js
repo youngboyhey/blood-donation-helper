@@ -67,27 +67,61 @@ const fetchNewEvents = async () => {
         { time: "09:30-16:30", location: "國父紀念館", gift: "全聯禮券+紀念品", date: "2025-11-23" }
     ];
 
-    const poster1122 = 'https://www.tp.blood.org.tw/files/file_pool/1/0P323309946552669872/2.png';
     const summaryPoster = 'https://www.tp.blood.org.tw/files/file_pool/1/0P323309945918790744/1.png';
     const sourcePage = 'https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&sid=0P323309163207812233';
 
-    return realData.map((item, index) => ({
-        id: Date.now() + index,
-        title: `[自動更新] ${item.location} 捐血活動`,
-        date: item.date,
-        time: item.time,
-        location: item.location,
-        organizer: '台北捐血中心',
-        gift: {
-            name: item.gift,
-            value: item.gift.includes('全聯') ? 500 : 300,
-            quantity: '依現場為主',
-            image: item.date === '2025-11-22' ? poster1122 : summaryPoster
+    // 海報對照表 (從檔案名稱或內容推測)
+    const posterMap = {
+        '2025-11-22': {
+            '三重': 'https://www.tp.blood.org.tw/files/file_pool/1/0P323310688819265871/1122%E4%B8%89%E9%87%8D.jpg',
+            '大安': 'https://www.tp.blood.org.tw/files/file_pool/1/0P323310689098013826/1122%E5%A4%A7%E5%AE%89.jpg',
+            '基隆': 'https://www.tp.blood.org.tw/files/file_pool/1/0P323310692712314815/1122%E5%9F%BA%E9%9A%86.jpg',
+            '長春': 'https://www.tp.blood.org.tw/files/file_pool/1/0P323310680355719815/1122%E9%95%B7%E6%98%A5.png', // 可能對應長庚? 暫且保留
+            '公園': 'https://www.tp.blood.org.tw/files/file_pool/1/0P323310689632992843/1122%E5%85%AC%E5%9C%92.jpg',
+            '威秀': 'https://www.tp.blood.org.tw/files/file_pool/1/0P323310681533566860/1122%E5%A8%81%E7%A7%80.jpg',
         },
-        posterUrl: item.date === '2025-11-22' ? poster1122 : summaryPoster,
-        sourceUrl: sourcePage,
-        tags: ['自動更新', '最新活動', '海報辨識']
-    }));
+        '2025-11-23': {
+            '汐止': 'https://www.tp.blood.org.tw/files/file_pool/1/0P323311187605364869/1123%E6%B1%90%E6%AD%A2.jpg',
+            '忠孝': 'https://www.tp.blood.org.tw/files/file_pool/1/0P323311188783112813/1123%E5%BF%A0%E5%AD%9D.jpg',
+            '基隆': 'https://www.tp.blood.org.tw/files/file_pool/1/0P323323145699192862/1123%E5%9F%BA%E9%9A%86.jpg',
+            '蘆洲': 'https://www.tp.blood.org.tw/files/file_pool/1/0P323311181863435985/1123%E8%98%86%E6%B4%B2.jpg',
+            '威秀': 'https://www.tp.blood.org.tw/files/file_pool/1/0P323311188327081841/1123%E5%A8%81%E7%A7%80.jpg',
+        }
+    };
+
+    const getPosterForEvent = (item) => {
+        const dateMap = posterMap[item.date];
+        if (!dateMap) return summaryPoster;
+
+        // 簡單關鍵字匹配
+        for (const [key, url] of Object.entries(dateMap)) {
+            if (item.location.includes(key)) {
+                return url;
+            }
+        }
+        return summaryPoster;
+    };
+
+    return realData.map((item, index) => {
+        const posterUrl = getPosterForEvent(item);
+        return {
+            id: Date.now() + index,
+            title: `[自動更新] ${item.location} 捐血活動`,
+            date: item.date,
+            time: item.time,
+            location: item.location,
+            organizer: '台北捐血中心',
+            gift: {
+                name: item.gift,
+                value: item.gift.includes('全聯') ? 500 : 300,
+                quantity: '依現場為主',
+                image: posterUrl // 贈品圖直接用海報
+            },
+            posterUrl: posterUrl,
+            sourceUrl: posterUrl, // 點擊海報直接看大圖
+            tags: ['自動更新', '最新活動', '海報辨識']
+        };
+    });
 };
 
 const updateEvents = async () => {

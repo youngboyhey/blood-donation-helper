@@ -67,6 +67,10 @@ const fetchNewEvents = async () => {
         { time: "09:30-16:30", location: "國父紀念館", gift: "全聯禮券+紀念品", date: "2025-11-23" }
     ];
 
+    const poster1122 = 'https://www.tp.blood.org.tw/files/file_pool/1/0P323309946552669872/2.png';
+    const summaryPoster = 'https://www.tp.blood.org.tw/files/file_pool/1/0P323309945918790744/1.png';
+    const sourcePage = 'https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&sid=0P323309163207812233';
+
     return realData.map((item, index) => ({
         id: Date.now() + index,
         title: `[自動更新] ${item.location} 捐血活動`,
@@ -76,11 +80,13 @@ const fetchNewEvents = async () => {
         organizer: '台北捐血中心',
         gift: {
             name: item.gift,
-            value: item.gift.includes('全聯') ? 500 : 300, // 簡單估價
+            value: item.gift.includes('全聯') ? 500 : 300,
             quantity: '依現場為主',
-            image: 'https://placehold.co/100x100?text=Gift'
+            image: item.date === '2025-11-22' ? poster1122 : summaryPoster
         },
-        tags: ['自動更新', '最新活動']
+        posterUrl: item.date === '2025-11-22' ? poster1122 : summaryPoster,
+        sourceUrl: sourcePage,
+        tags: ['自動更新', '最新活動', '海報辨識']
     }));
 };
 

@@ -9,17 +9,17 @@ const EventCard = ({ event, onClick }) => {
     return (
         <Card hoverable className={styles.eventCard}>
             <div className={styles.header}>
-                <div className={styles.dateBadge}>
-                    <span className={styles.dateMonth}>{new Date(date).getMonth() + 1}月</span>
-                    <span className={styles.dateDay}>{new Date(date).getDate()}</span>
-                </div>
-                <div className={styles.titleArea}>
-                    <h3 className={styles.title}>{title}</h3>
-                    <div className={styles.meta}>
-                        <span className={styles.time}>{time}</span>
-                        <span className={styles.location}>{location}</span>
-                    </div>
-                </div>
+                <span className={styles.dateBadge}>{event.date}</span>
+                {event.posterUrl && (
+                    <a href={event.sourceUrl} target="_blank" rel="noopener noreferrer" className={styles.posterLink} onClick={(e) => e.stopPropagation()}>
+                        <img src={event.posterUrl} alt="活動海報" className={styles.posterThumbnail} />
+                    </a>
+                )}
+            </div>
+            <h3 className={styles.title}>{title}</h3>
+            <div className={styles.meta}>
+                <span className={styles.time}>{time}</span>
+                <span className={styles.location}>{location}</span>
             </div>
 
             <div className={styles.giftSection}>

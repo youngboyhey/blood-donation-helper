@@ -63,32 +63,6 @@
 .giftLabel {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
-    color: var(--color-primary);
-    margin-bottom: var(--spacing-1);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.giftContent {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-1);
-}
-
-.giftName {
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-main);
-}
-
-.giftValue {
-    font-weight: var(--font-weight-bold);
-    color: var(--color-success);
-}
-
-.giftQuantity {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
 }
 
 .footer {

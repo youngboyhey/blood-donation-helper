@@ -25,7 +25,7 @@ jobs:
 
       - name: Run Scraper Script
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: node scripts/update-events.js
 
       - name: Commit and Push changes

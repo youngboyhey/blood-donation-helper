@@ -20,22 +20,6 @@
     margin-bottom: var(--spacing-2);
 }
 
-.subtitle {
-    font-size: var(--font-size-lg);
-    opacity: 0.9;
-}
-
-.searchSection {
-    margin-top: -3rem;
-    /* Overlap with header */
-    margin-bottom: var(--spacing-8);
-    padding: 0 var(--spacing-4);
-}
-
-.main {
-    padding: var(--spacing-4);
-}
-
 .listHeader {
     display: flex;
     justify-content: space-between;

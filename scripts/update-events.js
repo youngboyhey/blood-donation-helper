@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as cheerio from 'cheerio';
 import puppeteer from 'puppeteer';
+import 'dotenv/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -133,11 +134,12 @@ async function analyzeImageWithAI(imageUrl) {
   "date": "日期 (YYYY-MM-DD)",
   "time": "時間 (HH:MM-HH:MM)",
   "location": "地點",
+  "city": "縣市 (例如: 台北市, 新北市)",
+  "district": "行政區 (例如: 大安區, 板橋區)",
   "organizer": "主辦單位 (預設: 台北捐血中心)",
   "gift": {
     "name": "贈品名稱 (包含所有贈品項目)",
-    "value": "預估總價值 (數字, 若無法估算請填 300)",
-    "quantity": "數量 (例如: 依現場為主, 送完為止)"
+    "image": "圖片URL (程式會自動填入)"
   },
   "tags": ["AI辨識", "自動更新", "Gemini"]
 }

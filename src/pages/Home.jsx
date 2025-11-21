@@ -7,21 +7,39 @@ import Modal from '../components/Modal';
 
 const Home = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCity, setSelectedCity] = useState('');
+    const [selectedDistrict, setSelectedDistrict] = useState('');
     const [filteredEvents, setFilteredEvents] = useState(eventsData);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
+    // 提取所有有活動的縣市
+    const cities = [...new Set(eventsData.map(e => e.city).filter(Boolean))];
+
+    // 根據選擇的縣市提取有活動的區域
+    const districts = selectedCity
+        ? [...new Set(eventsData.filter(e => e.city === selectedCity).map(e => e.district).filter(Boolean))]
+        : [];
+
     useEffect(() => {
         const results = eventsData.filter(event => {
-            const term = searchTerm.toLowerCase();
-            return (
-                event.title?.toLowerCase().includes(term) ||
-                event.location?.toLowerCase().includes(term) ||
-                event.gift?.name?.toLowerCase().includes(term) ||
-                event.tags?.some(tag => tag.toLowerCase().includes(term))
+            const matchesSearch = (
+                event.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                event.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                event.gift?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                event.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
             );
+            const matchesCity = selectedCity ? event.city === selectedCity : true;
+            const matchesDistrict = selectedDistrict ? event.district === selectedDistrict : true;
+
+            return matchesSearch && matchesCity && matchesDistrict;
         });
         setFilteredEvents(results);
-    }, [searchTerm]);
+    }, [searchTerm, selectedCity, selectedDistrict]);
+
+    const handleCityChange = (e) => {
+        setSelectedCity(e.target.value);
+        setSelectedDistrict(''); // 重置區域選擇
+    };
 
     return (
         <div className={styles.container}>
@@ -30,7 +48,31 @@ const Home = () => {
                 <p className={styles.subtitle}>查詢附近的捐血活動與豐富贈品</p>
             </header>
 
-            <div className={styles.searchSection}>
+            <div className={styles.filterSection}>
+                <div className={styles.filters}>
+                    <select
+                        className={styles.select}
+                        value={selectedCity}
+                        onChange={handleCityChange}
+                    >
+                        <option value="">所有縣市</option>
+                        {cities.map(city => (
+                            <option key={city} value={city}>{city}</option>
+                        ))}
+                    </select>
+
+                    <select
+                        className={styles.select}
+                        value={selectedDistrict}
+                        onChange={(e) => setSelectedDistrict(e.target.value)}
+                        disabled={!selectedCity}
+                    >
+                        <option value="">所有區域</option>
+                        {districts.map(district => (
+                            <option key={district} value={district}>{district}</option>
+                        ))}
+                    </select>
+                </div>
                 <SearchBar onSearch={setSearchTerm} />
             </div>
 
@@ -55,14 +97,15 @@ const Home = () => {
                         <hr style={{ margin: '1rem 0', border: '0', borderTop: '1px solid #eee' }} />
                         <h4>贈品資訊</h4>
                         <p><strong>名稱:</strong> {selectedEvent.gift?.name || '無'}</p>
-                        <p><strong>價值:</strong> ${selectedEvent.gift?.value || 0}</p>
-                        <p><strong>數量:</strong> {selectedEvent.gift?.quantity || '依現場為主'}</p>
                         <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-                            <img
-                                src={selectedEvent.gift?.image}
-                                alt={selectedEvent.gift?.name || '贈品圖片'}
-                                style={{ maxWidth: '100%', borderRadius: '8px' }}
-                            />
+                            <a href={selectedEvent.gift?.image} target="_blank" rel="noopener noreferrer">
+                                <img
+                                    src={selectedEvent.gift?.image}
+                                    alt={selectedEvent.gift?.name || '贈品圖片'}
+                                    style={{ maxWidth: '100%', borderRadius: '8px', cursor: 'pointer' }}
+                                    title="點擊查看大圖"
+                                />
+                            </a>
                         </div>
                     </div>
                 )}

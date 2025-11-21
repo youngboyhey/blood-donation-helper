@@ -3,6 +3,17 @@
     flex-direction: column;
     gap: var(--spacing-4);
     height: 100%;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--color-border);
+}
+
+.eventCard:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
 }
 
 .header {
@@ -34,84 +45,56 @@
     color: var(--color-primary);
 }
 
-.titleArea {
-    flex: 1;
-}
-
 .title {
     font-size: var(--font-size-lg);
     margin-bottom: var(--spacing-1);
     color: var(--color-text-main);
+    font-weight: 600;
+    line-height: 1.4;
 }
 
 .meta {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-1);
-    align-items: center;
     padding-top: var(--spacing-2);
     border-top: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
 }
 
-.tags {
+.time,
+.location {
     display: flex;
+    align-items: center;
     gap: var(--spacing-2);
-    flex-wrap: wrap;
 }
 
-.eventCard {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-4);
-    height: 100%;
-}
-
-.header {
-    display: flex;
-    gap: var(--spacing-4);
-    align-items: flex-start;
-}
-
-.dateBadge {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-background);
+.giftSection {
+    background-color: #fff0f5;
+    padding: var(--spacing-3);
     border-radius: var(--radius-md);
-    padding: var(--spacing-2);
-    min-width: 60px;
-    border: 1px solid var(--color-border);
 }
 
-.dateMonth {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-}
-
-.dateDay {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-bold);
+.giftLabel {
+    font-size: var(--font-size-xs);
     color: var(--color-primary);
-}
-
-.titleArea {
-    flex: 1;
-}
-
-.title {
-    font-size: var(--font-size-lg);
+    font-weight: bold;
     margin-bottom: var(--spacing-1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.giftName {
+    font-weight: 500;
     color: var(--color-text-main);
 }
 
-.meta {
+.footer {
+    margin-top: auto;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-1);
-    align-items: center;
-    padding-top: var(--spacing-2);
-    border-top: 1px solid var(--color-border);
+    gap: var(--spacing-3);
 }
 
 .tags {
@@ -121,31 +104,14 @@
 }
 
 .tag {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     color: var(--color-secondary);
     background-color: var(--color-background);
-    padding: 2px 6px;
-    border-radius: var(--radius-sm);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
 }
 
-.posterLink {
-    display: block;
-    width: 60px;
-    height: 84px;
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1px solid #eee;
-    transition: transform 0.2s;
-    flex-shrink: 0;
-}
-
-.posterLink:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.posterThumbnail {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.viewButton {
+    align-self: flex-end;
 }

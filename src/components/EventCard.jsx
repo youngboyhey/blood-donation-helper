@@ -10,11 +10,6 @@ const EventCard = ({ event, onClick }) => {
         <Card hoverable className={styles.eventCard}>
             <div className={styles.header}>
                 <span className={styles.dateBadge}>{event.date}</span>
-                {event.posterUrl && (
-                    <a href={event.sourceUrl} target="_blank" rel="noopener noreferrer" className={styles.posterLink} onClick={(e) => e.stopPropagation()}>
-                        <img src={event.posterUrl} alt="活動海報" className={styles.posterThumbnail} />
-                    </a>
-                )}
             </div>
             <h3 className={styles.title}>{title}</h3>
             <div className={styles.meta}>
@@ -27,16 +22,17 @@ const EventCard = ({ event, onClick }) => {
                 <div className={styles.giftContent}>
                     <span className={styles.giftName}>{gift.name}</span>
                 </div>
-                <div className={styles.giftQuantity}>數量: {gift.quantity}</div>
             </div>
 
             <div className={styles.footer}>
                 <div className={styles.tags}>
-                    {tags.map((tag, index) => (
+                    {event.city && <span className={styles.tag}>#{event.city}</span>}
+                    {event.district && <span className={styles.tag}>#{event.district}</span>}
+                    {!event.city && !event.district && tags.map((tag, index) => (
                         <span key={index} className={styles.tag}>#{tag}</span>
                     ))}
                 </div>
-                <Button size="sm" variant="outline" onClick={() => onClick && onClick(event)}>查看詳情</Button>
+                <Button size="sm" variant="outline" className={styles.viewButton} onClick={() => onClick && onClick(event)}>查看詳情</Button>
             </div>
         </Card>
     );

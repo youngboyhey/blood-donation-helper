@@ -123,7 +123,61 @@ async function analyzeImageWithAI(imageUrl) {
 
 1. 如果是「多地點總表」(包含多個不同地點、列表形式、密密麻麻的文字)，請直接回傳 null。絕對不要提取總表的資料，因為缺乏贈品細節。
 2. 只有當圖片是針對「單一特定地點」或「單一特定活動」的宣傳海報，且包含具體的「贈品資訊」(例如：送全聯禮券、紀念傘、電影票等) 時，才提取資料。
+
+請以 JSON 格式回傳以下欄位 (若無資料請填 null):
+{
+  "title": "活動標題",
+  "date": "日期 (YYYY-MM-DD)",
+  "time": "時間 (HH:MM-HH:MM)",
+  "location": "地點",
+  "gifts": ["贈品1", "贈品2"]
+}
+`;
+
+        const result = await model.generateContent([prompt, { inlineData: { data: base64Image, mimeType: "image/jpeg" } }]);
+        const response = await result.response;
+        const text = response.text();
+        
+        // Clean up markdown code blocks if present
+        const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        
+        if (jsonStr === 'null') return null;
+
+        try {
+            return JSON.parse(jsonStr);
+        } catch (e) {
+            console.error("Failed to parse JSON:", text);
+            return null;
+        }
+
+    } catch (error) {
+        console.error(`AI Analysis failed for ${imageUrl}:`, error);
+        return null;
+    }
+}
+
+async function updateEvents() {
+    try {
+        const pageUrl = await getLatestEventPage();
+        const images = await extractImagesFromPage(pageUrl);
+        
+        const newEvents = [];
+        for (const img of images) {
+            const eventData = await analyzeImageWithAI(img);
+            if (eventData) {
+                // Add image URL to the event data
+                eventData.imageUrl = img;
+                newEvents.push(eventData);
+            }
+        }
+
+        if (newEvents.length > 0) {
             const outputPath = path.join(__dirname, '../src/data/events.json');
+            // Ensure directory exists
+            const dir = path.dirname(outputPath);
+            if (!fs.existsSync(dir)){
+                fs.mkdirSync(dir, { recursive: true });
+            }
             fs.writeFileSync(outputPath, JSON.stringify(newEvents, null, 2));
             console.log(`成功更新 ${ newEvents.length } 筆活動資料！`);
         } else {

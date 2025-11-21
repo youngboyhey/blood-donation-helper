@@ -130,17 +130,23 @@ async function analyzeImageWithAI(imageUrl) {
   "date": "日期 (YYYY-MM-DD)",
   "time": "時間 (HH:MM-HH:MM)",
   "location": "地點",
-  "gifts": ["贈品1", "贈品2"]
+  "organizer": "主辦單位 (預設: 台北捐血中心)",
+  "gift": {
+    "name": "贈品名稱 (包含所有贈品項目)",
+    "value": "預估總價值 (數字, 若無法估算請填 300)",
+    "quantity": "數量 (例如: 依現場為主, 送完為止)"
+  },
+  "tags": ["AI辨識", "自動更新", "Gemini"]
 }
 `;
 
         const result = await model.generateContent([prompt, { inlineData: { data: base64Image, mimeType: "image/jpeg" } }]);
         const response = await result.response;
         const text = response.text();
-        
+
         // Clean up markdown code blocks if present
         const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
-        
+
         if (jsonStr === 'null') return null;
 
         try {
@@ -160,13 +166,19 @@ async function updateEvents() {
     try {
         const pageUrl = await getLatestEventPage();
         const images = await extractImagesFromPage(pageUrl);
-        
+
         const newEvents = [];
         for (const img of images) {
             const eventData = await analyzeImageWithAI(img);
             if (eventData) {
                 // Add image URL to the event data
-                eventData.imageUrl = img;
+                eventData.posterUrl = img;
+                eventData.sourceUrl = pageUrl;
+                if (eventData.gift) {
+                    eventData.gift.image = img;
+                }
+                // Generate a unique ID
+                eventData.id = Date.now() + Math.random();
                 newEvents.push(eventData);
             }
         }
@@ -175,11 +187,11 @@ async function updateEvents() {
             const outputPath = path.join(__dirname, '../src/data/events.json');
             // Ensure directory exists
             const dir = path.dirname(outputPath);
-            if (!fs.existsSync(dir)){
+            if (!fs.existsSync(dir)) {
                 fs.mkdirSync(dir, { recursive: true });
             }
             fs.writeFileSync(outputPath, JSON.stringify(newEvents, null, 2));
-            console.log(`成功更新 ${ newEvents.length } 筆活動資料！`);
+            console.log(`成功更新 ${newEvents.length} 筆活動資料！`);
         } else {
             console.log('未提取到任何有效活動資料。');
         }

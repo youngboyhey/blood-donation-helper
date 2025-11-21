@@ -22,7 +22,7 @@ async function fetchHTMLWithPuppeteer(url) {
     });
     const page = await browser.newPage();
 
-    // Set a real User-Agent
+    // 設定真實的 User-Agent
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
     try {
@@ -31,26 +31,26 @@ async function fetchHTMLWithPuppeteer(url) {
         await browser.close();
         return content;
     } catch (error) {
-        console.error(`[Puppeteer] Error fetching ${url}:`, error);
+        console.error(`[Puppeteer] 抓取失敗 ${url}:`, error);
         await browser.close();
         throw error;
     }
 }
 
 async function fetchImageAsBase64(url) {
-    // For images, we can still try fetch, but if it fails, we might need puppeteer too.
-    // Let's try fetch with headers first as it's faster.
+    // 對於圖片，我們先嘗試直接 fetch，如果失敗才考慮用 puppeteer (但目前先只用 fetch)
+    // 先嘗試帶有 headers 的 fetch，通常比較快
     try {
         const response = await fetch(url, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
             }
         });
-        if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`);
+        if (!response.ok) throw new Error(`取得圖片失敗: ${response.statusText}`);
         const arrayBuffer = await response.arrayBuffer();
         return Buffer.from(arrayBuffer).toString('base64');
     } catch (error) {
-        console.error(`[Fetch] Image fetch failed, trying Puppeteer for image: ${url}`);
+        console.error(`[Fetch] 圖片下載失敗，嘗試使用 Puppeteer: ${url}`);
         return null;
     }
 }
@@ -144,7 +144,7 @@ async function analyzeImageWithAI(imageUrl) {
         const response = await result.response;
         const text = response.text();
 
-        // Clean up markdown code blocks if present
+        // 清除 markdown 程式碼區塊標記 (如果有的話)
         const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
         if (jsonStr === 'null') return null;
@@ -152,12 +152,12 @@ async function analyzeImageWithAI(imageUrl) {
         try {
             return JSON.parse(jsonStr);
         } catch (e) {
-            console.error("Failed to parse JSON:", text);
+            console.error("JSON 解析失敗:", text);
             return null;
         }
 
     } catch (error) {
-        console.error(`AI Analysis failed for ${imageUrl}:`, error);
+        console.error(`AI 分析失敗 ${imageUrl}:`, error);
         return null;
     }
 }
@@ -171,13 +171,13 @@ async function updateEvents() {
         for (const img of images) {
             const eventData = await analyzeImageWithAI(img);
             if (eventData) {
-                // Add image URL to the event data
+                // 將圖片 URL 加入活動資料
                 eventData.posterUrl = img;
                 eventData.sourceUrl = pageUrl;
                 if (eventData.gift) {
                     eventData.gift.image = img;
                 }
-                // Generate a unique ID
+                // 產生唯一 ID
                 eventData.id = Date.now() + Math.random();
                 newEvents.push(eventData);
             }
@@ -185,7 +185,7 @@ async function updateEvents() {
 
         if (newEvents.length > 0) {
             const outputPath = path.join(__dirname, '../src/data/events.json');
-            // Ensure directory exists
+            // 確保目錄存在
             const dir = path.dirname(outputPath);
             if (!fs.existsSync(dir)) {
                 fs.mkdirSync(dir, { recursive: true });

@@ -126,11 +126,6 @@ async function fetchFacebookImages(source) {
         // 2. 逐一進入詳情頁抓大圖
         for (const link of photoLinks) {
             try {
-                // 檢查是否已經有快取 (在 updateEvents 中處理，這裡先抓 URL)
-                // 但為了獲取大圖 URL，我們還是得進去抓。
-                // 優化：如果我們能從列表頁就拿到大圖 ID 或 URL 最好，但 FB 結構複雜。
-                // 這裡維持原樣，先抓到大圖 URL，再由外層決定是否分析。
-
                 console.log(`[Facebook] 正在讀取相片詳情: ${link}`);
                 const newPage = await browser.newPage();
                 await newPage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
@@ -147,13 +142,19 @@ async function fetchFacebookImages(source) {
                             src.includes('data:image');
                     };
 
-                    // 優先嘗試 meta tag (og:image)
+                    // 1. 優先嘗試 meta tag (og:image)
                     const metaImg = document.querySelector('meta[property="og:image"]');
                     if (metaImg && metaImg.content && !isInvalid(metaImg.content)) {
                         return metaImg.content;
                     }
 
-                    // 其次找最大的 img，且必須是 scontent 開頭 (內容圖片)
+                    // 2. 嘗試 twitter:image
+                    const twitterImg = document.querySelector('meta[name="twitter:image"]');
+                    if (twitterImg && twitterImg.content && !isInvalid(twitterImg.content)) {
+                        return twitterImg.content;
+                    }
+
+                    // 3. 找最大的 img
                     const images = Array.from(document.querySelectorAll('img'));
                     let maxArea = 0;
                     let bestImg = null;
@@ -162,11 +163,9 @@ async function fetchFacebookImages(source) {
                         const src = img.src;
                         if (isInvalid(src)) return;
 
-                        // 必須包含 scontent 或 fbcdn，確保是內容圖片
-                        if (!src.includes('scontent') && !src.includes('fbcdn')) return;
-
                         const area = img.naturalWidth * img.naturalHeight;
                         // 排除太小的圖 (可能是頭像或裝飾)
+                        // 放寬標準，只要夠大且不是無效網域即可
                         if (area > 10000 && area > maxArea) {
                             maxArea = area;
                             bestImg = src;

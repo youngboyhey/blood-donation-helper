@@ -98,17 +98,25 @@ async function fetchFacebookImages(source) {
         }
 
         // 滾動頁面以加載
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-        await new Promise(r => setTimeout(r, 2000));
+        console.log('[Facebook] 滾動頁面載入更多貼文...');
+        for (let i = 0; i < 5; i++) { // 增加滾動次數
+            await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+            await new Promise(r => setTimeout(r, 2000));
+        }
 
         // 1. 抓取相片連結 (從 /photos 頁面)
         const photoLinks = await page.evaluate(() => {
             const links = Array.from(document.querySelectorAll('a'));
             return links
                 .map(a => a.href)
-                .filter(href => href.includes('/photo') || href.includes('/photos/'))
-                .filter(href => !href.includes('album')) // 盡量避開相簿連結，找單張相片
-                .slice(0, 6); // 只抓最新的 6 張
+                .filter(href => {
+                    // 嚴格過濾：只保留單張相片的 Permalink
+                    // 排除 /photos, /photos_by, /albums 等導航連結
+                    const isPhoto = href.includes('/photo') || href.includes('/photos/');
+                    const isNav = href.endsWith('/photos') || href.endsWith('/photos/') || href.includes('/photos_by') || href.includes('/albums');
+                    return isPhoto && !isNav;
+                })
+                .slice(0, 20); // 增加抓取上限至 20 張
         });
 
         console.log(`[Facebook] 找到 ${photoLinks.length} 個相片連結，準備進入詳情頁抓取大圖...`);
@@ -118,6 +126,11 @@ async function fetchFacebookImages(source) {
         // 2. 逐一進入詳情頁抓大圖
         for (const link of photoLinks) {
             try {
+                // 檢查是否已經有快取 (在 updateEvents 中處理，這裡先抓 URL)
+                // 但為了獲取大圖 URL，我們還是得進去抓。
+                // 優化：如果我們能從列表頁就拿到大圖 ID 或 URL 最好，但 FB 結構複雜。
+                // 這裡維持原樣，先抓到大圖 URL，再由外層決定是否分析。
+
                 console.log(`[Facebook] 正在讀取相片詳情: ${link}`);
                 const newPage = await browser.newPage();
                 await newPage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
@@ -145,7 +158,11 @@ async function fetchFacebookImages(source) {
 
                 if (imgUrl) {
                     console.log(`[Facebook] 找到大圖: ${imgUrl.substring(0, 50)}...`);
-                    highResImages.push(imgUrl);
+                    highResImages.push({
+                        type: 'image',
+                        url: imgUrl,
+                        postUrl: link // 保留原始貼文連結
+                    });
                 }
                 await newPage.close();
                 // 避免請求過快
@@ -157,7 +174,16 @@ async function fetchFacebookImages(source) {
         }
 
         await browser.close();
-        return [...new Set(highResImages)];
+        // 去重
+        const uniqueImages = [];
+        const seenUrls = new Set();
+        for (const img of highResImages) {
+            if (!seenUrls.has(img.url)) {
+                seenUrls.add(img.url);
+                uniqueImages.push(img);
+            }
+        }
+        return uniqueImages;
 
     } catch (error) {
         console.error(`[Facebook] 抓取失敗 ${source.name}:`, error);
@@ -361,6 +387,28 @@ async function updateEvents() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // 1. 載入現有資料以建立快取
+    const outputPath = path.join(__dirname, '../src/data/events.json');
+    let existingEvents = [];
+    const cachedEventsMap = new Map(); // Key: posterUrl, Value: eventData
+
+    if (fs.existsSync(outputPath)) {
+        try {
+            const rawData = fs.readFileSync(outputPath, 'utf-8');
+            existingEvents = JSON.parse(rawData);
+            console.log(`[Cache] 載入 ${existingEvents.length} 筆現有活動資料`);
+
+            existingEvents.forEach(event => {
+                if (event.posterUrl) {
+                    cachedEventsMap.set(event.posterUrl, event);
+                }
+                // 也可以考慮用 gift.image 當 key，視情況而定
+            });
+        } catch (e) {
+            console.error("[Cache] 讀取現有資料失敗:", e);
+        }
+    }
+
     for (const source of SOURCES) {
         console.log(`\n=== 開始處理來源: ${source.name} ===`);
         let items = [];
@@ -368,13 +416,33 @@ async function updateEvents() {
         if (source.type === 'web') {
             items = await fetchWebImages(source);
         } else if (source.type === 'fb') {
-            const imageUrls = await fetchFacebookImages(source);
-            items = imageUrls.map(url => ({ type: 'image', url }));
+            // FB 回傳的是物件陣列 { type, url, postUrl }
+            items = await fetchFacebookImages(source);
         }
 
         console.log(`[${source.name}] 準備分析 ${items.length} 筆項目...`);
 
         for (const item of items) {
+            // 2. 檢查快取
+            if (item.type === 'image' && cachedEventsMap.has(item.url)) {
+                const cachedEvent = cachedEventsMap.get(item.url);
+
+                // 檢查快取活動是否過期
+                if (cachedEvent.date) {
+                    const eventDate = new Date(cachedEvent.date);
+                    if (eventDate >= today) {
+                        console.log(`[Cache] 命中快取，跳過 AI 分析: ${cachedEvent.title} (${cachedEvent.date})`);
+                        allNewEvents.push(cachedEvent);
+                        continue;
+                    } else {
+                        console.log(`[Cache] 快取資料已過期，忽略: ${cachedEvent.title}`);
+                        // 過期就不加入 allNewEvents，也不重新分析 (因為圖是一樣的，代表活動就是過期的)
+                        continue;
+                    }
+                }
+            }
+
+            // 3. 無快取，執行 AI 分析
             const eventDataList = await analyzeContentWithAI(item, source);
 
             if (eventDataList && eventDataList.length > 0) {
@@ -396,7 +464,7 @@ async function updateEvents() {
                             eventData.gift.image = item.url;
                         }
                     }
-                    eventData.sourceUrl = item.url || source.url;
+                    eventData.sourceUrl = item.postUrl || item.url || source.url;
                     eventData.id = Date.now() + Math.random();
 
                     if (eventData.date && eventData.location) {
@@ -409,14 +477,26 @@ async function updateEvents() {
     }
 
     if (allNewEvents.length > 0) {
-        const outputPath = path.join(__dirname, '../src/data/events.json');
         const dir = path.dirname(outputPath);
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
 
-        fs.writeFileSync(outputPath, JSON.stringify(allNewEvents, null, 2));
-        console.log(`\n總共成功更新 ${allNewEvents.length} 筆活動資料！`);
+        // 去重：避免同一活動被重複加入 (例如快取命中一次，又被某個邏輯加入一次)
+        // 這裡簡單用 posterUrl + date 做去重
+        const uniqueEvents = [];
+        const seenKeys = new Set();
+
+        for (const evt of allNewEvents) {
+            const key = `${evt.posterUrl}-${evt.date}`;
+            if (!seenKeys.has(key)) {
+                seenKeys.add(key);
+                uniqueEvents.push(evt);
+            }
+        }
+
+        fs.writeFileSync(outputPath, JSON.stringify(uniqueEvents, null, 2));
+        console.log(`\n總共成功更新 ${uniqueEvents.length} 筆活動資料！`);
     } else {
         console.log('\n未提取到任何有效活動資料。');
     }

@@ -14,12 +14,20 @@ const TARGET_URL = 'https://www.tp.blood.org.tw/xmdoc?xsmsid=0P06264696546732328
 const BASE_URL = 'https://www.tp.blood.org.tw';
 
 async function fetchHTML(url) {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        }
+    });
     return await response.text();
 }
 
 async function fetchImageAsBase64(url) {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        }
+    });
     const arrayBuffer = await response.arrayBuffer();
     return Buffer.from(arrayBuffer).toString('base64');
 }
@@ -27,6 +35,7 @@ async function fetchImageAsBase64(url) {
 async function getLatestEventPage() {
     console.log(`正在抓取列表頁面: ${TARGET_URL}`);
     const html = await fetchHTML(TARGET_URL);
+    console.log(`取得 HTML 長度: ${html.length}`);
     const $ = cheerio.load(html);
 
     // 尋找包含 "假日捐血活動" 的最新連結

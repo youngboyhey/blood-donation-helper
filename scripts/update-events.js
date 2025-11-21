@@ -53,7 +53,7 @@ const fetchNewEvents = async () => {
         { time: "09:00-17:00", location: "羅東捐血站", gift: "紀念傘", date: "2025-11-23" },
         { time: "09:00-17:00", location: "花蓮捐血站", gift: "紀念傘", date: "2025-11-23" },
         { time: "10:00-18:00", location: "新光站前", gift: "紀念傘", date: "2025-11-23" },
-        { time: "10:00-18:00", location: "忠孝號", gift: "紀念傘", date: "2025-11-23" },
+        { time: "11:00-19:00", location: "忠孝號 (東區地下街9號出口)", gift: "環保購物袋/飲料提袋", date: "2025-11-23" },
         { time: "10:00-18:00", location: "峨嵋號", gift: "紀念傘", date: "2025-11-23" },
         { time: "10:00-18:00", location: "大安號", gift: "紀念傘", date: "2025-11-23" },
         { time: "10:00-18:00", location: "仁愛號", gift: "紀念傘", date: "2025-11-23" },

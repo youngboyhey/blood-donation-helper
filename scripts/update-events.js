@@ -177,8 +177,29 @@ async function fetchWebImages(source) {
             }
         });
 
+        // 如果找不到圖片，嘗試提取純文字內容 (針對新竹捐血中心等純文字公告)
+        if (images.length === 0) {
+            console.log(`[Web] 找不到圖片，嘗試提取文字內容...`);
+            // 移除 script, style 等干擾元素
+            $detail('script').remove();
+            $detail('style').remove();
+            $detail('nav').remove();
+            $detail('header').remove();
+            $detail('footer').remove();
+
+            // 提取主要內容區塊 (通常是 article 或 main，或直接 body)
+            // 這裡簡單提取 body text，讓 AI 去過濾
+            const textContent = $detail('body').text().replace(/\s+/g, ' ').trim();
+
+            // 簡單判斷內容長度，避免提取到空頁面
+            if (textContent.length > 100) {
+                console.log(`[Web] 提取到文字內容 (${textContent.length} 字)`);
+                return [{ type: 'text', content: textContent, url: fullUrl }];
+            }
+        }
+
         console.log(`[Web] 找到 ${images.length} 張圖片`);
-        return [...new Set(images)];
+        return [...new Set(images)].map(url => ({ type: 'image', url }));
 
     } catch (error) {
         console.error(`[Web] 抓取失敗 ${source.name}:`, error);
@@ -202,19 +223,25 @@ async function fetchImageAsBase64(url) {
     }
 }
 
-async function analyzeImageWithAI(imageUrl, sourceContext) {
-    console.log(`[AI] 正在分析圖片 (${sourceContext.city}): ${imageUrl.substring(0, 50)}...`);
+async function analyzeContentWithAI(item, sourceContext) {
+    const isImage = item.type === 'image';
+    const contentPreview = isImage ? item.url : item.content.substring(0, 50);
+    console.log(`[AI] 正在分析${isImage ? '圖片' : '文字'} (${sourceContext.city}): ${contentPreview}...`);
 
     try {
-        const base64Image = await fetchImageAsBase64(imageUrl);
-        if (!base64Image) return null;
-
         const model = genAI.getGenerativeModel({
             model: "gemini-2.0-flash",
             generationConfig: { responseMimeType: "application/json" }
         });
 
-        const prompt = `請分析這張捐血活動海報。
+        let prompt = '';
+        let parts = [];
+
+        if (isImage) {
+            const base64Image = await fetchImageAsBase64(item.url);
+            if (!base64Image) return null;
+
+            prompt = `請分析這張捐血活動海報。
 來源脈絡：這張海報來自「${sourceContext.name}」，地點通常位於「${sourceContext.city}」。
 
 嚴格區分：這張圖片是「單一活動海報」還是「多地點總表」？
@@ -238,8 +265,41 @@ async function analyzeImageWithAI(imageUrl, sourceContext) {
   "tags": ["AI辨識", "自動更新", "${sourceContext.city}"]
 }
 `;
+            parts = [prompt, { inlineData: { data: base64Image, mimeType: "image/jpeg" } }];
+        } else {
+            // 文字分析模式
+            prompt = `請分析以下捐血活動公告文字。
+來源脈絡：來自「${sourceContext.name}」，地點通常位於「${sourceContext.city}」。
 
-        const result = await model.generateContent([prompt, { inlineData: { data: base64Image, mimeType: "image/jpeg" } }]);
+請從文字中提取「單一」或「多個」捐血活動資訊。
+注意：如果文字包含多個不同時間地點的活動，請回傳一個 JSON 陣列 (Array of Objects)。
+如果只有一個活動，也請回傳包含一個物件的陣列。
+
+文字內容：
+${item.content}
+
+請以 JSON 陣列格式回傳每個活動的以下欄位 (若無資料請填 null):
+[
+  {
+    "title": "活動標題 (若無特定標題，可用 '捐血活動' + 日期)",
+    "date": "日期 (YYYY-MM-DD)",
+    "time": "時間 (HH:MM-HH:MM)",
+    "location": "地點 (請盡量完整)",
+    "city": "縣市 (預設: ${sourceContext.city})",
+    "district": "行政區 (例如: 大安區, 板橋區)",
+    "organizer": "主辦單位 (預設: ${sourceContext.name})",
+    "gift": {
+      "name": "贈品名稱 (若文中未提及具體贈品，請填 null)",
+      "image": null
+    },
+    "tags": ["AI辨識", "自動更新", "${sourceContext.city}"]
+  }
+]
+`;
+            parts = [prompt];
+        }
+
+        const result = await model.generateContent(parts);
         const response = await result.response;
         const text = response.text();
         const jsonStr = text.replace(/```json/gi, '').replace(/```/g, '').trim();
@@ -247,7 +307,9 @@ async function analyzeImageWithAI(imageUrl, sourceContext) {
         if (jsonStr === 'null') return null;
 
         try {
-            return JSON.parse(jsonStr);
+            const parsed = JSON.parse(jsonStr);
+            // 統一回傳陣列
+            return Array.isArray(parsed) ? parsed : [parsed];
         } catch (e) {
             console.error("JSON 解析失敗:", text);
             return null;
@@ -264,27 +326,40 @@ async function updateEvents() {
 
     for (const source of SOURCES) {
         console.log(`\n=== 開始處理來源: ${source.name} ===`);
-        let images = [];
+        let items = [];
 
         if (source.type === 'web') {
-            images = await fetchWebImages(source);
+            items = await fetchWebImages(source);
         } else if (source.type === 'fb') {
-            images = await fetchFacebookImages(source);
+            // FB 仍然只抓圖片，但需包裝成統一格式
+            const imageUrls = await fetchFacebookImages(source);
+            items = imageUrls.map(url => ({ type: 'image', url }));
         }
 
-        console.log(`[${source.name}] 準備分析 ${images.length} 張圖片...`);
+        console.log(`[${source.name}] 準備分析 ${items.length} 筆項目...`);
 
-        for (const img of images) {
-            const eventData = await analyzeImageWithAI(img, source);
-            if (eventData) {
-                eventData.posterUrl = img;
-                eventData.sourceUrl = source.url;
-                if (eventData.gift) {
-                    eventData.gift.image = img;
+        for (const item of items) {
+            const eventDataList = await analyzeContentWithAI(item, source);
+
+            if (eventDataList && eventDataList.length > 0) {
+                for (const eventData of eventDataList) {
+                    if (!eventData) continue;
+
+                    if (item.type === 'image') {
+                        eventData.posterUrl = item.url;
+                        if (eventData.gift) {
+                            eventData.gift.image = item.url;
+                        }
+                    }
+                    eventData.sourceUrl = item.url || source.url;
+                    eventData.id = Date.now() + Math.random();
+
+                    // 簡單過濾無效資料
+                    if (eventData.date && eventData.location) {
+                        allNewEvents.push(eventData);
+                        console.log(`[成功] 提取活動: ${eventData.title} (${eventData.location})`);
+                    }
                 }
-                eventData.id = Date.now() + Math.random();
-                allNewEvents.push(eventData);
-                console.log(`[成功] 提取活動: ${eventData.title} (${eventData.location})`);
             }
         }
     }

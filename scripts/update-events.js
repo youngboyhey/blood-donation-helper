@@ -116,7 +116,10 @@ async function analyzeImageWithAI(imageUrl) {
         const base64Image = await fetchImageAsBase64(imageUrl);
         if (!base64Image) return null;
 
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+        const model = genAI.getGenerativeModel({
+            model: "gemini-2.0-flash",
+            generationConfig: { responseMimeType: "application/json" }
+        });
 
         const prompt = `請分析這張捐血活動海報。
 嚴格區分：這張圖片是「單一活動海報」還是「多地點總表」？
@@ -144,8 +147,8 @@ async function analyzeImageWithAI(imageUrl) {
         const response = await result.response;
         const text = response.text();
 
-        // 清除 markdown 程式碼區塊標記 (如果有的話)
-        const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        // 清除 markdown 程式碼區塊標記 (忽略大小寫)
+        const jsonStr = text.replace(/```json/gi, '').replace(/```/g, '').trim();
 
         if (jsonStr === 'null') return null;
 

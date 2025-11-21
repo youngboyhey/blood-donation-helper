@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import SearchBar from '../components/SearchBar';
 import EventList from '../components/EventList';
-import { mockEvents } from '../data/mockEvents';
+import eventsData from '../data/events.json';
 import styles from './Home.module.css';
 import Modal from '../components/Modal';
 
 const Home = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredEvents, setFilteredEvents] = useState(mockEvents);
+    const [filteredEvents, setFilteredEvents] = useState(eventsData);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
     useEffect(() => {
-        const results = mockEvents.filter(event => {
+        const results = eventsData.filter(event => {
             const term = searchTerm.toLowerCase();
             return (
                 event.title.toLowerCase().includes(term) ||

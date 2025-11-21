@@ -78,7 +78,7 @@ const Home = () => {
 
             <main className={styles.main}>
                 <div className={styles.listHeader}>
-                    <h2>近期活動</h2>
+                    <h2>假日捐血活動</h2>
                     <span className={styles.count}>共 {filteredEvents.length} 場活動</span>
                 </div>
                 <EventList events={filteredEvents} onEventClick={setSelectedEvent} />

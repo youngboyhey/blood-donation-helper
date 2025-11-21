@@ -20,6 +20,51 @@
     margin-bottom: var(--spacing-2);
 }
 
+.filterSection {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    margin-bottom: var(--spacing-6);
+    gap: var(--spacing-4);
+}
+
+.filters {
+    grid-column: 2;
+    display: flex;
+    gap: var(--spacing-3);
+}
+
+/* Target the SearchBar component wrapper if possible, or assume it's the next child */
+.filterSection> :last-child {
+    grid-column: 3;
+    justify-self: end;
+}
+
+.select {
+    padding: var(--spacing-2) var(--spacing-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    background-color: var(--color-surface);
+    color: var(--color-text-main);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    min-width: 120px;
+}
+
+.select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+}
+
+.select:disabled {
+    background-color: var(--color-background);
+    color: var(--color-text-secondary);
+    cursor: not-allowed;
+}
+
 .listHeader {
     display: flex;
     justify-content: space-between;
@@ -37,4 +82,23 @@
 .count {
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
+}
+
+@media (max-width: 768px) {
+    .filterSection {
+        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters {
+        grid-column: auto;
+        justify-content: center;
+    }
+
+    .filterSection> :last-child {
+        grid-column: auto;
+        justify-self: stretch;
+    }
 }

@@ -138,19 +138,38 @@ async function fetchFacebookImages(source) {
 
                 // 嘗試抓取大圖
                 const imgUrl = await newPage.evaluate(() => {
-                    // 優先嘗試 meta tag
-                    const metaImg = document.querySelector('meta[property="og:image"]');
-                    if (metaImg) return metaImg.content;
+                    const isInvalid = (src) => {
+                        return !src ||
+                            src.includes('static.xx.fbcdn.net') ||
+                            src.includes('rsrc.php') ||
+                            src.includes('emoji') ||
+                            src.includes('icon') ||
+                            src.includes('data:image');
+                    };
 
-                    // 其次找最大的 img
+                    // 優先嘗試 meta tag (og:image)
+                    const metaImg = document.querySelector('meta[property="og:image"]');
+                    if (metaImg && metaImg.content && !isInvalid(metaImg.content)) {
+                        return metaImg.content;
+                    }
+
+                    // 其次找最大的 img，且必須是 scontent 開頭 (內容圖片)
                     const images = Array.from(document.querySelectorAll('img'));
                     let maxArea = 0;
                     let bestImg = null;
+
                     images.forEach(img => {
+                        const src = img.src;
+                        if (isInvalid(src)) return;
+
+                        // 必須包含 scontent 或 fbcdn，確保是內容圖片
+                        if (!src.includes('scontent') && !src.includes('fbcdn')) return;
+
                         const area = img.naturalWidth * img.naturalHeight;
-                        if (area > maxArea && img.src.includes('https')) {
+                        // 排除太小的圖 (可能是頭像或裝飾)
+                        if (area > 10000 && area > maxArea) {
                             maxArea = area;
-                            bestImg = img.src;
+                            bestImg = src;
                         }
                     });
                     return bestImg;

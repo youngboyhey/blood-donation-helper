@@ -1,6 +1,8 @@
 name: Scrape and Update Data
 
 on:
+  push:
+    branches: [ "main" ]
   schedule:
     - cron: '0 1 * * *' # 每天凌晨 1 點執行 (UTC) -> 台灣時間早上 9 點
   workflow_dispatch: # 允許手動觸發

@@ -116,7 +116,7 @@ async function analyzeImageWithAI(imageUrl) {
         const base64Image = await fetchImageAsBase64(imageUrl);
         if (!base64Image) return null;
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-001" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
         const prompt = `請分析這張捐血活動海報。
 嚴格區分：這張圖片是「單一活動海報」還是「多地點總表」？

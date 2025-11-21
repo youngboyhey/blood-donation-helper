@@ -30,13 +30,31 @@ async function getLatestEventPage() {
     const $ = cheerio.load(html);
 
     // 尋找包含 "假日捐血活動" 的最新連結
-    const link = $('a:contains("假日捐血活動")').first();
-    if (link.length > 0) {
-        const href = link.attr('href');
-        const title = link.text().trim();
+    // 改用遍歷方式以避免 cheerio :contains 選擇器的潛在問題
+    let targetLink = null;
+    const links = $('a');
+
+    links.each((i, el) => {
+        const text = $(el).text().trim();
+        if (text.includes('假日捐血活動')) {
+            targetLink = $(el);
+            return false; // break loop
+        }
+    });
+
+    if (targetLink) {
+        const href = targetLink.attr('href');
+        const title = targetLink.text().trim();
         console.log(`找到最新活動頁面: ${title}`);
         return href.startsWith('http') ? href : BASE_URL + href;
     }
+
+    // Debug: 如果找不到，列出前 10 個連結標題以供除錯
+    console.log('找不到目標連結，列出頁面上的前 10 個連結標題:');
+    links.slice(0, 10).each((i, el) => {
+        console.log(`- ${$(el).text().trim()}`);
+    });
+
     throw new Error('找不到假日捐血活動頁面');
 }
 

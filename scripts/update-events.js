@@ -120,12 +120,10 @@ async function fetchFacebookImages(source) {
             // 忽略
         }
 
-        // 滾動頁面以加載
-        console.log('[Facebook] 滾動頁面載入更多貼文...');
-        for (let i = 0; i < 5; i++) { // 增加滾動次數
-            await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-            await new Promise(r => setTimeout(r, 2000));
-        }
+        // 滾動頁面以加載 (只滾動 1 次以確保載入足夠貼文，但不載入過多舊貼文)
+        console.log('[Facebook] 滾動頁面 1 次...');
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await new Promise(r => setTimeout(r, 2000));
 
         // 1. 抓取相片連結 (從 /photos 頁面)
         const photoLinks = await page.evaluate(() => {
@@ -139,121 +137,72 @@ async function fetchFacebookImages(source) {
                     const isNav = href.endsWith('/photos') || href.endsWith('/photos/') || href.includes('/photos_by') || href.includes('/albums');
                     return isPhoto && !isNav;
                 })
-                .slice(0, 20); // 增加抓取上限至 20 張
+                .slice(0, 20); // 抓取前 20 張
         });
 
         console.log(`[Facebook] 找到 ${photoLinks.length} 個相片連結，準備進入詳情頁抓取大圖...`);
 
         const highResImages = [];
 
-        // 2. 逐一進入詳情頁抓大圖 (Hybrid: mbasic -> www fallback)
+        // 2. 逐一進入詳情頁抓大圖 (只使用 www)
         for (const link of photoLinks) {
             try {
                 let imgUrl = null;
 
-                // --- 嘗試 1: mbasic ---
+                console.log(`[Facebook] 進入詳情頁: ${link}`);
+                const pageDesktop = await browser.newPage();
+
+                if (c_user && xs) {
+                    await pageDesktop.setCookie(
+                        { name: 'c_user', value: c_user, domain: '.facebook.com' },
+                        { name: 'xs', value: xs, domain: '.facebook.com' }
+                    );
+                }
+
+                await pageDesktop.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
                 try {
-                    const mbasicLink = link.replace('www.facebook.com', 'mbasic.facebook.com');
-                    console.log(`[Facebook] 嘗試 mbasic: ${mbasicLink}`);
+                    await pageDesktop.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
 
-                    const pageMobile = await browser.newPage();
+                    imgUrl = await pageDesktop.evaluate(() => {
+                        const isInvalid = (src) => {
+                            return !src ||
+                                src.includes('static.xx.fbcdn.net') ||
+                                src.includes('rsrc.php') ||
+                                src.includes('emoji') ||
+                                src.includes('icon') ||
+                                src.includes('data:image');
+                        };
 
-                    // 確保新頁面也有 Cookies
-                    if (c_user && xs) {
-                        await pageMobile.setCookie(
-                            { name: 'c_user', value: c_user, domain: '.facebook.com' },
-                            { name: 'xs', value: xs, domain: '.facebook.com' }
-                        );
-                    }
+                        // 優先嘗試 meta tag
+                        const metaImg = document.querySelector('meta[property="og:image"]');
+                        if (metaImg && metaImg.content && !isInvalid(metaImg.content)) return metaImg.content;
 
-                    await pageMobile.setUserAgent('Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36');
-                    await pageMobile.goto(mbasicLink, { waitUntil: 'networkidle2', timeout: 20000 });
+                        const twitterImg = document.querySelector('meta[name="twitter:image"]');
+                        if (twitterImg && twitterImg.content && !isInvalid(twitterImg.content)) return twitterImg.content;
 
-                    imgUrl = await pageMobile.evaluate(() => {
-                        // 1. 找 "View full size" 連結
-                        const fullSizeLink = document.querySelector('a[href*="view_full_size"]');
-                        if (fullSizeLink) return fullSizeLink.href;
-
-                        // 2. 找內容圖片 (scontent/fbcdn)
+                        // 找最大圖
                         const images = Array.from(document.querySelectorAll('img'));
                         let maxArea = 0;
                         let bestImg = null;
 
                         images.forEach(img => {
                             const src = img.src;
-                            if (src.includes('static.xx') || src.includes('emoji') || src.includes('icon') || src.includes('rsrc.php')) return;
-                            if (!src.includes('scontent') && !src.includes('fbcdn')) return;
+                            if (isInvalid(src)) return;
 
+                            // 寬鬆檢查：只要夠大
                             const area = img.naturalWidth * img.naturalHeight;
-                            if (area > 2000 && area > maxArea) { // 降低門檻
+                            if (area > 10000 && area > maxArea) {
                                 maxArea = area;
                                 bestImg = src;
                             }
                         });
                         return bestImg;
                     });
-                    await pageMobile.close();
                 } catch (e) {
-                    console.log(`[Facebook] mbasic 失敗: ${e.message}`);
+                    console.log(`[Facebook] www 失敗: ${e.message}`);
                 }
-
-                // --- 嘗試 2: www (如果 mbasic 失敗) ---
-                if (!imgUrl) {
-                    console.log(`[Facebook] mbasic 未找到，嘗試 www: ${link}`);
-                    const pageDesktop = await browser.newPage();
-
-                    if (c_user && xs) {
-                        await pageDesktop.setCookie(
-                            { name: 'c_user', value: c_user, domain: '.facebook.com' },
-                            { name: 'xs', value: xs, domain: '.facebook.com' }
-                        );
-                    }
-
-                    await pageDesktop.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-
-                    try {
-                        await pageDesktop.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
-
-                        imgUrl = await pageDesktop.evaluate(() => {
-                            const isInvalid = (src) => {
-                                return !src ||
-                                    src.includes('static.xx.fbcdn.net') ||
-                                    src.includes('rsrc.php') ||
-                                    src.includes('emoji') ||
-                                    src.includes('icon') ||
-                                    src.includes('data:image');
-                            };
-
-                            // 優先嘗試 meta tag
-                            const metaImg = document.querySelector('meta[property="og:image"]');
-                            if (metaImg && metaImg.content && !isInvalid(metaImg.content)) return metaImg.content;
-
-                            const twitterImg = document.querySelector('meta[name="twitter:image"]');
-                            if (twitterImg && twitterImg.content && !isInvalid(twitterImg.content)) return twitterImg.content;
-
-                            // 找最大圖
-                            const images = Array.from(document.querySelectorAll('img'));
-                            let maxArea = 0;
-                            let bestImg = null;
-
-                            images.forEach(img => {
-                                const src = img.src;
-                                if (isInvalid(src)) return;
-
-                                // 寬鬆檢查：只要夠大
-                                const area = img.naturalWidth * img.naturalHeight;
-                                if (area > 10000 && area > maxArea) {
-                                    maxArea = area;
-                                    bestImg = src;
-                                }
-                            });
-                            return bestImg;
-                        });
-                    } catch (e) {
-                        console.log(`[Facebook] www 失敗: ${e.message}`);
-                    }
-                    await pageDesktop.close();
-                }
+                await pageDesktop.close();
 
                 if (imgUrl) {
                     console.log(`[Facebook] 成功抓取圖片: ${imgUrl.substring(0, 50)}...`);

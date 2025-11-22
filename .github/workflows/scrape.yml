@@ -34,6 +34,8 @@ jobs:
       - name: Run Scraper Script
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          FB_COOKIE_C_USER: ${{ secrets.FB_COOKIE_C_USER }}
+          FB_COOKIE_XS: ${{ secrets.FB_COOKIE_XS }}
         run: node scripts/update-events.js
 
       - name: Commit and Push changes

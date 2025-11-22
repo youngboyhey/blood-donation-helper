@@ -83,12 +83,35 @@ async function fetchFacebookImages(source) {
     });
     const page = await browser.newPage();
     await page.setViewport({ width: 1280, height: 800 });
+
+    // 設定 Cookies (若有提供)
+    const c_user = process.env.FB_COOKIE_C_USER;
+    const xs = process.env.FB_COOKIE_XS;
+
+    if (c_user && xs) {
+        console.log('[Facebook] 檢測到 Cookies，嘗試模擬登入...');
+        await page.setCookie(
+            { name: 'c_user', value: c_user, domain: '.facebook.com' },
+            { name: 'xs', value: xs, domain: '.facebook.com' }
+        );
+    } else {
+        console.log('[Facebook] 未檢測到 Cookies，將以訪客身份瀏覽 (可能受限)');
+    }
+
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
     try {
         await page.goto(source.url, { waitUntil: 'networkidle2', timeout: 60000 });
 
-        // 嘗試關閉登入彈窗
+        // 檢查是否被導向登入頁 (簡單檢查)
+        const url = page.url();
+        if (url.includes('login') || url.includes('checkpoint')) {
+            console.warn('[Facebook] 警告: 被導向登入頁面，Cookies 可能無效或過期。');
+        } else if (c_user && xs) {
+            console.log('[Facebook] 成功以登入狀態進入頁面 (未被導向登入頁)');
+        }
+
+        // 嘗試關閉登入彈窗 (如果是訪客模式)
         try {
             const closeButtonSelector = 'div[aria-label="Close"], div[aria-label="關閉"]';
             await page.waitForSelector(closeButtonSelector, { timeout: 5000 });
@@ -134,6 +157,15 @@ async function fetchFacebookImages(source) {
                     console.log(`[Facebook] 嘗試 mbasic: ${mbasicLink}`);
 
                     const pageMobile = await browser.newPage();
+
+                    // 確保新頁面也有 Cookies
+                    if (c_user && xs) {
+                        await pageMobile.setCookie(
+                            { name: 'c_user', value: c_user, domain: '.facebook.com' },
+                            { name: 'xs', value: xs, domain: '.facebook.com' }
+                        );
+                    }
+
                     await pageMobile.setUserAgent('Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36');
                     await pageMobile.goto(mbasicLink, { waitUntil: 'networkidle2', timeout: 20000 });
 
@@ -169,6 +201,14 @@ async function fetchFacebookImages(source) {
                 if (!imgUrl) {
                     console.log(`[Facebook] mbasic 未找到，嘗試 www: ${link}`);
                     const pageDesktop = await browser.newPage();
+
+                    if (c_user && xs) {
+                        await pageDesktop.setCookie(
+                            { name: 'c_user', value: c_user, domain: '.facebook.com' },
+                            { name: 'xs', value: xs, domain: '.facebook.com' }
+                        );
+                    }
+
                     await pageDesktop.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
                     try {

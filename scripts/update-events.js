@@ -84,6 +84,9 @@ async function fetchFacebookImages(source) {
     const page = await browser.newPage();
     await page.setViewport({ width: 1280, height: 800 });
 
+    // 啟用瀏覽器 console log 轉發 (用於除錯)
+    page.on('console', msg => console.log(`[Browser] ${msg.text()}`));
+
     // 設定 Cookies (若有提供)
     const c_user = process.env.FB_COOKIE_C_USER;
     const xs = process.env.FB_COOKIE_XS;
@@ -123,7 +126,7 @@ async function fetchFacebookImages(source) {
         // 滾動頁面以加載 (只滾動 1 次以確保載入足夠貼文，但不載入過多舊貼文)
         console.log('[Facebook] 滾動頁面 1 次...');
         await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-        await new Promise(r => setTimeout(r, 2000));
+        await new Promise(r => setTimeout(r, 3000)); // 增加等待時間
 
         // 1. 抓取相片連結 (從 /photos 頁面)
         const photoLinks = await page.evaluate(() => {
@@ -133,8 +136,9 @@ async function fetchFacebookImages(source) {
                 .filter(href => {
                     // 嚴格過濾：只保留單張相片的 Permalink
                     // 排除 /photos, /photos_by, /albums 等導航連結
-                    const isPhoto = href.includes('/photo') || href.includes('/photos/');
-                    const isNav = href.endsWith('/photos') || href.endsWith('/photos/') || href.includes('/photos_by') || href.includes('/albums');
+                    if (!href) return false;
+                    const isPhoto = href.includes('/photo.php') || href.includes('/photos/') || href.includes('/photo/');
+                    const isNav = href.includes('/albums') || href.includes('/photos_by') || href.endsWith('/photos') || href.endsWith('/photos/');
                     return isPhoto && !isNav;
                 })
                 .slice(0, 20); // 抓取前 20 張
@@ -152,6 +156,9 @@ async function fetchFacebookImages(source) {
                 console.log(`[Facebook] 進入詳情頁: ${link}`);
                 const pageDesktop = await browser.newPage();
 
+                // 啟用新頁面的 console log
+                pageDesktop.on('console', msg => console.log(`[Page] ${msg.text()}`));
+
                 if (c_user && xs) {
                     await pageDesktop.setCookie(
                         { name: 'c_user', value: c_user, domain: '.facebook.com' },
@@ -164,24 +171,45 @@ async function fetchFacebookImages(source) {
                 try {
                     await pageDesktop.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
 
+                    // 等待圖片元素出現
+                    try {
+                        await pageDesktop.waitForSelector('img', { timeout: 5000 });
+                    } catch (e) { console.log('[Facebook] 等待 img 逾時'); }
+
                     imgUrl = await pageDesktop.evaluate(() => {
                         const isInvalid = (src) => {
-                            return !src ||
+                            const invalid = !src ||
                                 src.includes('static.xx.fbcdn.net') ||
                                 src.includes('rsrc.php') ||
                                 src.includes('emoji') ||
                                 src.includes('icon') ||
                                 src.includes('data:image');
+                            if (invalid && src) console.log(`[Filter] 過濾無效圖片: ${src.substring(0, 50)}...`);
+                            return invalid;
                         };
 
-                        // 優先嘗試 meta tag
+                        // 1. 優先嘗試 Spotlight 圖片 (Facebook 相片檢視器的主要圖片)
+                        const spotlightImg = document.querySelector('img[data-visualcompletion="media-vc-image"]');
+                        if (spotlightImg && !isInvalid(spotlightImg.src)) {
+                            console.log('[Extract] 找到 Spotlight 圖片');
+                            return spotlightImg.src;
+                        }
+
+                        // 2. 嘗試 meta tag
                         const metaImg = document.querySelector('meta[property="og:image"]');
-                        if (metaImg && metaImg.content && !isInvalid(metaImg.content)) return metaImg.content;
+                        if (metaImg && metaImg.content && !isInvalid(metaImg.content)) {
+                            console.log('[Extract] 找到 og:image');
+                            return metaImg.content;
+                        }
 
                         const twitterImg = document.querySelector('meta[name="twitter:image"]');
-                        if (twitterImg && twitterImg.content && !isInvalid(twitterImg.content)) return twitterImg.content;
+                        if (twitterImg && twitterImg.content && !isInvalid(twitterImg.content)) {
+                            console.log('[Extract] 找到 twitter:image');
+                            return twitterImg.content;
+                        }
 
-                        // 找最大圖
+                        // 3. 找最大圖
+                        console.log('[Extract] 嘗試尋找最大圖...');
                         const images = Array.from(document.querySelectorAll('img'));
                         let maxArea = 0;
                         let bestImg = null;
@@ -190,8 +218,8 @@ async function fetchFacebookImages(source) {
                             const src = img.src;
                             if (isInvalid(src)) return;
 
-                            // 寬鬆檢查：只要夠大
                             const area = img.naturalWidth * img.naturalHeight;
+                            // console.log(`[Check] ${src.substring(0,30)}... Area: ${area}`);
                             if (area > 10000 && area > maxArea) {
                                 maxArea = area;
                                 bestImg = src;

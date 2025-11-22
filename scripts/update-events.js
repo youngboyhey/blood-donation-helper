@@ -76,7 +76,7 @@ async function fetchHTMLWithPuppeteer(url) {
 }
 
 async function fetchFacebookImages(source) {
-    console.log(`[Facebook] 正在抓取粉絲頁相簿: ${source.name} (${source.url}) - v20251122-fix-logging`);
+    console.log(`[Facebook] 正在抓取粉絲頁相簿: ${source.name} (${source.url}) - v20251122-fix-restored`);
     const browser = await puppeteer.launch({
         headless: "new",
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-notifications']
@@ -194,6 +194,131 @@ async function fetchFacebookImages(source) {
                         { name: 'xs', value: xs, domain: '.facebook.com' }
                     );
                 }
+                await pageDesktop.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+                // --- 策略 A: 嘗試 www.facebook.com ---
+                try {
+                    await pageDesktop.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
+                    const currentUrl = pageDesktop.url();
+                    console.log(`[Facebook] Detail Page URL: ${currentUrl}`);
+
+                    if (currentUrl.includes('login') || currentUrl.includes('checkpoint')) {
+                        console.warn(`[Facebook] www 被導向登入頁面，跳過 www 解析，直接嘗試 mbasic...`);
+                        imgUrl = null; // Force fallback
+                    } else {
+                        // 強制等待 5 秒，確保主要內容載入
+                        await new Promise(r => setTimeout(r, 5000));
+
+                        imgUrl = await pageDesktop.evaluate(() => {
+                            const isInvalid = (src) => {
+                                return !src ||
+                                    src.includes('static.xx.fbcdn.net') ||
+                                    src.includes('rsrc.php') ||
+                                    src.includes('emoji') ||
+                                    src.includes('icon') ||
+                                    src.includes('data:image') ||
+                                    src.endsWith('.svg');
+                            };
+
+                            // 1. Meta Tags
+                            const metaImg = document.querySelector('meta[property="og:image"]');
+                            if (metaImg) {
+                                if (!isInvalid(metaImg.content)) {
+                                    console.log(`[Evaluate] Found valid og:image: ${metaImg.content.substring(0, 30)}...`);
+                                    return metaImg.content;
+                                } else {
+                                    console.log(`[Evaluate] og:image invalid: ${metaImg.content.substring(0, 30)}...`);
+                                }
+                            } else {
+                                console.log(`[Evaluate] No og:image found`);
+                            }
+
+                            // 2. Largest Image
+                            const images = Array.from(document.querySelectorAll('img'));
+                            console.log(`[Evaluate] Found ${images.length} images on page`);
+
+                            let maxArea = 0;
+                            let bestImg = null;
+
+                            images.forEach((img, i) => {
+                                if (isInvalid(img.src)) {
+                                    return;
+                                }
+                                const area = img.naturalWidth * img.naturalHeight;
+                                if (area <= 2000) {
+                                    return;
+                                }
+
+                                console.log(`[Evaluate] Img[${i}] candidate: ${area}px, src=${img.src.substring(0, 30)}...`);
+
+                                if (area > maxArea) {
+                                    maxArea = area;
+                                    bestImg = img.src;
+                                }
+                            });
+
+                            if (bestImg) console.log(`[Evaluate] Selected best image: ${bestImg.substring(0, 30)}...`);
+                            else console.log(`[Evaluate] No suitable image found after filtering`);
+
+                            return bestImg;
+                        });
+                    }
+                } catch (e) {
+                    console.log(`[Facebook] www 提取失敗: ${e.message}`);
+                }
+
+                // --- 策略 B: 如果 www 失敗，嘗試 mbasic.facebook.com ---
+                if (!imgUrl) {
+                    console.log(`[Facebook] www 未找到圖片，嘗試 mbasic fallback...`);
+                    try {
+                        const mbasicLink = link.replace('www.facebook.com', 'mbasic.facebook.com');
+
+                        // 切換為 Mobile User Agent
+                        await pageDesktop.setUserAgent('Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36');
+
+                        await pageDesktop.goto(mbasicLink, { waitUntil: 'networkidle2', timeout: 30000 });
+                        const mbasicUrl = pageDesktop.url();
+                        console.log(`[Facebook] mbasic URL: ${mbasicUrl}`);
+
+                        if (mbasicUrl.includes('login') || mbasicUrl.includes('checkpoint')) {
+                            console.warn(`[Facebook] mbasic 也被導向登入頁面，此連結無法抓取。`);
+                        } else {
+                            imgUrl = await pageDesktop.evaluate(() => {
+                                const isInvalid = (src) => {
+                                    return !src ||
+                                        src.includes('static.xx.fbcdn.net') ||
+                                        src.includes('rsrc.php') ||
+                                        src.includes('emoji') ||
+                                        src.includes('icon') ||
+                                        src.includes('data:image') ||
+                                        src.endsWith('.svg');
+                                };
+
+                                // 1. 優先找 "View full size" 連結
+                                const links = Array.from(document.querySelectorAll('a'));
+                                const viewFull = links.find(a => a.innerText.includes('View full size') || a.innerText.includes('檢視完整大小'));
+                                if (viewFull && !isInvalid(viewFull.href)) return viewFull.href;
+
+                                // 2. 找不到連結，直接找最大的 img
+                                const images = Array.from(document.querySelectorAll('img'));
+                                let maxArea = 0;
+                                let bestImg = null;
+                                images.forEach(img => {
+                                    if (isInvalid(img.src)) return;
+                                    const area = img.naturalWidth * img.naturalHeight;
+                                    if (area > 1000 && area > maxArea) {
+                                        maxArea = area;
+                                        bestImg = img.src;
+                                    }
+                                });
+                                return bestImg;
+                            });
+                        }
+                    } catch (e) {
+                        console.log(`[Facebook] mbasic 提取失敗: ${e.message}`);
+                    }
+                }
+
                 await pageDesktop.close();
 
                 if (imgUrl) {

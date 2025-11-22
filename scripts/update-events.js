@@ -175,6 +175,10 @@ async function fetchFacebookImages(source) {
 
         console.log(`[Facebook] 最終找到 ${photoLinks.length} 個相片連結，準備進入詳情頁抓取大圖...`);
 
+        // Capture all cookies from the main page which has a valid session
+        const sessionCookies = await page.cookies();
+        console.log(`[Facebook] 已獲取 ${sessionCookies.length} 個 Session Cookies，將套用於詳情頁面`);
+
         const highResImages = [];
 
         // 2. 逐一進入詳情頁抓大圖
@@ -187,13 +191,11 @@ async function fetchFacebookImages(source) {
                 // ADDED: Console listener for detail page
                 pageDesktop.on('console', msg => console.log(`[Browser Detail] ${msg.text()}`));
 
-                // 設定 Cookies
-                if (c_user && xs) {
-                    await pageDesktop.setCookie(
-                        { name: 'c_user', value: c_user, domain: '.facebook.com' },
-                        { name: 'xs', value: xs, domain: '.facebook.com' }
-                    );
+                // Apply ALL session cookies
+                if (sessionCookies.length > 0) {
+                    await pageDesktop.setCookie(...sessionCookies);
                 }
+
                 await pageDesktop.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
                 // --- 策略 A: 嘗試 www.facebook.com ---

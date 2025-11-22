@@ -196,7 +196,13 @@ async function fetchFacebookImages(source) {
                 // --- 策略 A: 嘗試 www.facebook.com ---
                 try {
                     await pageDesktop.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
-                    await new Promise(r => setTimeout(r, 3000)); // 強制等待 3 秒，不依賴 waitForSelector
+
+                    // 恢復 waitForSelector 但設為非阻塞 (catch error)
+                    try {
+                        await pageDesktop.waitForSelector('img', { timeout: 5000 });
+                    } catch (e) {
+                        console.log('[Facebook] www 等待圖片逾時，嘗試直接提取...');
+                    }
 
                     imgUrl = await pageDesktop.evaluate(() => {
                         const isInvalid = (src) => {
@@ -249,20 +255,20 @@ async function fetchFacebookImages(source) {
                                     src.endsWith('.svg');
                             };
 
-                            // mbasic 通常直接顯示圖片連結在 'a' 標籤中，或者直接是 img
-                            // 找尋 "檢視完整大小" 或類似的連結
+                            // 1. 優先找 "View full size" 連結
                             const links = Array.from(document.querySelectorAll('a'));
                             const viewFull = links.find(a => a.innerText.includes('View full size') || a.innerText.includes('檢視完整大小'));
                             if (viewFull && !isInvalid(viewFull.href)) return viewFull.href;
 
-                            // 或是直接找最大的 img
+                            // 2. 找不到連結，直接找最大的 img (新增此邏輯)
                             const images = Array.from(document.querySelectorAll('img'));
                             let maxArea = 0;
                             let bestImg = null;
                             images.forEach(img => {
                                 if (isInvalid(img.src)) return;
                                 const area = img.naturalWidth * img.naturalHeight;
-                                if (area > 2000 && area > maxArea) {
+                                // mbasic 的圖片可能比較小，降低門檻
+                                if (area > 1000 && area > maxArea) {
                                     maxArea = area;
                                     bestImg = img.src;
                                 }

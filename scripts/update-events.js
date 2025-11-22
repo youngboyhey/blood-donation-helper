@@ -199,7 +199,15 @@ async function fetchFacebookImages(source) {
                     await new Promise(r => setTimeout(r, 3000)); // 強制等待 3 秒，不依賴 waitForSelector
 
                     imgUrl = await pageDesktop.evaluate(() => {
-                        const isInvalid = (src) => !src || src.includes('static.xx') || src.includes('rsrc.php') || src.includes('data:image');
+                        const isInvalid = (src) => {
+                            return !src ||
+                                src.includes('static.xx.fbcdn.net') ||
+                                src.includes('rsrc.php') ||
+                                src.includes('emoji') ||
+                                src.includes('icon') ||
+                                src.includes('data:image') ||
+                                src.endsWith('.svg');
+                        };
 
                         // 1. Meta Tags
                         const metaImg = document.querySelector('meta[property="og:image"]');
@@ -231,17 +239,28 @@ async function fetchFacebookImages(source) {
                         await pageDesktop.goto(mbasicLink, { waitUntil: 'networkidle2', timeout: 30000 });
 
                         imgUrl = await pageDesktop.evaluate(() => {
+                            const isInvalid = (src) => {
+                                return !src ||
+                                    src.includes('static.xx.fbcdn.net') ||
+                                    src.includes('rsrc.php') ||
+                                    src.includes('emoji') ||
+                                    src.includes('icon') ||
+                                    src.includes('data:image') ||
+                                    src.endsWith('.svg');
+                            };
+
                             // mbasic 通常直接顯示圖片連結在 'a' 標籤中，或者直接是 img
                             // 找尋 "檢視完整大小" 或類似的連結
                             const links = Array.from(document.querySelectorAll('a'));
                             const viewFull = links.find(a => a.innerText.includes('View full size') || a.innerText.includes('檢視完整大小'));
-                            if (viewFull) return viewFull.href;
+                            if (viewFull && !isInvalid(viewFull.href)) return viewFull.href;
 
                             // 或是直接找最大的 img
                             const images = Array.from(document.querySelectorAll('img'));
                             let maxArea = 0;
                             let bestImg = null;
                             images.forEach(img => {
+                                if (isInvalid(img.src)) return;
                                 const area = img.naturalWidth * img.naturalHeight;
                                 if (area > 2000 && area > maxArea) {
                                     maxArea = area;

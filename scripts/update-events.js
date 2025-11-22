@@ -197,12 +197,8 @@ async function fetchFacebookImages(source) {
                 try {
                     await pageDesktop.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
 
-                    // 恢復 waitForSelector 但設為非阻塞 (catch error)
-                    try {
-                        await pageDesktop.waitForSelector('img', { timeout: 5000 });
-                    } catch (e) {
-                        console.log('[Facebook] www 等待圖片逾時，嘗試直接提取...');
-                    }
+                    // 強制等待 3 秒，確保主要內容載入 (比 waitForSelector 更可靠，因為頁面上總是有 img)
+                    await new Promise(r => setTimeout(r, 3000));
 
                     imgUrl = await pageDesktop.evaluate(() => {
                         const isInvalid = (src) => {
@@ -217,20 +213,46 @@ async function fetchFacebookImages(source) {
 
                         // 1. Meta Tags
                         const metaImg = document.querySelector('meta[property="og:image"]');
-                        if (metaImg && !isInvalid(metaImg.content)) return metaImg.content;
+                        if (metaImg) {
+                            if (!isInvalid(metaImg.content)) {
+                                console.log(`[Evaluate] Found valid og:image: ${metaImg.content.substring(0, 30)}...`);
+                                return metaImg.content;
+                            } else {
+                                console.log(`[Evaluate] og:image invalid: ${metaImg.content.substring(0, 30)}...`);
+                            }
+                        } else {
+                            console.log(`[Evaluate] No og:image found`);
+                        }
 
                         // 2. Largest Image
                         const images = Array.from(document.querySelectorAll('img'));
+                        console.log(`[Evaluate] Found ${images.length} images on page`);
+
                         let maxArea = 0;
                         let bestImg = null;
-                        images.forEach(img => {
-                            if (isInvalid(img.src)) return;
+
+                        images.forEach((img, i) => {
+                            if (isInvalid(img.src)) {
+                                // console.log(`[Evaluate] Img[${i}] skipped (invalid src): ${img.src.substring(0, 20)}...`);
+                                return;
+                            }
                             const area = img.naturalWidth * img.naturalHeight;
-                            if (area > 2000 && area > maxArea) { // 降低門檻到 2000
+                            if (area <= 2000) {
+                                // console.log(`[Evaluate] Img[${i}] skipped (too small): ${area}`);
+                                return;
+                            }
+
+                            console.log(`[Evaluate] Img[${i}] candidate: ${area}px, src=${img.src.substring(0, 30)}...`);
+
+                            if (area > maxArea) {
                                 maxArea = area;
                                 bestImg = img.src;
                             }
                         });
+
+                        if (bestImg) console.log(`[Evaluate] Selected best image: ${bestImg.substring(0, 30)}...`);
+                        else console.log(`[Evaluate] No suitable image found after filtering`);
+
                         return bestImg;
                     });
                 } catch (e) {
@@ -260,14 +282,13 @@ async function fetchFacebookImages(source) {
                             const viewFull = links.find(a => a.innerText.includes('View full size') || a.innerText.includes('檢視完整大小'));
                             if (viewFull && !isInvalid(viewFull.href)) return viewFull.href;
 
-                            // 2. 找不到連結，直接找最大的 img (新增此邏輯)
+                            // 2. 找不到連結，直接找最大的 img
                             const images = Array.from(document.querySelectorAll('img'));
                             let maxArea = 0;
                             let bestImg = null;
                             images.forEach(img => {
                                 if (isInvalid(img.src)) return;
                                 const area = img.naturalWidth * img.naturalHeight;
-                                // mbasic 的圖片可能比較小，降低門檻
                                 if (area > 1000 && area > maxArea) {
                                     maxArea = area;
                                     bestImg = img.src;

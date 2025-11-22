@@ -123,64 +123,114 @@ async function fetchFacebookImages(source) {
 
         const highResImages = [];
 
-        // 2. 逐一進入詳情頁抓大圖 (使用 mbasic 版本以提高成功率)
+        // 2. 逐一進入詳情頁抓大圖 (Hybrid: mbasic -> www fallback)
         for (const link of photoLinks) {
             try {
-                // 將 www 轉為 mbasic
-                const mbasicLink = link.replace('www.facebook.com', 'mbasic.facebook.com');
-                console.log(`[Facebook] 正在讀取相片詳情 (mbasic): ${mbasicLink}`);
+                let imgUrl = null;
 
-                const newPage = await browser.newPage();
-                // 使用 Android User-Agent 確保進入 mbasic
-                await newPage.setUserAgent('Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36');
-                await newPage.goto(mbasicLink, { waitUntil: 'networkidle2', timeout: 30000 });
+                // --- 嘗試 1: mbasic ---
+                try {
+                    const mbasicLink = link.replace('www.facebook.com', 'mbasic.facebook.com');
+                    console.log(`[Facebook] 嘗試 mbasic: ${mbasicLink}`);
 
-                // 嘗試抓取大圖 (mbasic 結構較簡單)
-                const imgUrl = await newPage.evaluate(() => {
-                    // 1. 找原始圖片連結 (通常在 "View full size" 或 "查看完整大小" 連結)
-                    const anchors = Array.from(document.querySelectorAll('a'));
-                    for (const a of anchors) {
-                        if (a.innerText.includes('View full size') || a.innerText.includes('查看完整大小') || a.innerText.includes('完整尺寸')) {
-                            return a.href;
-                        }
-                    }
+                    const pageMobile = await browser.newPage();
+                    await pageMobile.setUserAgent('Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36');
+                    await pageMobile.goto(mbasicLink, { waitUntil: 'networkidle2', timeout: 20000 });
 
-                    // 2. 找主要圖片 (通常在 div.attachment 內，或是頁面中最大的圖)
-                    const images = Array.from(document.querySelectorAll('img'));
-                    let maxArea = 0;
-                    let bestImg = null;
+                    imgUrl = await pageMobile.evaluate(() => {
+                        // 1. 找 "View full size" 連結
+                        const fullSizeLink = document.querySelector('a[href*="view_full_size"]');
+                        if (fullSizeLink) return fullSizeLink.href;
 
-                    images.forEach(img => {
-                        const src = img.src;
-                        // 排除小圖示
-                        if (src.includes('static.xx') || src.includes('emoji') || src.includes('icon')) return;
+                        // 2. 找內容圖片 (scontent/fbcdn)
+                        const images = Array.from(document.querySelectorAll('img'));
+                        let maxArea = 0;
+                        let bestImg = null;
 
-                        const area = img.naturalWidth * img.naturalHeight;
-                        // mbasic 圖片可能較小，降低門檻
-                        if (area > 5000 && area > maxArea) {
-                            maxArea = area;
-                            bestImg = src;
-                        }
+                        images.forEach(img => {
+                            const src = img.src;
+                            if (src.includes('static.xx') || src.includes('emoji') || src.includes('icon') || src.includes('rsrc.php')) return;
+                            if (!src.includes('scontent') && !src.includes('fbcdn')) return;
+
+                            const area = img.naturalWidth * img.naturalHeight;
+                            if (area > 2000 && area > maxArea) { // 降低門檻
+                                maxArea = area;
+                                bestImg = src;
+                            }
+                        });
+                        return bestImg;
                     });
-                    return bestImg;
-                });
+                    await pageMobile.close();
+                } catch (e) {
+                    console.log(`[Facebook] mbasic 失敗: ${e.message}`);
+                }
+
+                // --- 嘗試 2: www (如果 mbasic 失敗) ---
+                if (!imgUrl) {
+                    console.log(`[Facebook] mbasic 未找到，嘗試 www: ${link}`);
+                    const pageDesktop = await browser.newPage();
+                    await pageDesktop.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+                    try {
+                        await pageDesktop.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
+
+                        imgUrl = await pageDesktop.evaluate(() => {
+                            const isInvalid = (src) => {
+                                return !src ||
+                                    src.includes('static.xx.fbcdn.net') ||
+                                    src.includes('rsrc.php') ||
+                                    src.includes('emoji') ||
+                                    src.includes('icon') ||
+                                    src.includes('data:image');
+                            };
+
+                            // 優先嘗試 meta tag
+                            const metaImg = document.querySelector('meta[property="og:image"]');
+                            if (metaImg && metaImg.content && !isInvalid(metaImg.content)) return metaImg.content;
+
+                            const twitterImg = document.querySelector('meta[name="twitter:image"]');
+                            if (twitterImg && twitterImg.content && !isInvalid(twitterImg.content)) return twitterImg.content;
+
+                            // 找最大圖
+                            const images = Array.from(document.querySelectorAll('img'));
+                            let maxArea = 0;
+                            let bestImg = null;
+
+                            images.forEach(img => {
+                                const src = img.src;
+                                if (isInvalid(src)) return;
+
+                                // 寬鬆檢查：只要夠大
+                                const area = img.naturalWidth * img.naturalHeight;
+                                if (area > 10000 && area > maxArea) {
+                                    maxArea = area;
+                                    bestImg = src;
+                                }
+                            });
+                            return bestImg;
+                        });
+                    } catch (e) {
+                        console.log(`[Facebook] www 失敗: ${e.message}`);
+                    }
+                    await pageDesktop.close();
+                }
 
                 if (imgUrl) {
-                    console.log(`[Facebook] 找到大圖: ${imgUrl.substring(0, 50)}...`);
+                    console.log(`[Facebook] 成功抓取圖片: ${imgUrl.substring(0, 50)}...`);
                     highResImages.push({
                         type: 'image',
                         url: imgUrl,
-                        postUrl: link // 保留原始 www 連結供使用者點擊
+                        postUrl: link
                     });
                 } else {
-                    console.log(`[Facebook] 在 mbasic 找不到圖片，跳過`);
+                    console.log(`[Facebook] 放棄此連結，無法提取圖片`);
                 }
-                await newPage.close();
+
                 // 避免請求過快
                 await new Promise(r => setTimeout(r, 1000));
 
             } catch (err) {
-                console.error(`[Facebook] 讀取詳情頁失敗: ${link}`, err);
+                console.error(`[Facebook] 處理連結失敗: ${link}`, err);
             }
         }
 

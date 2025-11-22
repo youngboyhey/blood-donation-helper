@@ -76,7 +76,7 @@ async function fetchHTMLWithPuppeteer(url) {
 }
 
 async function fetchFacebookImages(source) {
-    console.log(`[Facebook] 正在抓取粉絲頁相簿: ${source.name} (${source.url}) - v20251122-fix-restored`);
+    console.log(`[Facebook] 正在抓取粉絲頁相簿: ${source.name} (${source.url}) - v20251122-fix-single-page`);
     const browser = await puppeteer.launch({
         headless: "new",
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-notifications']
@@ -175,10 +175,6 @@ async function fetchFacebookImages(source) {
 
         console.log(`[Facebook] 最終找到 ${photoLinks.length} 個相片連結，準備進入詳情頁抓取大圖...`);
 
-        // Capture all cookies from the main page which has a valid session
-        const sessionCookies = await page.cookies();
-        console.log(`[Facebook] 已獲取 ${sessionCookies.length} 個 Session Cookies，將套用於詳情頁面`);
-
         const highResImages = [];
 
         // 2. 逐一進入詳情頁抓大圖
@@ -186,22 +182,19 @@ async function fetchFacebookImages(source) {
             try {
                 let imgUrl = null;
                 console.log(`[Facebook] 進入詳情頁: ${link}`);
-                const pageDesktop = await browser.newPage();
 
-                // ADDED: Console listener for detail page
-                pageDesktop.on('console', msg => console.log(`[Browser Detail] ${msg.text()}`));
-
-                // Apply ALL session cookies
-                if (sessionCookies.length > 0) {
-                    await pageDesktop.setCookie(...sessionCookies);
-                }
-
-                await pageDesktop.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+                // REFACTOR: Reuse the main 'page' instance to maintain session state
 
                 // --- 策略 A: 嘗試 www.facebook.com ---
                 try {
-                    await pageDesktop.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
-                    const currentUrl = pageDesktop.url();
+                    // Add Referer to mimic natural navigation
+                    await page.goto(link, {
+                        waitUntil: 'networkidle2',
+                        timeout: 30000,
+                        referer: source.url
+                    });
+
+                    const currentUrl = page.url();
                     console.log(`[Facebook] Detail Page URL: ${currentUrl}`);
 
                     if (currentUrl.includes('login') || currentUrl.includes('checkpoint')) {
@@ -211,7 +204,7 @@ async function fetchFacebookImages(source) {
                         // 強制等待 5 秒，確保主要內容載入
                         await new Promise(r => setTimeout(r, 5000));
 
-                        imgUrl = await pageDesktop.evaluate(() => {
+                        imgUrl = await page.evaluate(() => {
                             const isInvalid = (src) => {
                                 return !src ||
                                     src.includes('static.xx.fbcdn.net') ||
@@ -275,17 +268,21 @@ async function fetchFacebookImages(source) {
                     try {
                         const mbasicLink = link.replace('www.facebook.com', 'mbasic.facebook.com');
 
-                        // 切換為 Mobile User Agent
-                        await pageDesktop.setUserAgent('Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36');
+                        // NOTE: Do NOT switch UA here, keep the Desktop UA to maintain session consistency.
 
-                        await pageDesktop.goto(mbasicLink, { waitUntil: 'networkidle2', timeout: 30000 });
-                        const mbasicUrl = pageDesktop.url();
+                        await page.goto(mbasicLink, {
+                            waitUntil: 'networkidle2',
+                            timeout: 30000,
+                            referer: link // Referer is the previous www page
+                        });
+
+                        const mbasicUrl = page.url();
                         console.log(`[Facebook] mbasic URL: ${mbasicUrl}`);
 
                         if (mbasicUrl.includes('login') || mbasicUrl.includes('checkpoint')) {
                             console.warn(`[Facebook] mbasic 也被導向登入頁面，此連結無法抓取。`);
                         } else {
-                            imgUrl = await pageDesktop.evaluate(() => {
+                            imgUrl = await page.evaluate(() => {
                                 const isInvalid = (src) => {
                                     return !src ||
                                         src.includes('static.xx.fbcdn.net') ||
@@ -320,8 +317,6 @@ async function fetchFacebookImages(source) {
                         console.log(`[Facebook] mbasic 提取失敗: ${e.message}`);
                     }
                 }
-
-                await pageDesktop.close();
 
                 if (imgUrl) {
                     console.log(`[Facebook] 成功抓取圖片: ${imgUrl.substring(0, 50)}...`);

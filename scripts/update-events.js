@@ -76,7 +76,7 @@ async function fetchHTMLWithPuppeteer(url) {
 }
 
 async function fetchFacebookImages(source) {
-    console.log(`[Facebook] 正在抓取粉絲頁相簿: ${source.name} (${source.url})`);
+    console.log(`[Facebook] 正在抓取粉絲頁相簿: ${source.name} (${source.url}) - v20251122-fix-wait`);
     const browser = await puppeteer.launch({
         headless: "new",
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-notifications']

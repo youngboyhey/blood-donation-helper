@@ -76,7 +76,7 @@ async function fetchHTMLWithPuppeteer(url) {
 }
 
 async function fetchFacebookImages(source) {
-    console.log(`[Facebook] 正在抓取粉絲頁相簿: ${source.name} (${source.url}) - v20251122-fix-wait`);
+    console.log(`[Facebook] 正在抓取粉絲頁相簿: ${source.name} (${source.url}) - v20251122-fix-logging`);
     const browser = await puppeteer.launch({
         headless: "new",
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-notifications']
@@ -184,6 +184,9 @@ async function fetchFacebookImages(source) {
                 console.log(`[Facebook] 進入詳情頁: ${link}`);
                 const pageDesktop = await browser.newPage();
 
+                // ADDED: Console listener for detail page
+                pageDesktop.on('console', msg => console.log(`[Browser Detail] ${msg.text()}`));
+
                 // 設定 Cookies
                 if (c_user && xs) {
                     await pageDesktop.setCookie(
@@ -196,9 +199,10 @@ async function fetchFacebookImages(source) {
                 // --- 策略 A: 嘗試 www.facebook.com ---
                 try {
                     await pageDesktop.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
+                    console.log(`[Facebook] Detail Page URL: ${pageDesktop.url()}`);
 
-                    // 強制等待 3 秒，確保主要內容載入 (比 waitForSelector 更可靠，因為頁面上總是有 img)
-                    await new Promise(r => setTimeout(r, 3000));
+                    // 強制等待 5 秒，確保主要內容載入
+                    await new Promise(r => setTimeout(r, 5000));
 
                     imgUrl = await pageDesktop.evaluate(() => {
                         const isInvalid = (src) => {

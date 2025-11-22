@@ -123,10 +123,11 @@ async function fetchFacebookImages(source) {
             // 忽略
         }
 
-        // 智慧滾動：只滾動直到收集到足夠的連結
+        // 修改：不進行初始滾動，直接抓取
+        // 只有當抓到的連結不足 20 個時，才嘗試滾動
         let photoLinks = [];
         let retries = 0;
-        const MAX_RETRIES = 5; // 最多滾動 5 次
+        const MAX_RETRIES = 3; // 最多滾動 3 次
         const TARGET_COUNT = 20;
 
         console.log('[Facebook] 開始抓取連結 (目標 20 篇)...');
@@ -138,7 +139,7 @@ async function fetchFacebookImages(source) {
                     .map(a => a.href)
                     .filter(href => {
                         if (!href) return false;
-                        // 寬鬆過濾，確保不漏掉
+                        // 寬鬆過濾
                         const isPhoto = href.includes('/photo.php') || href.includes('/photos/') || href.includes('/photo/');
                         // 排除明顯的導航頁
                         const isNav = href.endsWith('/photos') || href.endsWith('/photos/') || href.includes('/photos_by') || href.includes('/albums');
@@ -154,7 +155,8 @@ async function fetchFacebookImages(source) {
                 break;
             }
 
-            console.log(`[Facebook] 目前找到 ${uniqueLinks.length} 個連結，滾動載入更多... (${retries + 1}/${MAX_RETRIES})`);
+            // 如果連結不夠，才滾動
+            console.log(`[Facebook] 目前找到 ${uniqueLinks.length} 個連結，嘗試滾動載入更多... (${retries + 1}/${MAX_RETRIES})`);
             await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
             await new Promise(r => setTimeout(r, 3000)); // 等待載入
             retries++;

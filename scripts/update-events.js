@@ -123,50 +123,41 @@ async function fetchFacebookImages(source) {
 
         const highResImages = [];
 
-        // 2. 逐一進入詳情頁抓大圖
+        // 2. 逐一進入詳情頁抓大圖 (使用 mbasic 版本以提高成功率)
         for (const link of photoLinks) {
             try {
-                console.log(`[Facebook] 正在讀取相片詳情: ${link}`);
+                // 將 www 轉為 mbasic
+                const mbasicLink = link.replace('www.facebook.com', 'mbasic.facebook.com');
+                console.log(`[Facebook] 正在讀取相片詳情 (mbasic): ${mbasicLink}`);
+
                 const newPage = await browser.newPage();
-                await newPage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-                await newPage.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
+                // 使用 Android User-Agent 確保進入 mbasic
+                await newPage.setUserAgent('Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36');
+                await newPage.goto(mbasicLink, { waitUntil: 'networkidle2', timeout: 30000 });
 
-                // 嘗試抓取大圖
+                // 嘗試抓取大圖 (mbasic 結構較簡單)
                 const imgUrl = await newPage.evaluate(() => {
-                    const isInvalid = (src) => {
-                        return !src ||
-                            src.includes('static.xx.fbcdn.net') ||
-                            src.includes('rsrc.php') ||
-                            src.includes('emoji') ||
-                            src.includes('icon') ||
-                            src.includes('data:image');
-                    };
-
-                    // 1. 優先嘗試 meta tag (og:image)
-                    const metaImg = document.querySelector('meta[property="og:image"]');
-                    if (metaImg && metaImg.content && !isInvalid(metaImg.content)) {
-                        return metaImg.content;
+                    // 1. 找原始圖片連結 (通常在 "View full size" 或 "查看完整大小" 連結)
+                    const anchors = Array.from(document.querySelectorAll('a'));
+                    for (const a of anchors) {
+                        if (a.innerText.includes('View full size') || a.innerText.includes('查看完整大小') || a.innerText.includes('完整尺寸')) {
+                            return a.href;
+                        }
                     }
 
-                    // 2. 嘗試 twitter:image
-                    const twitterImg = document.querySelector('meta[name="twitter:image"]');
-                    if (twitterImg && twitterImg.content && !isInvalid(twitterImg.content)) {
-                        return twitterImg.content;
-                    }
-
-                    // 3. 找最大的 img
+                    // 2. 找主要圖片 (通常在 div.attachment 內，或是頁面中最大的圖)
                     const images = Array.from(document.querySelectorAll('img'));
                     let maxArea = 0;
                     let bestImg = null;
 
                     images.forEach(img => {
                         const src = img.src;
-                        if (isInvalid(src)) return;
+                        // 排除小圖示
+                        if (src.includes('static.xx') || src.includes('emoji') || src.includes('icon')) return;
 
                         const area = img.naturalWidth * img.naturalHeight;
-                        // 排除太小的圖 (可能是頭像或裝飾)
-                        // 放寬標準，只要夠大且不是無效網域即可
-                        if (area > 10000 && area > maxArea) {
+                        // mbasic 圖片可能較小，降低門檻
+                        if (area > 5000 && area > maxArea) {
                             maxArea = area;
                             bestImg = src;
                         }
@@ -179,8 +170,10 @@ async function fetchFacebookImages(source) {
                     highResImages.push({
                         type: 'image',
                         url: imgUrl,
-                        postUrl: link // 保留原始貼文連結
+                        postUrl: link // 保留原始 www 連結供使用者點擊
                     });
+                } else {
+                    console.log(`[Facebook] 在 mbasic 找不到圖片，跳過`);
                 }
                 await newPage.close();
                 // 避免請求過快

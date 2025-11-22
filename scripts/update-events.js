@@ -106,15 +106,15 @@ async function fetchFacebookImages(source) {
     try {
         await page.goto(source.url, { waitUntil: 'networkidle2', timeout: 60000 });
 
-        // 檢查是否被導向登入頁 (簡單檢查)
+        // 檢查是否被導向登入頁
         const url = page.url();
         if (url.includes('login') || url.includes('checkpoint')) {
             console.warn('[Facebook] 警告: 被導向登入頁面，Cookies 可能無效或過期。');
         } else if (c_user && xs) {
-            console.log('[Facebook] 成功以登入狀態進入頁面 (未被導向登入頁)');
+            console.log('[Facebook] 成功以登入狀態進入頁面');
         }
 
-        // 嘗試關閉登入彈窗 (如果是訪客模式)
+        // 嘗試關閉登入彈窗
         try {
             const closeButtonSelector = 'div[aria-label="Close"], div[aria-label="關閉"]';
             await page.waitForSelector(closeButtonSelector, { timeout: 5000 });
@@ -123,32 +123,61 @@ async function fetchFacebookImages(source) {
             // 忽略
         }
 
-        // 滾動頁面以加載 (只滾動 1 次以確保載入足夠貼文，但不載入過多舊貼文)
-        console.log('[Facebook] 滾動頁面 1 次...');
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-        await new Promise(r => setTimeout(r, 3000)); // 增加等待時間
+        // 智慧滾動：只滾動直到收集到足夠的連結
+        let photoLinks = [];
+        let retries = 0;
+        const MAX_RETRIES = 5; // 最多滾動 5 次
+        const TARGET_COUNT = 20;
 
-        // 1. 抓取相片連結 (從 /photos 頁面)
-        const photoLinks = await page.evaluate(() => {
-            const links = Array.from(document.querySelectorAll('a'));
-            return links
-                .map(a => a.href)
-                .filter(href => {
-                    // 嚴格過濾：只保留單張相片的 Permalink
-                    // 排除 /photos, /photos_by, /albums 等導航連結
-                    if (!href) return false;
-                    const isPhoto = href.includes('/photo.php') || href.includes('/photos/') || href.includes('/photo/');
-                    const isNav = href.includes('/albums') || href.includes('/photos_by') || href.endsWith('/photos') || href.endsWith('/photos/');
-                    return isPhoto && !isNav;
-                })
-                .slice(0, 20); // 抓取前 20 張
-        });
+        console.log('[Facebook] 開始抓取連結 (目標 20 篇)...');
 
-        console.log(`[Facebook] 找到 ${photoLinks.length} 個相片連結，準備進入詳情頁抓取大圖...`);
+        while (photoLinks.length < TARGET_COUNT && retries < MAX_RETRIES) {
+            const newLinks = await page.evaluate(() => {
+                const links = Array.from(document.querySelectorAll('a'));
+                return links
+                    .map(a => a.href)
+                    .filter(href => {
+                        if (!href) return false;
+                        // 寬鬆過濾，確保不漏掉
+                        const isPhoto = href.includes('/photo.php') || href.includes('/photos/') || href.includes('/photo/');
+                        // 排除明顯的導航頁
+                        const isNav = href.endsWith('/photos') || href.endsWith('/photos/') || href.includes('/photos_by') || href.includes('/albums');
+                        return isPhoto && !isNav;
+                    });
+            });
+
+            // 去重
+            const uniqueLinks = [...new Set(newLinks)];
+
+            if (uniqueLinks.length >= TARGET_COUNT) {
+                photoLinks = uniqueLinks.slice(0, TARGET_COUNT);
+                break;
+            }
+
+            console.log(`[Facebook] 目前找到 ${uniqueLinks.length} 個連結，滾動載入更多... (${retries + 1}/${MAX_RETRIES})`);
+            await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+            await new Promise(r => setTimeout(r, 3000)); // 等待載入
+            retries++;
+            photoLinks = uniqueLinks;
+        }
+
+        // 如果還是不夠，就用抓到的所有連結
+        if (photoLinks.length === 0) {
+            // 最後嘗試一次獲取
+            photoLinks = await page.evaluate(() => {
+                const links = Array.from(document.querySelectorAll('a'));
+                return links
+                    .map(a => a.href)
+                    .filter(href => href && (href.includes('/photo.php') || href.includes('/photos/')))
+                    .slice(0, 20);
+            });
+        }
+
+        console.log(`[Facebook] 最終找到 ${photoLinks.length} 個相片連結，準備進入詳情頁抓取大圖...`);
 
         const highResImages = [];
 
-        // 2. 逐一進入詳情頁抓大圖 (只使用 www)
+        // 2. 逐一進入詳情頁抓大圖 (使用寬鬆的 www 策略)
         for (const link of photoLinks) {
             try {
                 let imgUrl = null;
@@ -188,14 +217,7 @@ async function fetchFacebookImages(source) {
                             return invalid;
                         };
 
-                        // 1. 優先嘗試 Spotlight 圖片 (Facebook 相片檢視器的主要圖片)
-                        const spotlightImg = document.querySelector('img[data-visualcompletion="media-vc-image"]');
-                        if (spotlightImg && !isInvalid(spotlightImg.src)) {
-                            console.log('[Extract] 找到 Spotlight 圖片');
-                            return spotlightImg.src;
-                        }
-
-                        // 2. 嘗試 meta tag
+                        // 1. 優先嘗試 meta tag (最準確)
                         const metaImg = document.querySelector('meta[property="og:image"]');
                         if (metaImg && metaImg.content && !isInvalid(metaImg.content)) {
                             console.log('[Extract] 找到 og:image');
@@ -208,8 +230,7 @@ async function fetchFacebookImages(source) {
                             return twitterImg.content;
                         }
 
-                        // 3. 找最大圖
-                        console.log('[Extract] 嘗試尋找最大圖...');
+                        // 2. 找最大圖 (寬鬆策略)
                         const images = Array.from(document.querySelectorAll('img'));
                         let maxArea = 0;
                         let bestImg = null;
@@ -219,8 +240,8 @@ async function fetchFacebookImages(source) {
                             if (isInvalid(src)) return;
 
                             const area = img.naturalWidth * img.naturalHeight;
-                            // console.log(`[Check] ${src.substring(0,30)}... Area: ${area}`);
-                            if (area > 10000 && area > maxArea) {
+                            // 只要大於一定尺寸就考慮，取最大的
+                            if (area > 5000 && area > maxArea) {
                                 maxArea = area;
                                 bestImg = src;
                             }
@@ -480,7 +501,6 @@ async function updateEvents() {
                 if (event.posterUrl) {
                     cachedEventsMap.set(event.posterUrl, event);
                 }
-                // 也可以考慮用 gift.image 當 key，視情況而定
             });
         } catch (e) {
             console.error("[Cache] 讀取現有資料失敗:", e);
@@ -494,7 +514,6 @@ async function updateEvents() {
         if (source.type === 'web') {
             items = await fetchWebImages(source);
         } else if (source.type === 'fb') {
-            // FB 回傳的是物件陣列 { type, url, postUrl }
             items = await fetchFacebookImages(source);
         }
 
@@ -514,7 +533,6 @@ async function updateEvents() {
                         continue;
                     } else {
                         console.log(`[Cache] 快取資料已過期，忽略: ${cachedEvent.title}`);
-                        // 過期就不加入 allNewEvents，也不重新分析 (因為圖是一樣的，代表活動就是過期的)
                         continue;
                     }
                 }
@@ -560,8 +578,7 @@ async function updateEvents() {
             fs.mkdirSync(dir, { recursive: true });
         }
 
-        // 去重：避免同一活動被重複加入 (例如快取命中一次，又被某個邏輯加入一次)
-        // 這裡簡單用 posterUrl + date 做去重
+        // 去重
         const uniqueEvents = [];
         const seenKeys = new Set();
 

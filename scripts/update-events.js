@@ -433,10 +433,66 @@ async function updateEvents() {
         }
     }
 
-    if (allNewEvents.length > 0) {
-    } else {
-        console.log('\n未提取到任何有效活動資料。');
+    // 進階去重邏輯
+    console.log(`[去重] 開始處理 ${allNewEvents.length} 筆活動...`);
+    const uniqueEvents = [];
+
+    // 輔助函式：標準化地點字串 (移除空白、括號等)
+    const normalize = (str) => (str || '').replace(/[()\s\-\uff08\uff09]/g, '').toLowerCase();
+
+    for (const evt of allNewEvents) {
+        // 1. 嘗試在已加入的清單中找到重複活動
+        const duplicateIndex = uniqueEvents.findIndex(existing => {
+            // 必須是同一天
+            if (existing.date !== evt.date) return false;
+
+            // 必須是同一個縣市 (如果有資料)
+            if (existing.city && evt.city && existing.city !== evt.city) return false;
+
+            const loc1 = normalize(existing.location);
+            const loc2 = normalize(evt.location);
+
+            // 判斷地點是否高度相似或包含
+            const isMatch = loc1.includes(loc2) || loc2.includes(loc1);
+            if (isMatch) {
+                console.log(`[去重] 發現重複: "${existing.title}" vs "${evt.title}"`);
+            }
+            return isMatch;
+        });
+
+        if (duplicateIndex !== -1) {
+            // 找到重複，保留資訊較完整的那一個
+            const existing = uniqueEvents[duplicateIndex];
+
+            // 判斷標準：
+            // 1. 有海報優先
+            // 2. 地點字串較長優先 (通常較詳細)
+            // 3. 有贈品資訊優先
+
+            let keepNew = false;
+
+            if (evt.posterUrl && !existing.posterUrl) keepNew = true;
+            else if (!evt.posterUrl && existing.posterUrl) keepNew = false;
+            else {
+                // 都有或都沒有海報，比地點長度
+                if ((evt.location || '').length > (existing.location || '').length) keepNew = true;
+            }
+
+            if (keepNew) {
+                console.log(`[去重] 取代舊活動: 保留 "${evt.title}" (${evt.location}), 移除 "${existing.title}"`);
+                uniqueEvents[duplicateIndex] = evt;
+            } else {
+                console.log(`[去重] 保留舊活動: "${existing.title}" (${existing.location}), 忽略 "${evt.title}"`);
+            }
+        } else {
+            uniqueEvents.push(evt);
+        }
     }
+
+    console.log(`[去重] 完成，剩餘 ${uniqueEvents.length} 筆活動 (原始 ${allNewEvents.length} 筆)`);
+
+    fs.writeFileSync(outputPath, JSON.stringify(uniqueEvents, null, 2));
+    console.log(`\n總共成功更新 ${uniqueEvents.length} 筆活動資料！`);
 };
 
 updateEvents();

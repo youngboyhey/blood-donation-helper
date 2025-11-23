@@ -119,14 +119,24 @@ const Home = () => {
                         <h4>贈品資訊</h4>
                         <p>{selectedEvent.gift?.name || '以現場提供為主'}</p>
                         <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-                            <a href={selectedEvent.gift?.image} target="_blank" rel="noopener noreferrer">
-                                <img
-                                    src={selectedEvent.gift?.image}
-                                    alt={selectedEvent.gift?.name || '贈品圖片'}
-                                    style={{ maxWidth: '100%', borderRadius: '8px', cursor: 'pointer' }}
-                                    title="點擊查看大圖"
-                                />
-                            </a>
+                            {selectedEvent.gift?.image && (
+                                selectedEvent.gift.image.startsWith('http') ? (
+                                    <a href={selectedEvent.gift.image} target="_blank" rel="noopener noreferrer">
+                                        <img
+                                            src={selectedEvent.gift.image}
+                                            alt={selectedEvent.gift?.name || '贈品圖片'}
+                                            style={{ maxWidth: '100%', borderRadius: '8px', cursor: 'pointer' }}
+                                            title="點擊查看大圖"
+                                        />
+                                    </a>
+                                ) : (
+                                    <img
+                                        src={selectedEvent.gift.image}
+                                        alt={selectedEvent.gift?.name || '贈品圖片'}
+                                        style={{ maxWidth: '100%', borderRadius: '8px' }}
+                                    />
+                                )
+                            )}
                         </div>
                     </div>
                 )}

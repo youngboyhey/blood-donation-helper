@@ -428,13 +428,28 @@ async function updateEvents() {
                 for (const eventData of eventDataList) {
                     if (!eventData) continue;
 
-                    // 日期過濾：只保留今天以後的活動
+                    // 日期過濾：只保留今天以後的活動，且格式必須正確
                     if (eventData.date) {
+                        // 驗證日期格式 YYYY-MM-DD
+                        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                        if (!dateRegex.test(eventData.date)) {
+                            console.log(`[跳過] 日期格式錯誤: ${eventData.title} (${eventData.date})`);
+                            continue;
+                        }
+
                         const eventDate = new Date(eventData.date);
+                        if (isNaN(eventDate.getTime())) {
+                            console.log(`[跳過] 無效日期: ${eventData.title} (${eventData.date})`);
+                            continue;
+                        }
+
                         if (eventDate < today) {
                             console.log(`[跳過] 過期活動: ${eventData.title} (${eventData.date})`);
                             continue;
                         }
+                    } else {
+                        console.log(`[跳過] 缺少日期: ${eventData.title}`);
+                        continue;
                     }
 
                     if (item.type === 'image') {

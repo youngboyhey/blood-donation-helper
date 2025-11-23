@@ -20,7 +20,7 @@ const Home = () => {
     ];
 
     // 提取所有有活動的縣市並排序
-    const cities = [...new Set(eventsData.map(e => e.city).filter(Boolean))].sort((a, b) => {
+    const cities = [...new Set(eventsData.map(e => e.city).filter(c => c && c !== 'null' && c !== 'undefined'))].sort((a, b) => {
         const indexA = CITY_ORDER.indexOf(a);
         const indexB = CITY_ORDER.indexOf(b);
         // 如果都在列表中，照順序排
@@ -35,7 +35,7 @@ const Home = () => {
 
     // 根據選擇的縣市提取有活動的區域並排序
     const districts = selectedCity
-        ? [...new Set(eventsData.filter(e => e.city === selectedCity).map(e => e.district).filter(Boolean))].sort((a, b) => {
+        ? [...new Set(eventsData.filter(e => e.city === selectedCity).map(e => e.district).filter(d => d && d !== 'null' && d !== 'undefined'))].sort((a, b) => {
             // 區域暫時使用筆畫/字串排序，因為各縣市區域順序繁多
             return a.localeCompare(b, 'zh-TW');
         })

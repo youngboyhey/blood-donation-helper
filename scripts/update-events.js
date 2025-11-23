@@ -12,6 +12,28 @@ const __dirname = path.dirname(__filename);
 // 初始化 Gemini 客戶端
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// 清理資料的輔助函式
+function sanitizeData(data) {
+    if (Array.isArray(data)) {
+        return data.map(sanitizeData);
+    }
+    if (data && typeof data === 'object') {
+        const cleaned = {};
+        for (const [key, value] of Object.entries(data)) {
+            cleaned[key] = sanitizeData(value);
+        }
+        return cleaned;
+    }
+    if (typeof data === 'string') {
+        const trimmed = data.trim();
+        if (trimmed.toLowerCase() === 'null' || trimmed.toLowerCase() === 'undefined') {
+            return null;
+        }
+        return trimmed;
+    }
+    return data;
+}
+
 const SOURCES = [
     {
         type: 'web',
@@ -491,8 +513,11 @@ async function updateEvents() {
 
     console.log(`[去重] 完成，剩餘 ${uniqueEvents.length} 筆活動 (原始 ${allNewEvents.length} 筆)`);
 
-    fs.writeFileSync(outputPath, JSON.stringify(uniqueEvents, null, 2));
-    console.log(`\n總共成功更新 ${uniqueEvents.length} 筆活動資料！`);
-};
+    // 最終清理資料
+    const cleanedEvents = sanitizeData(uniqueEvents);
+
+    fs.writeFileSync(outputPath, JSON.stringify(cleanedEvents, null, 2));
+    console.log(`\n總共成功更新 ${cleanedEvents.length} 筆活動資料！`);
+}
 
 updateEvents();

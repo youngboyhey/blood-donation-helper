@@ -10,6 +10,19 @@ const EventCard = ({ event, onClick }) => {
         <Card hoverable className={styles.eventCard}>
             <div className={styles.header}>
                 <span className={styles.dateBadge}>{event.date}</span>
+                <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.mapLink}
+                    title="開啟 Google 地圖導航"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                </a>
             </div>
             <h3 className={styles.title}>{title}</h3>
             <div className={styles.meta}>
@@ -20,7 +33,7 @@ const EventCard = ({ event, onClick }) => {
             <div className={styles.giftSection}>
                 <div className={styles.giftLabel}>贈品亮點</div>
                 <div className={styles.giftContent}>
-                    <span className={styles.giftName}>{gift.name}</span>
+                    <span className={styles.giftName}>{gift?.name || '以現場提供為主'}</span>
                 </div>
             </div>
 

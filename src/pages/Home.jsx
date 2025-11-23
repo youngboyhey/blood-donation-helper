@@ -78,7 +78,7 @@ const Home = () => {
 
             <main className={styles.main}>
                 <div className={styles.listHeader}>
-                    <h2>假日捐血活動</h2>
+                    <h2>捐血活動</h2>
                     <span className={styles.count}>共 {filteredEvents.length} 場活動</span>
                 </div>
                 <EventList events={filteredEvents} onEventClick={setSelectedEvent} />
@@ -96,7 +96,7 @@ const Home = () => {
                         <p><strong>主辦單位:</strong> {selectedEvent.organizer}</p>
                         <hr style={{ margin: '1rem 0', border: '0', borderTop: '1px solid #eee' }} />
                         <h4>贈品資訊</h4>
-                        <p><strong>名稱:</strong> {selectedEvent.gift?.name || '無'}</p>
+                        <p>{selectedEvent.gift?.name || '以現場提供為主'}</p>
                         <div style={{ marginTop: '1rem', textAlign: 'center' }}>
                             <a href={selectedEvent.gift?.image} target="_blank" rel="noopener noreferrer">
                                 <img

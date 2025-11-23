@@ -30,24 +30,24 @@ const SOURCES = [
         city: '新竹市'
     },
     {
-        type: 'fb',
+        type: 'google',
         id: 'taichung',
         name: '台中捐血中心',
-        url: 'https://www.facebook.com/tcblood/photos',
+        query: '台中捐血中心 捐血活動 贈品',
         city: '台中市'
     },
     {
-        type: 'fb',
+        type: 'google',
         id: 'kaohsiung',
         name: '高雄捐血中心',
-        url: 'https://www.facebook.com/TBSFksblood/photos',
+        query: '高雄捐血中心 捐血活動 贈品',
         city: '高雄市'
     },
     {
-        type: 'fb',
+        type: 'google',
         id: 'tainan',
         name: '台南捐血中心',
-        url: 'https://www.facebook.com/tnblood/photos',
+        query: '台南捐血中心 捐血活動 贈品',
         city: '台南市'
     }
 ];
@@ -75,283 +75,63 @@ async function fetchHTMLWithPuppeteer(url) {
     }
 }
 
-async function fetchFacebookImages(source) {
-    console.log(`[Facebook] 正在抓取粉絲頁相簿: ${source.name} (${source.url}) - v20251122-fix-single-page`);
+async function fetchGoogleImages(source) {
+    console.log(`[Google] 正在搜尋圖片: ${source.query}`);
     const browser = await puppeteer.launch({
         headless: "new",
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-notifications']
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     const page = await browser.newPage();
     await page.setViewport({ width: 1280, height: 800 });
-
-    // 啟用瀏覽器 console log 轉發 (用於除錯)
-    page.on('console', msg => console.log(`[Browser] ${msg.text()}`));
-
-    // 設定 Cookies (若有提供)
-    const c_user = process.env.FB_COOKIE_C_USER;
-    const xs = process.env.FB_COOKIE_XS;
-
-    if (c_user && xs) {
-        console.log('[Facebook] 檢測到 Cookies，嘗試模擬登入...');
-        await page.setCookie(
-            { name: 'c_user', value: c_user, domain: '.facebook.com' },
-            { name: 'xs', value: xs, domain: '.facebook.com' }
-        );
-    } else {
-        console.log('[Facebook] 未檢測到 Cookies，將以訪客身份瀏覽 (可能受限)');
-    }
-
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
     try {
-        await page.goto(source.url, { waitUntil: 'networkidle2', timeout: 60000 });
+        // 建構 Google 圖片搜尋 URL (tbm=isch: 圖片搜尋, tbs=qdr:w: 過去一週)
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(source.query)}&tbm=isch&tbs=qdr:w`;
+        await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 60000 });
 
-        // 檢查是否被導向登入頁
-        const url = page.url();
-        if (url.includes('login') || url.includes('checkpoint')) {
-            console.warn('[Facebook] 警告: 被導向登入頁面，Cookies 可能無效或過期。');
-        } else if (c_user && xs) {
-            console.log('[Facebook] 成功以登入狀態進入頁面');
-        }
+        // 隨機延遲，模擬人類行為
+        await new Promise(r => setTimeout(r, 2000 + Math.random() * 3000));
 
-        // 嘗試關閉登入彈窗
-        try {
-            const closeButtonSelector = 'div[aria-label="Close"], div[aria-label="關閉"]';
-            await page.waitForSelector(closeButtonSelector, { timeout: 5000 });
-            await page.click(closeButtonSelector);
-        } catch (e) {
-            // 忽略
-        }
+        // 滾動一點點以觸發載入
+        await page.evaluate(() => window.scrollBy(0, 500));
+        await new Promise(r => setTimeout(r, 2000));
 
-        // 智慧滾動：只滾動直到收集到足夠的連結
-        let photoLinks = [];
-        let retries = 0;
-        const MAX_RETRIES = 5; // 最多滾動 5 次
-        const TARGET_COUNT = 20;
+        // 提取圖片連結
+        // Google 圖片搜尋結果結構複雜，這裡嘗試抓取縮圖或原始圖連結
+        // 為了簡單起見，我們先抓取縮圖 (通常在 img 標籤中)
+        // 若要抓大圖需要點擊，這裡先從簡單的開始，讓 AI 分析縮圖 (Gemini 對縮圖辨識能力也不錯)
+        const imageUrls = await page.evaluate(() => {
+            const images = Array.from(document.querySelectorAll('img'));
+            return images
+                .map(img => img.src)
+                .filter(src => src && src.startsWith('http') && !src.includes('google') && !src.includes('gstatic.com/images?q=tbn')) // 嘗試過濾掉 Google 的 icon
+                // Google 搜尋結果的圖片通常是 base64 或加密網址，或者 gstatic
+                // 讓我們放寬一點，抓取所有看起來像圖片的
+                .filter(src => src && src.length > 100); // 過濾掉太小的圖示
+        });
 
-        console.log('[Facebook] 開始抓取連結 (目標 20 篇)...');
+        // 針對 Google 圖片結構的特殊處理
+        // 現代 Google 圖片搜尋的縮圖通常是 base64 或者 data:image
+        // 我們嘗試抓取主要的結果區塊
+        const resultImages = await page.evaluate(() => {
+            const results = document.querySelectorAll('div[data-id] img'); // 嘗試定位結果圖片
+            return Array.from(results).map(img => img.src).filter(src => src);
+        });
 
-        while (photoLinks.length < TARGET_COUNT && retries < MAX_RETRIES) {
-            const newLinks = await page.evaluate(() => {
-                const links = Array.from(document.querySelectorAll('a'));
-                return links
-                    .map(a => a.href)
-                    .filter(href => {
-                        if (!href) return false;
-                        // 寬鬆過濾，確保不漏掉
-                        const isPhoto = href.includes('/photo.php') || href.includes('/photos/') || href.includes('/photo/');
-                        // 排除明顯的導航頁
-                        const isNav = href.endsWith('/photos') || href.endsWith('/photos/') || href.includes('/photos_by') || href.includes('/albums');
-                        return isPhoto && !isNav;
-                    });
-            });
+        const finalImages = resultImages.length > 0 ? resultImages : imageUrls;
 
-            // 去重
-            const uniqueLinks = [...new Set(newLinks)];
+        console.log(`[Google] 找到 ${finalImages.length} 張潛在圖片，取前 20 張...`);
 
-            if (uniqueLinks.length >= TARGET_COUNT) {
-                photoLinks = uniqueLinks.slice(0, TARGET_COUNT);
-                break;
-            }
+        const uniqueImages = [...new Set(finalImages)].slice(0, 20);
 
-            console.log(`[Facebook] 目前找到 ${uniqueLinks.length} 個連結，滾動載入更多... (${retries + 1}/${MAX_RETRIES})`);
-            await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-            await new Promise(r => setTimeout(r, 3000)); // 等待載入
-            retries++;
-            photoLinks = uniqueLinks;
-        }
-
-        // 如果還是不夠，就用抓到的所有連結
-        if (photoLinks.length === 0) {
-            // 最後嘗試一次獲取
-            photoLinks = await page.evaluate(() => {
-                const links = Array.from(document.querySelectorAll('a'));
-                return links
-                    .map(a => a.href)
-                    .filter(href => href && (href.includes('/photo.php') || href.includes('/photos/')))
-                    .slice(0, 20);
-            });
-        }
-
-        console.log(`[Facebook] 最終找到 ${photoLinks.length} 個相片連結，準備進入詳情頁抓取大圖...`);
-
-        const highResImages = [];
-
-        // 2. 逐一進入詳情頁抓大圖
-        for (const link of photoLinks) {
-            try {
-                let imgUrl = null;
-                console.log(`[Facebook] 進入詳情頁: ${link}`);
-
-                // REFACTOR: Reuse the main 'page' instance to maintain session state
-
-                // --- 策略 A: 嘗試 www.facebook.com ---
-                try {
-                    // Add Referer to mimic natural navigation
-                    await page.goto(link, {
-                        waitUntil: 'networkidle2',
-                        timeout: 30000,
-                        referer: source.url
-                    });
-
-                    const currentUrl = page.url();
-                    console.log(`[Facebook] Detail Page URL: ${currentUrl}`);
-
-                    if (currentUrl.includes('login') || currentUrl.includes('checkpoint')) {
-                        console.warn(`[Facebook] www 被導向登入頁面，跳過 www 解析，直接嘗試 mbasic...`);
-                        imgUrl = null; // Force fallback
-                    } else {
-                        // 強制等待 5 秒，確保主要內容載入
-                        await new Promise(r => setTimeout(r, 5000));
-
-                        imgUrl = await page.evaluate(() => {
-                            const isInvalid = (src) => {
-                                return !src ||
-                                    src.includes('static.xx.fbcdn.net') ||
-                                    src.includes('rsrc.php') ||
-                                    src.includes('emoji') ||
-                                    src.includes('icon') ||
-                                    src.includes('data:image') ||
-                                    src.endsWith('.svg');
-                            };
-
-                            // 1. Meta Tags
-                            const metaImg = document.querySelector('meta[property="og:image"]');
-                            if (metaImg) {
-                                if (!isInvalid(metaImg.content)) {
-                                    console.log(`[Evaluate] Found valid og:image: ${metaImg.content.substring(0, 30)}...`);
-                                    return metaImg.content;
-                                } else {
-                                    console.log(`[Evaluate] og:image invalid: ${metaImg.content.substring(0, 30)}...`);
-                                }
-                            } else {
-                                console.log(`[Evaluate] No og:image found`);
-                            }
-
-                            // 2. Largest Image
-                            const images = Array.from(document.querySelectorAll('img'));
-                            console.log(`[Evaluate] Found ${images.length} images on page`);
-
-                            let maxArea = 0;
-                            let bestImg = null;
-
-                            images.forEach((img, i) => {
-                                if (isInvalid(img.src)) {
-                                    return;
-                                }
-                                const area = img.naturalWidth * img.naturalHeight;
-                                if (area <= 2000) {
-                                    return;
-                                }
-
-                                console.log(`[Evaluate] Img[${i}] candidate: ${area}px, src=${img.src.substring(0, 30)}...`);
-
-                                if (area > maxArea) {
-                                    maxArea = area;
-                                    bestImg = img.src;
-                                }
-                            });
-
-                            if (bestImg) console.log(`[Evaluate] Selected best image: ${bestImg.substring(0, 30)}...`);
-                            else console.log(`[Evaluate] No suitable image found after filtering`);
-
-                            return bestImg;
-                        });
-                    }
-                } catch (e) {
-                    console.log(`[Facebook] www 提取失敗: ${e.message}`);
-                }
-
-                // --- 策略 B: 如果 www 失敗，嘗試 mbasic.facebook.com ---
-                if (!imgUrl) {
-                    console.log(`[Facebook] www 未找到圖片，嘗試 mbasic fallback...`);
-                    try {
-                        const mbasicLink = link.replace('www.facebook.com', 'mbasic.facebook.com');
-
-                        // NOTE: Do NOT switch UA here, keep the Desktop UA to maintain session consistency.
-
-                        await page.goto(mbasicLink, {
-                            waitUntil: 'networkidle2',
-                            timeout: 30000,
-                            referer: link // Referer is the previous www page
-                        });
-
-                        const mbasicUrl = page.url();
-                        console.log(`[Facebook] mbasic URL: ${mbasicUrl}`);
-
-                        if (mbasicUrl.includes('login') || mbasicUrl.includes('checkpoint')) {
-                            console.warn(`[Facebook] mbasic 也被導向登入頁面，此連結無法抓取。`);
-                        } else {
-                            imgUrl = await page.evaluate(() => {
-                                const isInvalid = (src) => {
-                                    return !src ||
-                                        src.includes('static.xx.fbcdn.net') ||
-                                        src.includes('rsrc.php') ||
-                                        src.includes('emoji') ||
-                                        src.includes('icon') ||
-                                        src.includes('data:image') ||
-                                        src.endsWith('.svg');
-                                };
-
-                                // 1. 優先找 "View full size" 連結
-                                const links = Array.from(document.querySelectorAll('a'));
-                                const viewFull = links.find(a => a.innerText.includes('View full size') || a.innerText.includes('檢視完整大小'));
-                                if (viewFull && !isInvalid(viewFull.href)) return viewFull.href;
-
-                                // 2. 找不到連結，直接找最大的 img
-                                const images = Array.from(document.querySelectorAll('img'));
-                                let maxArea = 0;
-                                let bestImg = null;
-                                images.forEach(img => {
-                                    if (isInvalid(img.src)) return;
-                                    const area = img.naturalWidth * img.naturalHeight;
-                                    if (area > 1000 && area > maxArea) {
-                                        maxArea = area;
-                                        bestImg = img.src;
-                                    }
-                                });
-                                return bestImg;
-                            });
-                        }
-                    } catch (e) {
-                        console.log(`[Facebook] mbasic 提取失敗: ${e.message}`);
-                    }
-                }
-
-                if (imgUrl) {
-                    console.log(`[Facebook] 成功抓取圖片: ${imgUrl.substring(0, 50)}...`);
-                    highResImages.push({
-                        type: 'image',
-                        url: imgUrl,
-                        postUrl: link
-                    });
-                } else {
-                    console.log(`[Facebook] 放棄此連結，無法提取圖片`);
-                }
-
-                await new Promise(r => setTimeout(r, 1000));
-
-            } catch (err) {
-                console.error(`[Facebook] 處理連結失敗: ${link}`, err);
-            }
-        }
-
-        await browser.close();
-        // 去重
-        const uniqueImages = [];
-        const seenUrls = new Set();
-        for (const img of highResImages) {
-            if (!seenUrls.has(img.url)) {
-                seenUrls.add(img.url);
-                uniqueImages.push(img);
-            }
-        }
-        return uniqueImages;
+        return uniqueImages.map(url => ({ type: 'image', url, sourceUrl: searchUrl }));
 
     } catch (error) {
-        console.error(`[Facebook] 抓取失敗 ${source.name}:`, error);
-        await browser.close();
+        console.error(`[Google] 搜尋失敗 ${source.name}:`, error);
         return [];
+    } finally {
+        await browser.close();
     }
 }
 
@@ -392,7 +172,18 @@ async function fetchWebImages(source) {
             const src = $detail(el).attr('src');
             if (src && (src.includes('file_pool') || src.includes('upload'))) {
                 const imgUrl = src.startsWith('http') ? src : source.baseUrl + src;
-                if (!imgUrl.includes('icon') && !imgUrl.includes('logo')) {
+                const lowerUrl = imgUrl.toLowerCase();
+
+                // Enhanced filtering to exclude non-poster images (Re-applied fix)
+                if (!lowerUrl.includes('icon') &&
+                    !lowerUrl.includes('logo') &&
+                    !lowerUrl.endsWith('.svg') &&
+                    !lowerUrl.endsWith('.gif') &&
+                    !lowerUrl.includes('qr') &&
+                    !lowerUrl.includes('line') &&
+                    !lowerUrl.includes('fb') &&
+                    !lowerUrl.includes('ig')) {
+
                     images.push(imgUrl);
                 }
             }
@@ -430,6 +221,11 @@ async function fetchWebImages(source) {
 
 async function fetchImageAsBase64(url) {
     try {
+        // 如果是 Data URL，直接回傳內容 (去掉前綴)
+        if (url.startsWith('data:image')) {
+            return url.split(',')[1];
+        }
+
         const response = await fetch(url, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
@@ -439,14 +235,14 @@ async function fetchImageAsBase64(url) {
         const arrayBuffer = await response.arrayBuffer();
         return Buffer.from(arrayBuffer).toString('base64');
     } catch (error) {
-        console.error(`[Fetch] 圖片下載失敗: ${url}`);
+        console.error(`[Fetch] 圖片下載失敗: ${url.substring(0, 50)}...`);
         return null;
     }
 }
 
 async function analyzeContentWithAI(item, sourceContext) {
     const isImage = item.type === 'image';
-    const contentPreview = isImage ? item.url : item.content.substring(0, 50);
+    const contentPreview = isImage ? item.url.substring(0, 50) : item.content.substring(0, 50);
     console.log(`[AI] 正在分析${isImage ? '圖片' : '文字'} (${sourceContext.city}): ${contentPreview}...`);
 
     try {
@@ -470,6 +266,7 @@ async function analyzeContentWithAI(item, sourceContext) {
 嚴格區分：
 1. 如果是「多地點總表」或「過期活動」(日期在 ${today} 之前)，請回傳 null。
 2. 只有當圖片是「單一活動海報」且日期是「今天或未來」的活動，才提取資料。
+3. 如果圖片模糊不清或不是捐血活動海報，請回傳 null。
 
 請以 JSON 格式回傳以下欄位 (若無資料請填 null):
 {
@@ -577,8 +374,8 @@ async function updateEvents() {
 
         if (source.type === 'web') {
             items = await fetchWebImages(source);
-        } else if (source.type === 'fb') {
-            items = await fetchFacebookImages(source);
+        } else if (source.type === 'google') {
+            items = await fetchGoogleImages(source);
         }
 
         console.log(`[${source.name}] 準備分析 ${items.length} 筆項目...`);
@@ -624,7 +421,7 @@ async function updateEvents() {
                             eventData.gift.image = item.url;
                         }
                     }
-                    eventData.sourceUrl = item.postUrl || item.url || source.url;
+                    eventData.sourceUrl = item.postUrl || item.url || source.url || item.sourceUrl;
                     eventData.id = Date.now() + Math.random();
 
                     if (eventData.date && eventData.location) {

@@ -434,25 +434,6 @@ async function updateEvents() {
     }
 
     if (allNewEvents.length > 0) {
-        const dir = path.dirname(outputPath);
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
-        }
-
-        // 去重
-        const uniqueEvents = [];
-        const seenKeys = new Set();
-
-        for (const evt of allNewEvents) {
-            const key = `${evt.posterUrl}-${evt.date}`;
-            if (!seenKeys.has(key)) {
-                seenKeys.add(key);
-                uniqueEvents.push(evt);
-            }
-        }
-
-        fs.writeFileSync(outputPath, JSON.stringify(uniqueEvents, null, 2));
-        console.log(`\n總共成功更新 ${uniqueEvents.length} 筆活動資料！`);
     } else {
         console.log('\n未提取到任何有效活動資料。');
     }

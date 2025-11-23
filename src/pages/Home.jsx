@@ -11,6 +11,7 @@ const Home = () => {
     const [selectedDistrict, setSelectedDistrict] = useState('');
     const [filteredEvents, setFilteredEvents] = useState(eventsData);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(null);
 
     // 台灣縣市標準排序
     const CITY_ORDER = [
@@ -120,27 +121,78 @@ const Home = () => {
                         <p>{selectedEvent.gift?.name || '以現場提供為主'}</p>
                         <div style={{ marginTop: '1rem', textAlign: 'center' }}>
                             {selectedEvent.gift?.image && (
-                                selectedEvent.gift.image.startsWith('http') ? (
-                                    <a href={selectedEvent.gift.image} target="_blank" rel="noopener noreferrer">
-                                        <img
-                                            src={selectedEvent.gift.image}
-                                            alt={selectedEvent.gift?.name || '贈品圖片'}
-                                            style={{ maxWidth: '100%', borderRadius: '8px', cursor: 'pointer' }}
-                                            title="點擊查看大圖"
-                                        />
-                                    </a>
-                                ) : (
-                                    <img
-                                        src={selectedEvent.gift.image}
-                                        alt={selectedEvent.gift?.name || '贈品圖片'}
-                                        style={{ maxWidth: '100%', borderRadius: '8px' }}
-                                    />
-                                )
+                                <img
+                                    src={selectedEvent.gift.image}
+                                    alt={selectedEvent.gift?.name || '贈品圖片'}
+                                    style={{
+                                        maxWidth: '100%',
+                                        maxHeight: '300px',
+                                        borderRadius: '8px',
+                                        cursor: 'zoom-in',
+                                        objectFit: 'contain'
+                                    }}
+                                    onClick={() => setSelectedImage(selectedEvent.gift.image)}
+                                    title="點擊放大圖片"
+                                />
                             )}
                         </div>
                     </div>
                 )}
             </Modal>
+
+            {/* Lightbox Overlay */}
+            {selectedImage && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 2000,
+                        cursor: 'zoom-out'
+                    }}
+                    onClick={() => setSelectedImage(null)}
+                >
+                    <img
+                        src={selectedImage}
+                        alt="Full size"
+                        style={{
+                            maxWidth: '95vw',
+                            maxHeight: '95vh',
+                            objectFit: 'contain',
+                            borderRadius: '4px'
+                        }}
+                    />
+                    <button
+                        style={{
+                            position: 'absolute',
+                            top: '20px',
+                            right: '20px',
+                            background: 'white',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '40px',
+                            height: '40px',
+                            fontSize: '20px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedImage(null);
+                        }}
+                    >
+                        ×
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

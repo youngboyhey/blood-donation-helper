@@ -40,10 +40,12 @@ const EventCard = ({ event, onClick }) => {
             <div className={styles.footer}>
                 <div className={styles.tags}>
                     {event.city && <span className={styles.tag}>#{event.city}</span>}
-                    {event.district && <span className={styles.tag}>#{event.district}</span>}
-                    {!event.city && !event.district && tags.map((tag, index) => (
-                        <span key={index} className={styles.tag}>#{tag}</span>
-                    ))}
+                    {event.district && event.district !== 'null' && <span className={styles.tag}>#{event.district}</span>}
+                    {!event.city && !event.district && tags && tags
+                        .filter(tag => tag && tag !== 'null' && tag !== 'undefined')
+                        .map((tag, index) => (
+                            <span key={index} className={styles.tag}>#{tag}</span>
+                        ))}
                 </div>
                 <Button size="sm" variant="outline" className={styles.viewButton} onClick={() => onClick && onClick(event)}>查看詳情</Button>
             </div>

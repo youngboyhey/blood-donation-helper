@@ -275,10 +275,10 @@ async function analyzeContentWithAI(item, sourceContext) {
   "time": "時間 (HH:MM-HH:MM)",
   "location": "地點 (請盡量完整，若海報只寫地標，請結合來源城市推斷完整地址)",
   "city": "縣市 (請務必從地點判斷，例如：桃園市、苗栗縣、新北市。若無法判斷才填 ${sourceContext.city})",
-  "district": "行政區 (例如: 大安區, 板橋區)",
+  "district": "行政區 (請仔細從地址中提取，例如：中區、北區、西屯區。若無法判斷請填 null)",
   "organizer": "主辦單位 (預設: ${sourceContext.name})",
   "gift": {
-    "name": "贈品名稱 (包含所有贈品項目)",
+    "name": "贈品名稱 (請列出實質贈品，**嚴格排除**『捐血』、『捐發票』、『集點』、『健康檢查』等非物質項目。若無實質贈品請填 null)",
     "image": "圖片URL (程式會自動填入)"
   },
   "tags": ["AI辨識", "自動更新", "縣市名稱(請填入實際判斷的縣市)"]
@@ -308,10 +308,10 @@ ${item.content}
     "time": "時間 (HH:MM-HH:MM)",
     "location": "地點 (請盡量完整)",
     "city": "縣市 (請務必從地點判斷，例如：桃園市、苗栗縣、新北市。若無法判斷才填 ${sourceContext.city})",
-    "district": "行政區 (例如: 大安區, 板橋區)",
+    "district": "行政區 (請仔細從地址中提取，例如：中區、北區、西屯區。若無法判斷請填 null)",
     "organizer": "主辦單位 (預設: ${sourceContext.name})",
     "gift": {
-      "name": "贈品名稱 (若文中未提及具體贈品，請填 null)",
+      "name": "贈品名稱 (請列出實質贈品，**嚴格排除**『捐血』、『捐發票』、『集點』、『健康檢查』等非物質項目。若無實質贈品請填 null)",
       "image": null
     },
     "tags": ["AI辨識", "自動更新", "縣市名稱(請填入實際判斷的縣市)"]

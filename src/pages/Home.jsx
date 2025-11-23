@@ -12,12 +12,33 @@ const Home = () => {
     const [filteredEvents, setFilteredEvents] = useState(eventsData);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
-    // 提取所有有活動的縣市
-    const cities = [...new Set(eventsData.map(e => e.city).filter(Boolean))];
+    // 台灣縣市標準排序
+    const CITY_ORDER = [
+        '基隆市', '台北市', '新北市', '桃園市', '新竹市', '新竹縣', '苗栗縣',
+        '台中市', '彰化縣', '南投縣', '雲林縣', '嘉義市', '嘉義縣', '台南市',
+        '高雄市', '屏東縣', '宜蘭縣', '花蓮縣', '台東縣', '澎湖縣', '金門縣', '連江縣'
+    ];
 
-    // 根據選擇的縣市提取有活動的區域
+    // 提取所有有活動的縣市並排序
+    const cities = [...new Set(eventsData.map(e => e.city).filter(Boolean))].sort((a, b) => {
+        const indexA = CITY_ORDER.indexOf(a);
+        const indexB = CITY_ORDER.indexOf(b);
+        // 如果都在列表中，照順序排
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+        // 如果只有 A 在列表中，A 排前面
+        if (indexA !== -1) return -1;
+        // 如果只有 B 在列表中，B 排前面
+        if (indexB !== -1) return 1;
+        // 都不在列表中，照字串排序
+        return a.localeCompare(b, 'zh-TW');
+    });
+
+    // 根據選擇的縣市提取有活動的區域並排序
     const districts = selectedCity
-        ? [...new Set(eventsData.filter(e => e.city === selectedCity).map(e => e.district).filter(Boolean))]
+        ? [...new Set(eventsData.filter(e => e.city === selectedCity).map(e => e.district).filter(Boolean))].sort((a, b) => {
+            // 區域暫時使用筆畫/字串排序，因為各縣市區域順序繁多
+            return a.localeCompare(b, 'zh-TW');
+        })
         : [];
 
     useEffect(() => {

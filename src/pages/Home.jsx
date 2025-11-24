@@ -135,8 +135,14 @@ const Home = () => {
                                         cursor: 'zoom-in',
                                         objectFit: 'contain'
                                     }}
-                                    onClick={() => setSelectedImage(selectedEvent.gift.image)}
-                                    title="點擊放大圖片"
+                                    onClick={() => {
+                                        if (selectedEvent.sourceUrl) {
+                                            window.open(selectedEvent.sourceUrl, '_blank');
+                                        } else {
+                                            setSelectedImage(selectedEvent.gift.image);
+                                        }
+                                    }}
+                                    title={selectedEvent.sourceUrl ? "點擊前往活動頁面" : "點擊放大圖片"}
                                 />
                             )}
                         </div>

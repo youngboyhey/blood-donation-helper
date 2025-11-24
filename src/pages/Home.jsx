@@ -55,6 +55,10 @@ const Home = () => {
 
             return matchesSearch && matchesCity && matchesDistrict;
         });
+
+        // 依照日期排序：由近到遠
+        results.sort((a, b) => new Date(a.date) - new Date(b.date));
+
         setFilteredEvents(results);
     }, [searchTerm, selectedCity, selectedDistrict]);
 

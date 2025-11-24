@@ -108,46 +108,98 @@ async function fetchGoogleImages(source) {
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
     try {
-        // 建構 Google 圖片搜尋 URL (tbm=isch: 圖片搜尋, tbs=qdr:w: 過去一週)
         const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(source.query)}&tbm=isch&tbs=qdr:w`;
         await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 60000 });
 
-        // 隨機延遲，模擬人類行為
-        await new Promise(r => setTimeout(r, 2000 + Math.random() * 3000));
+        // 等待搜尋結果載入
+        try {
+            await page.waitForSelector('div[data-id] img', { timeout: 10000 });
+        } catch (e) {
+            console.log(`[Google] 等待搜尋結果超時: ${source.name}`);
+            return [];
+        }
 
-        // 滾動一點點以觸發載入
-        await page.evaluate(() => window.scrollBy(0, 500));
-        await new Promise(r => setTimeout(r, 2000));
+        const images = [];
+        const MAX_RESULTS = 10; // 限制處理數量以節省時間
 
-        // 提取圖片連結
-        // Google 圖片搜尋結果結構複雜，這裡嘗試抓取縮圖或原始圖連結
-        // 為了簡單起見，我們先抓取縮圖 (通常在 img 標籤中)
-        // 若要抓大圖需要點擊，這裡先從簡單的開始，讓 AI 分析縮圖 (Gemini 對縮圖辨識能力也不錯)
-        const imageUrls = await page.evaluate(() => {
-            const images = Array.from(document.querySelectorAll('img'));
-            return images
-                .map(img => img.src)
-                .filter(src => src && src.startsWith('http') && !src.includes('google') && !src.includes('gstatic.com/images?q=tbn')) // 嘗試過濾掉 Google 的 icon
-                // Google 搜尋結果的圖片通常是 base64 或加密網址，或者 gstatic
-                // 讓我們放寬一點，抓取所有看起來像圖片的
-                .filter(src => src && src.length > 100); // 過濾掉太小的圖示
-        });
+        console.log(`[Google] 準備處理前 ${MAX_RESULTS} 筆結果以獲取高畫質圖片...`);
 
-        // 針對 Google 圖片結構的特殊處理
-        // 現代 Google 圖片搜尋的縮圖通常是 base64 或者 data:image
-        // 我們嘗試抓取主要的結果區塊
-        const resultImages = await page.evaluate(() => {
-            const results = document.querySelectorAll('div[data-id] img'); // 嘗試定位結果圖片
-            return Array.from(results).map(img => img.src).filter(src => src);
-        });
+        for (let i = 0; i < MAX_RESULTS; i++) {
+            try {
+                // 每次重新查詢元素以避免 stale element
+                const thumbnails = await page.$$('div[data-id] img');
+                if (i >= thumbnails.length) break;
 
-        const finalImages = resultImages.length > 0 ? resultImages : imageUrls;
+                const thumb = thumbnails[i];
 
-        console.log(`[Google] 找到 ${finalImages.length} 張潛在圖片，取前 20 張...`);
+                // 先提取縮圖 src 作為備案，避免點擊後 handle 失效
+                let thumbSrc = null;
+                try {
+                    thumbSrc = await page.evaluate(el => el.src, thumb);
+                } catch (e) {
+                    console.log(`[Google] 無法預先提取縮圖: ${e.message}`);
+                }
 
-        const uniqueImages = [...new Set(finalImages)].slice(0, 20);
+                // 使用 evaluate click 比較穩定
+                await page.evaluate(el => el.click(), thumb);
 
-        return uniqueImages.map(url => ({ type: 'image', url, sourceUrl: searchUrl }));
+                // 等待側邊欄/大圖載入
+                // 這裡需要一點時間讓高品質圖片載入
+                await new Promise(r => setTimeout(r, 1500));
+
+                const highResUrl = await page.evaluate(() => {
+                    const allImages = Array.from(document.querySelectorAll('img'));
+
+                    // 篩選候選圖片
+                    const candidates = allImages.filter(img => {
+                        const rect = img.getBoundingClientRect();
+                        const isVisible = rect.width > 0 && rect.height > 0;
+                        // 條件：寬高大於 200 (排除小圖示)，且是 http 開頭 (排除 base64 縮圖)，且非 gstatic (通常是縮圖)
+                        const isLarge = rect.width > 200 && rect.height > 200;
+                        const isHttp = img.src.startsWith('http') && !img.src.includes('gstatic.com');
+                        return isVisible && isLarge && isHttp;
+                    });
+
+                    if (candidates.length > 0) {
+                        // 依面積排序，取最大的
+                        candidates.sort((a, b) => {
+                            const areaA = a.getBoundingClientRect().width * a.getBoundingClientRect().height;
+                            const areaB = b.getBoundingClientRect().width * b.getBoundingClientRect().height;
+                            return areaB - areaA;
+                        });
+                        return candidates[0].src;
+                    }
+                    return null;
+                });
+
+                if (highResUrl) {
+                    // console.log(`[Google] 找到高畫質圖片 (${i+1}): ${highResUrl.substring(0, 50)}...`);
+                    images.push({ type: 'image', url: highResUrl, sourceUrl: searchUrl });
+                } else {
+                    // console.log(`[Google] 第 ${i+1} 筆未找到高畫質圖片，嘗試使用縮圖...`);
+                    if (thumbSrc && thumbSrc.length > 100) {
+                        images.push({ type: 'image', url: thumbSrc, sourceUrl: searchUrl });
+                    }
+                }
+
+            } catch (err) {
+                console.error(`[Google] 處理第 ${i + 1} 筆圖片時發生錯誤:`, err.message);
+            }
+        }
+
+        console.log(`[Google] 共收集 ${images.length} 張圖片`);
+
+        // 去重
+        const uniqueImages = [];
+        const seenUrls = new Set();
+        for (const img of images) {
+            if (!seenUrls.has(img.url)) {
+                seenUrls.add(img.url);
+                uniqueImages.push(img);
+            }
+        }
+
+        return uniqueImages;
 
     } catch (error) {
         console.error(`[Google] 搜尋失敗 ${source.name}:`, error);

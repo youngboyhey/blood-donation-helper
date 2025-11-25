@@ -76,7 +76,7 @@ const SOURCES = [
         type: 'google',
         id: 'kaohsiung_ig',
         name: '高雄捐血中心 (IG)',
-        query: 'site:instagram.com/khblood_tbsf 捐血活動',
+        query: 'site:instagram.com 高雄捐血中心 捐血活動',
         city: '高雄市'
     },
     // {
@@ -331,7 +331,11 @@ async function fetchWebImages(source) {
 
         links.each((i, el) => {
             const text = $(el).text().trim();
-            if (text.includes('假日捐血活動') || text.includes('捐血活動場次')) {
+            // Relaxed search: Look for "捐血活動" but exclude "How to" or "Suspended" posts
+            if (text.includes('捐血活動') &&
+                !text.includes('怎麼辦') &&
+                !text.includes('暫停') &&
+                !text.includes('新聞稿')) {
                 targetLink = $(el);
                 return false; // break loop
             }

@@ -186,6 +186,12 @@ async function fetchGoogleImages(source) {
                                 return src.includes('icon') || src.includes('logo') || src.includes('favicon');
                             };
 
+                            // Helper to check if image is a placeholder (e.g. 1x1 GIF)
+                            const isPlaceholder = (img) => {
+                                const src = img.src;
+                                return src.includes('data:image/gif') || src.includes('R0lGODlhAQABA');
+                            };
+
                             // 1. Find the side panel container (usually on the right)
                             // Google's side panel often has a specific structure. 
                             // We look for the largest image that is NOT the thumbnail we just clicked.
@@ -204,6 +210,7 @@ async function fetchGoogleImages(source) {
 
                                 // Filter out known icon patterns
                                 if (isIcon(img)) return false;
+                                if (isPlaceholder(img)) return false;
 
                                 return true;
                             });
@@ -266,7 +273,15 @@ async function fetchGoogleImages(source) {
                     }
                 }
 
-                const finalImageUrl = result.highResUrl || thumbSrc;
+                let finalImageUrl = result.highResUrl;
+
+                // Double check if highResUrl is a placeholder or too short
+                if (finalImageUrl && (finalImageUrl.includes('data:image/gif') || finalImageUrl.length < 100)) {
+                    // console.log(`[Google] High res URL looks like a placeholder, falling back to thumbnail.`);
+                    finalImageUrl = null;
+                }
+
+                finalImageUrl = finalImageUrl || thumbSrc;
                 const finalSourceUrl = result.visitUrl || searchUrl;
 
                 if (finalImageUrl && finalImageUrl.length > 100) {

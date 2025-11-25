@@ -60,6 +60,13 @@ const SOURCES = [
     },
     {
         type: 'google',
+        id: 'taichung_ig',
+        name: '台中捐血中心 (IG)',
+        query: 'site:instagram.com 台中捐血中心 捐血活動',
+        city: '台中市'
+    },
+    {
+        type: 'google',
         id: 'kaohsiung',
         name: '高雄捐血中心',
         query: '高雄捐血中心 捐血活動 贈品',
@@ -67,9 +74,23 @@ const SOURCES = [
     },
     {
         type: 'google',
+        id: 'kaohsiung_ig',
+        name: '高雄捐血中心 (IG)',
+        query: 'site:instagram.com/khblood_tbsf 捐血活動',
+        city: '高雄市'
+    },
+    {
+        type: 'google',
         id: 'tainan',
         name: '台南捐血中心',
         query: '台南捐血中心 捐血活動 贈品',
+        city: '台南市'
+    },
+    {
+        type: 'google',
+        id: 'tainan_ig',
+        name: '台南捐血中心 (IG)',
+        query: 'site:instagram.com 台南捐血中心 捐血活動',
         city: '台南市'
     }
 ];

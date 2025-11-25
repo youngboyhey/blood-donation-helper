@@ -177,7 +177,8 @@ async function fetchGoogleImages(source) {
                     // Helper to check if an image is likely an icon/logo
                     const isIcon = (img) => {
                         const src = img.src.toLowerCase();
-                        return src.includes('icon') || src.includes('logo') || src.includes('fb') || src.includes('instagram');
+                        // Only filter out obvious icon filenames, not just the domain
+                        return src.includes('icon') || src.includes('logo') || src.includes('favicon');
                     };
 
                     // 1. Find the side panel container (usually on the right)
@@ -189,7 +190,8 @@ async function fetchGoogleImages(source) {
                     const candidates = allImages.filter(img => {
                         const rect = img.getBoundingClientRect();
                         // Filter out small images (icons) and hidden images
-                        if (rect.width < 200 || rect.height < 200) return false;
+                        // Relaxed size filter to 150x150 to catch more valid images
+                        if (rect.width < 150 || rect.height < 150) return false;
                         if (rect.width === 0 || rect.height === 0) return false;
 
                         // Must be http(s) to be useful for linking, but we accept base64 if it's high res

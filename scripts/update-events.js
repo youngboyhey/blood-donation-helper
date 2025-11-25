@@ -162,100 +162,109 @@ async function fetchGoogleImages(source) {
                 }
 
                 // 點擊縮圖
+                let clickSuccess = false;
                 try {
                     await page.evaluate(el => el.click(), thumb);
+                    clickSuccess = true;
                 } catch (e) {
-                    console.log(`[Google] 點擊縮圖失敗: ${e.message}`);
-                    continue;
+                    console.log(`[Google] 點擊縮圖失敗: ${e.message}，將使用縮圖作為備案`);
                 }
 
-                // 等待側邊欄載入
-                await new Promise(r => setTimeout(r, 1500));
+                let result = { highResUrl: null, visitUrl: null };
 
-                // 提取資料 (高畫質圖 + 前往連結)
-                const result = await page.evaluate(() => {
-                    // Helper to check if an image is likely an icon/logo
-                    const isIcon = (img) => {
-                        const src = img.src.toLowerCase();
-                        // Only filter out obvious icon filenames, not just the domain
-                        return src.includes('icon') || src.includes('logo') || src.includes('favicon');
-                    };
+                if (clickSuccess) {
+                    // 等待側邊欄載入
+                    await new Promise(r => setTimeout(r, 1500));
 
-                    // 1. Find the side panel container (usually on the right)
-                    // Google's side panel often has a specific structure. 
-                    // We look for the largest image that is NOT the thumbnail we just clicked.
+                    // 提取資料 (高畫質圖 + 前往連結)
+                    try {
+                        result = await page.evaluate(() => {
+                            // Helper to check if an image is likely an icon/logo
+                            const isIcon = (img) => {
+                                const src = img.src.toLowerCase();
+                                // Only filter out obvious icon filenames, not just the domain
+                                return src.includes('icon') || src.includes('logo') || src.includes('favicon');
+                            };
 
-                    const allImages = Array.from(document.querySelectorAll('img'));
+                            // 1. Find the side panel container (usually on the right)
+                            // Google's side panel often has a specific structure. 
+                            // We look for the largest image that is NOT the thumbnail we just clicked.
 
-                    const candidates = allImages.filter(img => {
-                        const rect = img.getBoundingClientRect();
-                        // Filter out small images (icons) and hidden images
-                        // Relaxed size filter to 150x150 to catch more valid images
-                        if (rect.width < 150 || rect.height < 150) return false;
-                        if (rect.width === 0 || rect.height === 0) return false;
+                            const allImages = Array.from(document.querySelectorAll('img'));
 
-                        // Must be http(s) to be useful for linking, but we accept base64 if it's high res
-                        // However, for "linking" we prefer http.
+                            const candidates = allImages.filter(img => {
+                                const rect = img.getBoundingClientRect();
+                                // Filter out small images (icons) and hidden images
+                                // Relaxed size filter to 150x150 to catch more valid images
+                                if (rect.width < 150 || rect.height < 150) return false;
+                                if (rect.width === 0 || rect.height === 0) return false;
 
-                        // Filter out known icon patterns
-                        if (isIcon(img)) return false;
+                                // Must be http(s) to be useful for linking, but we accept base64 if it's high res
+                                // However, for "linking" we prefer http.
 
-                        return true;
-                    });
+                                // Filter out known icon patterns
+                                if (isIcon(img)) return false;
 
-                    // Sort by size (largest first) - The main image in side panel is usually the largest visible one
-                    candidates.sort((a, b) => {
-                        const areaA = a.getBoundingClientRect().width * a.getBoundingClientRect().height;
-                        const areaB = b.getBoundingClientRect().width * b.getBoundingClientRect().height;
-                        return areaB - areaA;
-                    });
+                                return true;
+                            });
 
-                    let highResUrl = null;
-                    // Prefer the first candidate that starts with http
-                    const httpCandidate = candidates.find(img => img.src.startsWith('http') && !img.src.includes('gstatic.com'));
+                            // Sort by size (largest first) - The main image in side panel is usually the largest visible one
+                            candidates.sort((a, b) => {
+                                const areaA = a.getBoundingClientRect().width * a.getBoundingClientRect().height;
+                                const areaB = b.getBoundingClientRect().width * b.getBoundingClientRect().height;
+                                return areaB - areaA;
+                            });
 
-                    if (httpCandidate) {
-                        highResUrl = httpCandidate.src;
-                    } else if (candidates.length > 0) {
-                        // Fallback to base64 if it's the only large image found
-                        highResUrl = candidates[0].src;
-                    }
+                            let highResUrl = null;
+                            // Prefer the first candidate that starts with http
+                            const httpCandidate = candidates.find(img => img.src.startsWith('http') && !img.src.includes('gstatic.com'));
 
-                    // 2. Find "Visit" link
-                    // The visit link is usually near the main image in the side panel.
-                    // We look for <a> tags with specific text or structure.
-                    const links = Array.from(document.querySelectorAll('a'));
-                    let visitUrl = null;
+                            if (httpCandidate) {
+                                highResUrl = httpCandidate.src;
+                            } else if (candidates.length > 0) {
+                                // Fallback to base64 if it's the only large image found
+                                highResUrl = candidates[0].src;
+                            }
 
-                    // Strategy 1: Text content
-                    const visitLink = links.find(a => {
-                        const text = a.innerText.trim();
-                        const rect = a.getBoundingClientRect();
-                        return rect.width > 0 && rect.height > 0 &&
-                            (text.includes('前往') || text.includes('Visit') || text === '網站' || text === 'Website');
-                    });
+                            // 2. Find "Visit" link
+                            // The visit link is usually near the main image in the side panel.
+                            // We look for <a> tags with specific text or structure.
+                            const links = Array.from(document.querySelectorAll('a'));
+                            let visitUrl = null;
 
-                    if (visitLink) {
-                        visitUrl = visitLink.href;
-                    } else {
-                        // Strategy 2: Look for the link wrapping the image or immediately following it
-                        // This is harder to generalize, so we stick to a fallback of "first external link in side panel"
-                        // Assuming side panel is roughly the right half of the screen
-                        const sidePanelLinks = links.filter(a => {
-                            const rect = a.getBoundingClientRect();
-                            return rect.left > window.innerWidth / 2 && // Right half
-                                rect.width > 0 && rect.height > 0 &&
-                                a.href.startsWith('http') &&
-                                !a.href.includes('google.com');
+                            // Strategy 1: Text content
+                            const visitLink = links.find(a => {
+                                const text = a.innerText.trim();
+                                const rect = a.getBoundingClientRect();
+                                return rect.width > 0 && rect.height > 0 &&
+                                    (text.includes('前往') || text.includes('Visit') || text === '網站' || text === 'Website');
+                            });
+
+                            if (visitLink) {
+                                visitUrl = visitLink.href;
+                            } else {
+                                // Strategy 2: Look for the link wrapping the image or immediately following it
+                                // This is harder to generalize, so we stick to a fallback of "first external link in side panel"
+                                // Assuming side panel is roughly the right half of the screen
+                                const sidePanelLinks = links.filter(a => {
+                                    const rect = a.getBoundingClientRect();
+                                    return rect.left > window.innerWidth / 2 && // Right half
+                                        rect.width > 0 && rect.height > 0 &&
+                                        a.href.startsWith('http') &&
+                                        !a.href.includes('google.com');
+                                });
+
+                                if (sidePanelLinks.length > 0) {
+                                    visitUrl = sidePanelLinks[0].href;
+                                }
+                            }
+
+                            return { highResUrl, visitUrl };
                         });
-
-                        if (sidePanelLinks.length > 0) {
-                            visitUrl = sidePanelLinks[0].href;
-                        }
+                    } catch (e) {
+                        // console.log(`[Google] 提取詳細資料失敗: ${e.message}`);
                     }
-
-                    return { highResUrl, visitUrl };
-                });
+                }
 
                 const finalImageUrl = result.highResUrl || thumbSrc;
                 const finalSourceUrl = result.visitUrl || searchUrl;
@@ -334,7 +343,7 @@ async function fetchWebImages(source) {
                 const imgUrl = src.startsWith('http') ? src : source.baseUrl + src;
                 const lowerUrl = imgUrl.toLowerCase();
 
-                // Enhanced filtering to exclude non-poster images (Re-applied fix)
+                // Enhanced filtering to exclude non-poster images
                 if (!lowerUrl.includes('icon') &&
                     !lowerUrl.includes('logo') &&
                     !lowerUrl.endsWith('.svg') &&

@@ -136,13 +136,20 @@ const Home = () => {
                                         objectFit: 'contain'
                                     }}
                                     onClick={() => {
-                                        if (selectedEvent.sourceUrl) {
+                                        const isHttpUrl = selectedEvent.sourceUrl && 
+                                            (selectedEvent.sourceUrl.startsWith('http://') || selectedEvent.sourceUrl.startsWith('https://'));
+                                        
+                                        if (isHttpUrl) {
                                             window.open(selectedEvent.sourceUrl, '_blank');
                                         } else {
                                             setSelectedImage(selectedEvent.gift.image);
                                         }
                                     }}
-                                    title={selectedEvent.sourceUrl ? "點擊前往活動頁面" : "點擊放大圖片"}
+                                    title={
+                                        (selectedEvent.sourceUrl && (selectedEvent.sourceUrl.startsWith('http://') || selectedEvent.sourceUrl.startsWith('https://')))
+                                            ? "點擊前往活動頁面" 
+                                            : "點擊放大圖片"
+                                    }
                                 />
                             )}
                         </div>

@@ -51,13 +51,13 @@ const SOURCES = [
         baseUrl: 'https://www.sc.blood.org.tw',
         city: '新竹市'
     },
-    {
-        type: 'google',
-        id: 'taichung',
-        name: '台中捐血中心',
-        query: '台中捐血中心 捐血活動 贈品',
-        city: '台中市'
-    },
+    // {
+    //     type: 'google',
+    //     id: 'taichung',
+    //     name: '台中捐血中心',
+    //     query: '台中捐血中心 捐血活動 贈品',
+    //     city: '台中市'
+    // },
     {
         type: 'google',
         id: 'taichung_ig',
@@ -65,13 +65,13 @@ const SOURCES = [
         query: 'site:instagram.com 台中捐血中心 捐血活動',
         city: '台中市'
     },
-    {
-        type: 'google',
-        id: 'kaohsiung',
-        name: '高雄捐血中心',
-        query: '高雄捐血中心 捐血活動 贈品',
-        city: '高雄市'
-    },
+    // {
+    //     type: 'google',
+    //     id: 'kaohsiung',
+    //     name: '高雄捐血中心',
+    //     query: '高雄捐血中心 捐血活動 贈品',
+    //     city: '高雄市'
+    // },
     {
         type: 'google',
         id: 'kaohsiung_ig',
@@ -79,13 +79,13 @@ const SOURCES = [
         query: 'site:instagram.com/khblood_tbsf 捐血活動',
         city: '高雄市'
     },
-    {
-        type: 'google',
-        id: 'tainan',
-        name: '台南捐血中心',
-        query: '台南捐血中心 捐血活動 贈品',
-        city: '台南市'
-    },
+    // {
+    //     type: 'google',
+    //     id: 'tainan',
+    //     name: '台南捐血中心',
+    //     query: '台南捐血中心 捐血活動 贈品',
+    //     city: '台南市'
+    // },
     {
         type: 'google',
         id: 'tainan_ig',

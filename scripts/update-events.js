@@ -635,6 +635,15 @@ async function updateEvents() {
                 for (const eventData of eventDataList) {
                     if (!eventData) continue;
 
+                    // 輔助函式：正規化文字 (將 "臺" 轉為 "台")
+                    const normalizeText = (text) => {
+                        if (!text) return text;
+                        return text.replace(/臺/g, '台');
+                    };
+
+                    eventData.city = normalizeText(eventData.city);
+                    eventData.location = normalizeText(eventData.location);
+
                     // 日期過濾：只保留今天以後的活動，且格式必須正確
                     if (eventData.date) {
                         // 驗證日期格式 YYYY-MM-DD

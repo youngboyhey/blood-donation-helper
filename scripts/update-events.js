@@ -464,7 +464,7 @@ async function analyzeContentWithAI(item, sourceContext) {
 
     try {
         const model = genAI.getGenerativeModel({
-            model: "gemini-2.0-flash",
+            model: "gemini-2.5-flash",
             generationConfig: { responseMimeType: "application/json" }
         });
 

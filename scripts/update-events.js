@@ -511,7 +511,7 @@ async function analyzeContentWithAI(item, sourceContext) {
             if (!base64Image) return null;
 
             prompt = `請分析這張捐血活動海報。
-來源脈絡：這張海報來自「${sourceContext.name}」，地點通常位於「${sourceContext.city}」及其周邊縣市（例如新竹中心涵蓋桃園、苗栗；台北中心涵蓋新北）。
+來源脈絡：這張海報來自「${sourceContext.name}」，搜尋時設定的地點為「${sourceContext.city}」。
 今天是 ${today}，請特別留意活動日期。
 
 嚴格區分：
@@ -519,6 +519,7 @@ async function analyzeContentWithAI(item, sourceContext) {
 2. 只有當圖片是「單一活動海報」且日期是「今天或未來」的活動，才提取資料。
 3. 如果圖片模糊不清或不是捐血活動海報，請回傳 null。
 4. **重要：** 如果內容是「施工公告」、「暫停服務」、「遷移公告」、「會議通知」或任何行政公告，**絕對不要**提取，直接回傳 null。
+5. **跨縣市處理：** 雖然搜尋來源是 ${sourceContext.city}，但若海報內容明確指出活動是在其他縣市（例如台南、高雄等），**請務必提取海報上的真實地點與縣市**，不要因為與搜尋地點不同而過濾掉。
 
 請以 JSON 格式回傳以下欄位 (若無資料請填 null):
 {
@@ -540,7 +541,7 @@ async function analyzeContentWithAI(item, sourceContext) {
         } else {
             // 文字分析模式
             prompt = `請分析以下捐血活動公告文字。
-來源脈絡：來自「${sourceContext.name}」，地點通常位於「${sourceContext.city}」及其周邊縣市（例如新竹中心涵蓋桃園、苗栗；台北中心涵蓋新北）。
+來源脈絡：來自「${sourceContext.name}」，搜尋時設定的地點為「${sourceContext.city}」。
 今天是 ${today}，請特別留意活動日期。
 
 請從文字中提取「單一」或「多個」捐血活動資訊。
@@ -549,6 +550,7 @@ async function analyzeContentWithAI(item, sourceContext) {
 2. 如果文字包含多個不同時間地點的活動，請回傳一個 JSON 陣列 (Array of Objects)。
 3. 如果只有一個活動，也請回傳包含一個物件的陣列。
 4. **重要：** 如果內容是「施工公告」、「暫停服務」、「遷移公告」、「會議通知」或任何行政公告，**絕對不要**提取，直接回傳 null。
+5. **跨縣市處理：** 雖然搜尋來源是 ${sourceContext.city}，但若內容明確指出活動是在其他縣市，**請務必提取內容中的真實地點與縣市**，不要因為與搜尋地點不同而過濾掉。
 
 文字內容：
 ${item.content}

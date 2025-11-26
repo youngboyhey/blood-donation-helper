@@ -51,48 +51,16 @@ const SOURCES = [
         baseUrl: 'https://www.sc.blood.org.tw',
         city: '新竹市'
     },
-    // {
-    //     type: 'google',
-    //     id: 'taichung',
-    //     name: '台中捐血中心',
-    //     query: '台中捐血中心 捐血活動 贈品',
-    //     city: '台中市'
-    // },
-    {
-        type: 'google',
-        id: 'taichung_ig',
-        name: '台中捐血中心 (IG)',
-        query: 'site:instagram.com 台中捐血中心 捐血活動',
-        city: '台中市'
-    },
-    // {
-    //     type: 'google',
-    //     id: 'kaohsiung',
-    //     name: '高雄捐血中心',
-    //     query: '高雄捐血中心 捐血活動 贈品',
-    //     city: '高雄市'
-    // },
-    {
-        type: 'google',
-        id: 'kaohsiung_ig',
-        name: '高雄捐血中心 (IG)',
-        query: 'site:instagram.com 高雄捐血中心 捐血活動',
-        city: '高雄市'
-    },
-    // {
-    //     type: 'google',
-    //     id: 'tainan',
-    //     name: '台南捐血中心',
-    //     query: '台南捐血中心 捐血活動 贈品',
-    //     city: '台南市'
-    // },
-    {
-        type: 'google',
-        id: 'tainan_ig',
-        name: '台南捐血中心 (IG)',
-        query: 'site:instagram.com 台南捐血中心 捐血活動',
-        city: '台南市'
-    }
+    { type: 'google', id: 'taichung', name: '台中捐血中心', query: '台中 捐血活動 贈品', city: '台中市' },
+    { type: 'google', id: 'changhua', name: '彰化捐血站', query: '彰化 捐血活動 贈品', city: '彰化縣' },
+    { type: 'google', id: 'nantou', name: '南投捐血室', query: '南投 捐血活動 贈品', city: '南投縣' },
+    { type: 'google', id: 'yunlin', name: '雲林捐血站', query: '雲林 捐血活動 贈品', city: '雲林縣' },
+    { type: 'google', id: 'tainan', name: '台南捐血中心', query: '台南 捐血活動 贈品', city: '台南市' },
+    { type: 'google', id: 'chiayi', name: '嘉義捐血站', query: '嘉義 捐血活動 贈品', city: '嘉義市' },
+    { type: 'google', id: 'kaohsiung', name: '高雄捐血中心', query: '高雄 捐血活動 贈品', city: '高雄市' },
+    { type: 'google', id: 'pingtung', name: '屏東捐血站', query: '屏東 捐血活動 贈品', city: '屏東縣' },
+    { type: 'google', id: 'taitung', name: '台東捐血站', query: '台東 捐血活動 贈品', city: '台東縣' },
+    { type: 'google', id: 'penghu', name: '馬公捐血站', query: '澎湖 捐血活動 贈品', city: '澎湖縣' }
 ];
 
 async function fetchHTMLWithPuppeteer(url) {
@@ -141,7 +109,7 @@ async function fetchGoogleImages(source) {
         }
 
         const images = [];
-        const MAX_RESULTS = 50; // 增加搜尋數量至 50
+        const MAX_RESULTS = 10; // 限制搜尋數量至 10
 
         console.log(`[Google] 準備處理前 ${MAX_RESULTS} 筆結果以獲取高畫質圖片與來源連結...`);
 
@@ -201,8 +169,8 @@ async function fetchGoogleImages(source) {
                             const candidates = allImages.filter(img => {
                                 const rect = img.getBoundingClientRect();
                                 // Filter out small images (icons) and hidden images
-                                // Relaxed size filter to 150x150 to catch more valid images
-                                if (rect.width < 150 || rect.height < 150) return false;
+                                // Stricter size filter: 300x300
+                                if (rect.width < 300 || rect.height < 300) return false;
                                 if (rect.width === 0 || rect.height === 0) return false;
 
                                 // Must be http(s) to be useful for linking, but we accept base64 if it's high res

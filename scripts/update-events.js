@@ -325,8 +325,8 @@ async function fetchWebImages(source) {
         const html = await fetchHTMLWithPuppeteer(source.url);
         const $ = cheerio.load(html);
 
-        // 尋找包含 "假日捐血活動" 或 "捐血活動" 的最新連結
-        let targetLink = null;
+        // 尋找包含 "假日捐血活動" 或 "捐血活動" 的連結
+        const targetLinks = [];
         const links = $('a');
 
         links.each((i, el) => {
@@ -336,70 +336,99 @@ async function fetchWebImages(source) {
                 !text.includes('怎麼辦') &&
                 !text.includes('暫停') &&
                 !text.includes('新聞稿')) {
-                targetLink = $(el);
-                return false; // break loop
-            }
-        });
 
-        if (!targetLink) {
-            console.log(`[Web] 在 ${source.name} 找不到活動連結，跳過。`);
-            return [];
-        }
-
-        let href = targetLink.attr('href');
-        if (!href) return [];
-
-        const fullUrl = href.startsWith('http') ? href : source.baseUrl + href;
-        console.log(`[Web] 找到活動頁面: ${fullUrl}`);
-
-        const detailHtml = await fetchHTMLWithPuppeteer(fullUrl);
-        const $detail = cheerio.load(detailHtml);
-        const images = [];
-
-        $detail('img').each((i, el) => {
-            const src = $detail(el).attr('src');
-            if (src && (src.includes('file_pool') || src.includes('upload'))) {
-                const imgUrl = src.startsWith('http') ? src : source.baseUrl + src;
-                const lowerUrl = imgUrl.toLowerCase();
-
-                // Enhanced filtering to exclude non-poster images
-                if (!lowerUrl.includes('icon') &&
-                    !lowerUrl.includes('logo') &&
-                    !lowerUrl.endsWith('.svg') &&
-                    !lowerUrl.endsWith('.gif') &&
-                    !lowerUrl.includes('qr') &&
-                    !lowerUrl.includes('line') &&
-                    !lowerUrl.includes('fb') &&
-                    !lowerUrl.includes('ig')) {
-
-                    images.push(imgUrl);
+                let href = $(el).attr('href');
+                if (href) {
+                    const fullUrl = href.startsWith('http') ? href : source.baseUrl + href;
+                    targetLinks.push(fullUrl);
                 }
             }
         });
 
-        // 如果找不到圖片，嘗試提取純文字內容 (針對新竹捐血中心等純文字公告)
-        if (images.length === 0) {
-            console.log(`[Web] 找不到圖片，嘗試提取文字內容...`);
-            // 移除 script, style 等干擾元素
-            $detail('script').remove();
-            $detail('style').remove();
-            $detail('nav').remove();
-            $detail('header').remove();
-            $detail('footer').remove();
+        if (targetLinks.length === 0) {
+            console.log(`[Web] 在 ${source.name} 找不到活動連結，跳過。`);
+            return [];
+        }
 
-            // 提取主要內容區塊 (通常是 article 或 main，或直接 body)
-            // 這裡簡單提取 body text，讓 AI 去過濾
-            const textContent = $detail('body').text().replace(/\s+/g, ' ').trim();
+        // 去重連結 (有些網站可能有多個連結指向同一頁)
+        const uniqueLinks = [...new Set(targetLinks)];
+        console.log(`[Web] 找到 ${uniqueLinks.length} 個潛在活動頁面:`, uniqueLinks);
 
-            // 簡單判斷內容長度，避免提取到空頁面
-            if (textContent.length > 100) {
-                console.log(`[Web] 提取到文字內容 (${textContent.length} 字)`);
-                return [{ type: 'text', content: textContent, url: fullUrl }];
+        let allImages = [];
+
+        for (const fullUrl of uniqueLinks) {
+            console.log(`[Web] 正在處理活動頁面: ${fullUrl}`);
+            try {
+                const detailHtml = await fetchHTMLWithPuppeteer(fullUrl);
+                const $detail = cheerio.load(detailHtml);
+                const pageImages = [];
+
+                $detail('img').each((i, el) => {
+                    const src = $detail(el).attr('src');
+                    if (src && (src.includes('file_pool') || src.includes('upload'))) {
+                        const imgUrl = src.startsWith('http') ? src : source.baseUrl + src;
+                        const lowerUrl = imgUrl.toLowerCase();
+
+                        // Enhanced filtering to exclude non-poster images
+                        if (!lowerUrl.includes('icon') &&
+                            !lowerUrl.includes('logo') &&
+                            !lowerUrl.endsWith('.svg') &&
+                            !lowerUrl.endsWith('.gif') &&
+                            !lowerUrl.includes('qr') &&
+                            !lowerUrl.includes('line') &&
+                            !lowerUrl.includes('fb') &&
+                            !lowerUrl.includes('ig')) {
+
+                            pageImages.push(imgUrl);
+                        }
+                    }
+                });
+
+                // 如果找不到圖片，嘗試提取純文字內容 (針對新竹捐血中心等純文字公告)
+                if (pageImages.length === 0) {
+                    console.log(`[Web] 找不到圖片，嘗試提取文字內容...`);
+                    // 移除 script, style 等干擾元素
+                    $detail('script').remove();
+                    $detail('style').remove();
+                    $detail('nav').remove();
+                    $detail('header').remove();
+                    $detail('footer').remove();
+
+                    // 提取主要內容區塊 (通常是 article 或 main，或直接 body)
+                    const textContent = $detail('body').text().replace(/\s+/g, ' ').trim();
+
+                    // 簡單判斷內容長度，避免提取到空頁面
+                    if (textContent.length > 100) {
+                        console.log(`[Web] 提取到文字內容 (${textContent.length} 字)`);
+                        allImages.push({ type: 'text', content: textContent, url: fullUrl });
+                    }
+                } else {
+                    console.log(`[Web] 在此頁面找到 ${pageImages.length} 張圖片`);
+                    pageImages.forEach(url => {
+                        allImages.push({ type: 'image', url, postUrl: fullUrl });
+                    });
+                }
+
+            } catch (err) {
+                console.error(`[Web] 處理頁面失敗 ${fullUrl}:`, err);
             }
         }
 
-        console.log(`[Web] 找到 ${images.length} 張圖片`);
-        return [...new Set(images)].map(url => ({ type: 'image', url }));
+        console.log(`[Web] 總共收集到 ${allImages.length} 筆資料`);
+
+        // 簡單去重 (針對 URL)
+        const uniqueResult = [];
+        const seen = new Set();
+
+        for (const item of allImages) {
+            const key = item.type === 'image' ? item.url : item.url; // 文字模式用頁面 URL 當 key
+            if (!seen.has(key)) {
+                seen.add(key);
+                uniqueResult.push(item);
+            }
+        }
+
+        return uniqueResult;
 
     } catch (error) {
         console.error(`[Web] 抓取失敗 ${source.name}:`, error);

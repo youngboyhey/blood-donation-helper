@@ -740,29 +740,44 @@ async function updateEvents() {
         });
 
         if (duplicateIndex !== -1) {
-            // 找到重複，保留資訊較完整的那一個
+            // 找到重複，進行智慧合併
             const existing = uniqueEvents[duplicateIndex];
+            console.log(`[去重] 合併活動: "${existing.title}" vs "${evt.title}"`);
 
-            // 判斷標準：
-            // 1. 有海報優先
-            // 2. 地點字串較長優先 (通常較詳細)
-            // 3. 有贈品資訊優先
+            // 合併邏輯：保留資訊較完整的部分
+            const merged = { ...existing };
 
-            let keepNew = false;
+            // 1. 海報：優先保留有的
+            merged.posterUrl = existing.posterUrl || evt.posterUrl;
 
-            if (evt.posterUrl && !existing.posterUrl) keepNew = true;
-            else if (!evt.posterUrl && existing.posterUrl) keepNew = false;
-            else {
-                // 都有或都沒有海報，比地點長度
-                if ((evt.location || '').length > (existing.location || '').length) keepNew = true;
+            // 2. 標題：保留較長的 (通常較詳細)
+            if ((evt.title || '').length > (existing.title || '').length) {
+                merged.title = evt.title;
             }
 
-            if (keepNew) {
-                console.log(`[去重] 取代舊活動: 保留 "${evt.title}" (${evt.location}), 移除 "${existing.title}"`);
-                uniqueEvents[duplicateIndex] = evt;
-            } else {
-                console.log(`[去重] 保留舊活動: "${existing.title}" (${existing.location}), 忽略 "${evt.title}"`);
+            // 3. 地點：保留較長的
+            if ((evt.location || '').length > (existing.location || '').length) {
+                merged.location = evt.location;
+                merged.city = evt.city || existing.city; // 跟隨地點更新縣市
+                merged.district = evt.district || existing.district;
             }
+
+            // 4. 時間：優先保留有的
+            merged.time = existing.time || evt.time;
+
+            // 5. 贈品：優先保留有內容且較長的
+            const gift1 = existing.gift ? existing.gift.name : '';
+            const gift2 = evt.gift ? evt.gift.name : '';
+            if (gift2.length > gift1.length) {
+                merged.gift = evt.gift;
+            }
+
+            // 6. 標籤：合併並去重
+            const tags = new Set([...(existing.tags || []), ...(evt.tags || [])]);
+            merged.tags = Array.from(tags);
+
+            // 更新回陣列
+            uniqueEvents[duplicateIndex] = merged;
         } else {
             uniqueEvents.push(evt);
         }

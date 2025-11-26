@@ -329,6 +329,38 @@ async function fetchWebImages(source) {
         const targetLinks = [];
         const links = $('a');
 
+        // 輔助函式：從標題解析日期
+        const parseDatesFromTitle = (title) => {
+            const dateRegex = /(\d{1,2})[\/\.](\d{1,2})/g;
+            const matches = [...title.matchAll(dateRegex)];
+            if (matches.length === 0) return null;
+
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            const currentMonth = today.getMonth() + 1;
+
+            // 找出標題中提到的所有日期
+            const dates = matches.map(m => {
+                let month = parseInt(m[1], 10);
+                let day = parseInt(m[2], 10);
+
+                // 簡單的年份判斷：如果現在是 12 月，但活動是 1 月，假設是明年
+                let year = currentYear;
+                if (currentMonth === 12 && month === 1) {
+                    year = currentYear + 1;
+                }
+                // 如果現在是 1 月，但活動是 12 月，假設是去年 (已過期)
+                else if (currentMonth === 1 && month === 12) {
+                    year = currentYear - 1;
+                }
+
+                return new Date(year, month - 1, day);
+            });
+
+            // 回傳最晚的日期
+            return new Date(Math.max(...dates));
+        };
+
         links.each((i, el) => {
             const text = $(el).text().trim();
             // Relaxed search: Look for "捐血活動" but exclude "How to" or "Suspended" posts
@@ -336,6 +368,18 @@ async function fetchWebImages(source) {
                 !text.includes('怎麼辦') &&
                 !text.includes('暫停') &&
                 !text.includes('新聞稿')) {
+
+                // 日期過濾邏輯
+                const latestDate = parseDatesFromTitle(text);
+                if (latestDate) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (latestDate < today) {
+                        console.log(`[Web] 跳過過期活動: ${text} (日期: ${latestDate.toLocaleDateString()})`);
+                        return; // continue loop
+                    }
+                }
 
                 let href = $(el).attr('href');
                 if (href) {

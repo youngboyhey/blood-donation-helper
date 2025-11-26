@@ -766,8 +766,8 @@ async function updateEvents() {
             merged.time = existing.time || evt.time;
 
             // 5. 贈品：優先保留有內容且較長的
-            const gift1 = existing.gift ? existing.gift.name : '';
-            const gift2 = evt.gift ? evt.gift.name : '';
+            const gift1 = (existing.gift && existing.gift.name) ? existing.gift.name : '';
+            const gift2 = (evt.gift && evt.gift.name) ? evt.gift.name : '';
             if (gift2.length > gift1.length) {
                 merged.gift = evt.gift;
             }

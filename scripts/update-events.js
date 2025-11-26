@@ -109,6 +109,27 @@ async function fetchGoogleImages(source) {
         }
 
         const images = [];
+        // 模擬人類行為：先捲動頁面以觸發 lazy loading
+        await page.evaluate(async () => {
+            await new Promise((resolve) => {
+                let totalHeight = 0;
+                const distance = 100;
+                const timer = setInterval(() => {
+                    const scrollHeight = document.body.scrollHeight;
+                    window.scrollBy(0, distance);
+                    totalHeight += distance;
+
+                    if (totalHeight >= scrollHeight || totalHeight > 3000) { // 捲動一部分即可，不用到底
+                        clearInterval(timer);
+                        resolve();
+                    }
+                }, 100);
+            });
+        });
+
+        // 隨機等待一下
+        await new Promise(r => setTimeout(r, 1000 + Math.random() * 2000));
+
         const MAX_RESULTS = 10; // 限制搜尋數量至 10
 
         console.log(`[Google] 準備處理前 ${MAX_RESULTS} 筆結果以獲取高畫質圖片與來源連結...`);
@@ -132,6 +153,8 @@ async function fetchGoogleImages(source) {
                 // 點擊縮圖
                 let clickSuccess = false;
                 try {
+                    // 隨機延遲點擊
+                    await new Promise(r => setTimeout(r, 500 + Math.random() * 1000));
                     await page.evaluate(el => el.click(), thumb);
                     clickSuccess = true;
                 } catch (e) {
@@ -141,8 +164,19 @@ async function fetchGoogleImages(source) {
                 let result = { highResUrl: null, visitUrl: null };
 
                 if (clickSuccess) {
-                    // 等待側邊欄載入
-                    await new Promise(r => setTimeout(r, 1500));
+                    // 等待側邊欄載入，給予更多時間並使用 waitForFunction 確保大圖出現
+                    try {
+                        // 等待右側面板出現大圖 (通常是 img 標籤，且 src 不是 base64 縮圖)
+                        // 這裡使用一個較寬鬆的等待條件，避免卡死
+                        await page.waitForFunction(() => {
+                            const images = Array.from(document.querySelectorAll('img'));
+                            // 尋找寬度大於 300 的圖片，且不是剛剛點擊的那個縮圖
+                            return images.some(img => img.getBoundingClientRect().width > 300);
+                        }, { timeout: 3000 }).catch(() => { }); // 忽略 timeout，繼續嘗試提取
+                    } catch (e) { }
+
+                    // 額外等待一下，確保圖片完全載入
+                    await new Promise(r => setTimeout(r, 1000));
 
                     // 提取資料 (高畫質圖 + 前往連結)
                     try {
@@ -150,19 +184,14 @@ async function fetchGoogleImages(source) {
                             // Helper to check if an image is likely an icon/logo
                             const isIcon = (img) => {
                                 const src = img.src.toLowerCase();
-                                // Only filter out obvious icon filenames, not just the domain
                                 return src.includes('icon') || src.includes('logo') || src.includes('favicon');
                             };
 
-                            // Helper to check if image is a placeholder (e.g. 1x1 GIF)
+                            // Helper to check if image is a placeholder
                             const isPlaceholder = (img) => {
                                 const src = img.src;
                                 return src.includes('data:image/gif') || src.includes('R0lGODlhAQABA');
                             };
-
-                            // 1. Find the side panel container (usually on the right)
-                            // Google's side panel often has a specific structure. 
-                            // We look for the largest image that is NOT the thumbnail we just clicked.
 
                             const allImages = Array.from(document.querySelectorAll('img'));
 
@@ -173,9 +202,6 @@ async function fetchGoogleImages(source) {
                                 if (rect.width < 300 || rect.height < 300) return false;
                                 if (rect.width === 0 || rect.height === 0) return false;
 
-                                // Must be http(s) to be useful for linking, but we accept base64 if it's high res
-                                // However, for "linking" we prefer http.
-
                                 // Filter out known icon patterns
                                 if (isIcon(img)) return false;
                                 if (isPlaceholder(img)) return false;
@@ -183,7 +209,7 @@ async function fetchGoogleImages(source) {
                                 return true;
                             });
 
-                            // Sort by size (largest first) - The main image in side panel is usually the largest visible one
+                            // Sort by size (largest first)
                             candidates.sort((a, b) => {
                                 const areaA = a.getBoundingClientRect().width * a.getBoundingClientRect().height;
                                 const areaB = b.getBoundingClientRect().width * b.getBoundingClientRect().height;
@@ -202,8 +228,6 @@ async function fetchGoogleImages(source) {
                             }
 
                             // 2. Find "Visit" link
-                            // The visit link is usually near the main image in the side panel.
-                            // We look for <a> tags with specific text or structure.
                             const links = Array.from(document.querySelectorAll('a'));
                             let visitUrl = null;
 
@@ -219,8 +243,6 @@ async function fetchGoogleImages(source) {
                                 visitUrl = visitLink.href;
                             } else {
                                 // Strategy 2: Look for the link wrapping the image or immediately following it
-                                // This is harder to generalize, so we stick to a fallback of "first external link in side panel"
-                                // Assuming side panel is roughly the right half of the screen
                                 const sidePanelLinks = links.filter(a => {
                                     const rect = a.getBoundingClientRect();
                                     return rect.left > window.innerWidth / 2 && // Right half

@@ -265,8 +265,8 @@ async function fetchGoogleImages(source) {
 
                 let finalImageUrl = result.highResUrl;
 
-                // Double check if highResUrl is a placeholder or too short
-                if (finalImageUrl && (finalImageUrl.includes('data:image/gif') || finalImageUrl.length < 100)) {
+                // Double check if highResUrl is a placeholder or too short (only for data URLs)
+                if (finalImageUrl && finalImageUrl.startsWith('data:') && (finalImageUrl.includes('data:image/gif') || finalImageUrl.length < 100)) {
                     // console.log(`[Google] High res URL looks like a placeholder, falling back to thumbnail.`);
                     finalImageUrl = null;
                 }
@@ -274,7 +274,7 @@ async function fetchGoogleImages(source) {
                 finalImageUrl = finalImageUrl || thumbSrc;
                 const finalSourceUrl = result.visitUrl || searchUrl;
 
-                if (finalImageUrl && finalImageUrl.length > 100) {
+                if (finalImageUrl && (finalImageUrl.startsWith('http') || finalImageUrl.length > 100)) {
                     images.push({
                         type: 'image',
                         url: finalImageUrl,

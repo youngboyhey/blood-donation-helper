@@ -1,66 +1,948 @@
 [
   {
-    "title": "一起捐血 小丸抱抱",
-    "date": "2025-11-26",
+    "title": "李氏宗祠挽袖捐血攜手送愛",
+    "date": "2025-11-29",
+    "time": "10:00-18:00",
+    "location": "公園路襄陽路口 (公園號捐血車)",
+    "city": "台北市",
+    "district": "中正區",
+    "organizer": "財團法人台灣李氏宗祠, 台北市李氏宗親會",
+    "gift": {
+      "name": "全聯禮券",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331110106676674/1129%E5%85%AC%E5%9C%92%E6%9D%8E%E6%B0%8F.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331110106676674/1129%E5%85%AC%E5%9C%92%E6%9D%8E%E6%B0%8F.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210585631.8462
+  },
+  {
+    "title": "捐血愛不止息 你的熱血是點亮他人生命的一盞燈",
+    "date": "2025-11-29",
+    "time": "09:30-16:30",
+    "location": "新北市林口區文化一路與仁愛一路交叉口 (林口運動公園)",
+    "city": "新北市",
+    "district": "林口區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": "全聯禮券200元、喜馬拉雅免費咖啡券、龍藏萬福招財錢母",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331110741555691/1129%E6%9D%BE%E6%9F%8F%E6%85%88%E5%96%84%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331110741555691/1129%E6%9D%BE%E6%9F%8F%E6%85%88%E5%96%84%E6%9C%83.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210601199.6372
+  },
+  {
+    "title": "捐血一袋，救人一命！",
+    "date": "2025-11-29",
+    "time": "11:00-17:30",
+    "location": "台北市信義區松壽路16號",
+    "city": "台北市",
+    "district": "信義區",
+    "organizer": "國際扶輪3523地區 第一分區聯合主辦 (主辦社：南區社、逸仙社、逸澤社、逸新社；協辦社：逸天社、雲聯網社、黃埔社、蘭亭鐵馬社)",
+    "gift": {
+      "name": "電影票",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331111285423629/1129%E6%9D%BE%E5%A3%BD%E8%B7%AF.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331111285423629/1129%E6%9D%BE%E5%A3%BD%E8%B7%AF.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210610565.3176
+  },
+  {
+    "title": "捐血有你 熱血相挺",
+    "date": "2025-11-29",
+    "time": "10:00-18:00",
+    "location": "新北市新莊區中華路一段與復興路一段交叉口 (新莊綜合體育場)",
+    "city": "新北市",
+    "district": "新莊區",
+    "organizer": "中華民國紅十字會新北市分會新莊區會",
+    "gift": {
+      "name": "優質好米, 衛生紙",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331111829302646/1129%E7%B4%85%E5%8D%81%E5%AD%97.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331111829302646/1129%E7%B4%85%E5%8D%81%E5%AD%97.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210617320.4602
+  },
+  {
+    "title": "捐血GO！連續12年約您一起做公益",
+    "date": "2025-11-29",
+    "time": "09:00-17:00",
+    "location": "中和號捐血車 - 新北市中和區中安街 (中安街圖書館旁823公園)",
+    "city": "新北市",
+    "district": "中和區",
+    "organizer": "台灣預防保健協會",
+    "gift": {
+      "name": "高山有機高麗菜 2顆, 特益康(60粒/1盒)",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331112008150691/1129%E9%A0%90%E9%98%B2%E4%BF%9D%E5%81%A5.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331112008150691/1129%E9%A0%90%E9%98%B2%E4%BF%9D%E5%81%A5.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210627936.331
+  },
+  {
+    "title": "捐血有愛因為你在",
+    "date": "2025-11-29",
+    "time": "09:30-17:00",
+    "location": "新北市新莊區中華路三段富貴路口 (車停中華路上)",
+    "city": "新北市",
+    "district": "新莊區",
+    "organizer": "台灣希望之光慈善會",
+    "gift": {
+      "name": "統一超商禮券200元、松村壽司御飯糰",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331112463271673/1129%E6%96%B0%E8%8E%8A%E4%B8%AD%E8%8F%AF%E8%B7%AF.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331112463271673/1129%E6%96%B0%E8%8E%8A%E4%B8%AD%E8%8F%AF%E8%B7%AF.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210638114.3115
+  },
+  {
+    "title": "捐血博愛 生命續航",
+    "date": "2025-11-29",
+    "time": "09:30-16:30",
+    "location": "基隆市麥金路201號 (城上城)",
+    "city": "基隆市",
+    "district": "安樂區",
+    "organizer": "基隆市譽樂友好協會",
+    "gift": {
+      "name": "桂格養氣人參",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331113642029628/1129%E9%A5%97%E6%A8%82.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "基隆市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331113642029628/1129%E9%A5%97%E6%A8%82.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210649027.872
+  },
+  {
+    "title": "捐血有你 愛不止息 捐血暨免費血糖檢測及義剪活動",
+    "date": "2025-11-29",
+    "time": "09:00-17:00",
+    "location": "新北市三重區三和路四段+慈愛街口 (麗馳社區9號)",
+    "city": "新北市",
+    "district": "三重區",
+    "organizer": "新北市北一獅子會",
+    "gift": {
+      "name": "手杖傘、思慕牛排(徐匯店)餐券",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331118383959692/1129%E4%B8%89%E9%87%8D%E6%85%88%E6%84%9B.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331118383959692/1129%E4%B8%89%E9%87%8D%E6%85%88%E6%84%9B.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210657518.7913
+  },
+  {
+    "title": "捐熱血 Go! 愛心",
+    "date": "2025-11-29",
+    "time": "09:00-17:00",
+    "location": "新北市三重區仁愛街15號 (三重國小捷運站、長泰派出所旁)",
+    "city": "新北市",
+    "district": "三重區",
+    "organizer": "三重同濟會, U2 電影館",
+    "gift": {
+      "name": "三好米一包, U2電影票一張, 禧福腳踏車(限量10部) 或 加碼禮品大相送",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331118749980674/1129%E4%B8%89%E9%87%8D%E5%9C%8B%E5%B0%8F.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331118749980674/1129%E4%B8%89%E9%87%8D%E5%9C%8B%E5%B0%8F.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210667297.1768
+  },
+  {
+    "title": "捐血有禮 愛心無限",
+    "date": "2025-11-29",
+    "time": "09:30-16:00",
+    "location": "台北市士林區中山北路七段9號 (天母廣場旁 住商門口)",
+    "city": "台北市",
+    "district": "士林區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": "全聯禮券200元, 議員贊助品, 味全龍束口袋, 洗碗精",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331119562707647/1129%E4%B8%AD%E5%B1%B1%E5%8C%97%E8%B7%AF7%E6%AE%B5.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331119562707647/1129%E4%B8%AD%E5%B1%B1%E5%8C%97%E8%B7%AF7%E6%AE%B5.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210676070.505
+  },
+  {
+    "title": "國際佛光會台北大安第四分會 邀請您一起捐血傳愛",
+    "date": "2025-11-29",
+    "time": "09:00-17:00",
+    "location": "長春捐血室 (台北市中山區長春路17號2樓)",
+    "city": "台北市",
+    "district": "中山區",
+    "organizer": "國際佛光會台北大安第四分會",
+    "gift": {
+      "name": "健康滾輪足底踏板",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331119928838629/1129%E5%A4%A7%E5%AE%89%E5%9B%9B.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331119928838629/1129%E5%A4%A7%E5%AE%89%E5%9B%9B.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210683398.0774
+  },
+  {
+    "title": "熱血凝聚愛 捐血傳真情",
+    "date": "2025-11-30",
+    "time": "10:00-17:00",
+    "location": "台北市中山區南京西路6號",
+    "city": "台北市",
+    "district": "中山區",
+    "organizer": "國際扶輪3521地區 臺北市九合扶輪社、國際扶輪3521地區 臺北市九合扶輪社 社區服務團、信義房屋 中山捷運店、中山南京店",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332200324705228/1130%E4%B8%AD%E5%B1%B1%E7%AB%99.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "臺北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332200324705228/1130%E4%B8%AD%E5%B1%B1%E7%AB%99.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210692006.6423
+  },
+  {
+    "title": "熱血大安",
+    "date": "2025-11-30",
+    "time": "09:30-16:30",
+    "location": "台北市立大安高工 台北市大安區復興南路二段52號",
+    "city": "台北市",
+    "district": "大安區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": "禮券、餐具組、提袋、點心、娃娃/吊飾、毛巾",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332200789836201/1130%E5%A4%A7%E5%AE%89.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332200789836201/1130%E5%A4%A7%E5%AE%89.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210704444.2449
+  },
+  {
+    "title": "文潔議員邀您 愛心捐血一起來",
+    "date": "2025-11-30",
+    "time": "09:30-16:30",
+    "location": "台北市松山區南京東路五段281號前",
+    "city": "台北市",
+    "district": "松山區",
+    "organizer": "新台北獅子會、台灣銀髮族總會、張文潔議員服務團隊",
+    "gift": {
+      "name": "燉雞精、張文潔議員紀念品",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332201502553273/1130%E5%8D%97%E4%BA%AC%E6%9D%B1%E8%B7%AF5%E6%AE%B5.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332201502553273/1130%E5%8D%97%E4%BA%AC%E6%9D%B1%E8%B7%AF5%E6%AE%B5.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210715211.172
+  },
+  {
+    "title": "臺北市北投健康管理醫院捐血活動",
+    "date": "2025-11-30",
+    "time": "09:00-17:00",
+    "location": "台北市北投健康管理醫院 / 北投老爺酒店 1樓廣場 (地址: 台北市北投區中和街2號)",
+    "city": "台北市",
+    "district": "北投區",
+    "organizer": "臺北市北投健康管理醫院, 台北市春暉獅子會",
+    "gift": {
+      "name": "全家禮物卡300元, 手工餅乾, Footer機能襪1雙, 抱枕一顆",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332201968684256/1130%E5%8C%97%E6%8A%95%E5%81%A5%E5%BA%B7%E7%AE%A1%E7%90%86.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332201968684256/1130%E5%8C%97%E6%8A%95%E5%81%A5%E5%BA%B7%E7%AE%A1%E7%90%86.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210724158.1072
+  },
+  {
+    "title": "減法空愛加倍 Give me five!",
+    "date": "2025-11-30",
+    "time": "11:00-18:00",
+    "location": "台北市信義區松壽路16巷底 (信義威秀旁)",
+    "city": "台北市",
+    "district": "信義區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": "威秀影城電影票、熱血gogo雙面刺繡鑰匙圈",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332202146432200/1130%E5%A8%81%E7%A7%80.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332202146432200/1130%E5%A8%81%E7%A7%80.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210735644.1953
+  },
+  {
+    "title": "愛心捐血脈相連",
+    "date": "2025-11-30",
     "time": "08:00-17:00",
-    "location": "新竹縣竹北市光明十一路215巷8號 竹北愛心樓",
+    "location": "基隆二信總社前 (基隆市愛二路78號) 及 基隆捐血站 (基隆市信一路14號)",
+    "city": "基隆市",
+    "district": "仁愛區",
+    "organizer": "基隆和平獅子會",
+    "gift": {
+      "name": "全聯禮券",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332202781301228/1130%E5%9F%BA%E9%9A%86.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "基隆市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332202781301228/1130%E5%9F%BA%E9%9A%86.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210753215.998
+  },
+  {
+    "title": "捐血快樂 讓愛相隨",
+    "date": "2025-11-30",
+    "time": "10:00-18:00",
+    "location": "新莊號捐血車 (新莊區中華路一段、復興路一段)",
+    "city": "新北市",
+    "district": "新莊區",
+    "organizer": "中源獅子會",
+    "gift": {
+      "name": "虱目魚丸, 花枝丸, 高級茶葉, 毛寶洗衣精禮盒",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332203325280255/1130%E6%96%B0%E8%8E%8A.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332203325280255/1130%E6%96%B0%E8%8E%8A.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210760577.3882
+  },
+  {
+    "title": "新北市蘆洲區定期捐血活動",
+    "date": "2025-11-30",
+    "time": "09:30-16:30",
+    "location": "新北市蘆洲區三民路95號前(蘆洲區公所)",
+    "city": "新北市",
+    "district": "蘆洲區",
+    "organizer": "新北市信賴台灣之友會蘆洲分會",
+    "gift": {
+      "name": "全聯禮券",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332203869158273/1130%E8%98%86%E6%B4%B2%E4%BF%A1%E8%B3%B4.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332203869158273/1130%E8%98%86%E6%B4%B2%E4%BF%A1%E8%B3%B4.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210768942.2483
+  },
+  {
+    "title": "GIVE BLOOD GIVE LIVE 捐血活動",
+    "date": "2025-11-30",
+    "time": "09:30-16:30",
+    "location": "新北市三峽區學成路396號",
+    "city": "新北市",
+    "district": "三峽區",
+    "organizer": "救國團新北市三峽區團委會",
+    "gift": {
+      "name": "米粉、購物袋、口罩、小杯子、白沙屯媽祖保庇小吊飾",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332209145967274/1130%E4%B8%89%E5%B3%BD%E5%9C%98%E5%A7%94.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332209145967274/1130%E4%B8%89%E5%B3%BD%E5%9C%98%E5%A7%94.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210781387.2156
+  },
+  {
+    "title": "群英捐血 讓愛相隨 暨 血糖檢測",
+    "date": "2025-11-30",
+    "time": "09:00-17:00",
+    "location": "新北市三重區中正北路193巷45號 (三重愛買前)",
+    "city": "新北市",
+    "district": "三重區",
+    "organizer": "群英獅子會",
+    "gift": {
+      "name": "愛買商品券",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332209601088256/1130%E4%B8%89%E9%87%8D%E6%84%9B%E8%B2%B7.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331332209601088256/1130%E4%B8%89%E9%87%8D%E6%84%9B%E8%B2%B7.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-11-27%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764210791741.3687
+  },
+  {
+    "title": "挽袖捐血 生命延續",
+    "date": "2025-11-29",
+    "time": "09:00-16:00",
+    "location": "八德消防局大湳分隊 桃園市八德區 福國北街69號",
+    "city": "桃園市",
+    "district": "八德區",
+    "organizer": "桃園市八德獅子會",
+    "gift": {
+      "name": "雞蛋一盒、100元超商禮券、A Plus排插延長線",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574264394315196/1129%E5%85%AB%E5%BE%B7%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574264394315196/1129%E5%85%AB%E5%BE%B7%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330573836942598501",
+    "id": 1764210913807.5972
+  },
+  {
+    "title": "名贊建設 捐血活動",
+    "date": "2025-11-29",
+    "time": "09:00-16:00",
+    "location": "地點一：名贊建設 (桃園市桃園區同德六街89號-凱基銀行前); 地點二：大業國民小學 (桃園市桃園區大業路一段135號)",
+    "city": "桃園市",
+    "district": "桃園區",
+    "organizer": "富堯建設股份有限公司, 名贊建設股份有限公司, 青禾建設有限公司, 璟樹建設股份有限公司",
+    "gift": {
+      "name": "全聯禮券",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574264938284113/1129%E5%90%8D%E8%B4%8A.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574264938284113/1129%E5%90%8D%E8%B4%8A.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330573836942598501",
+    "id": 1764210925170.835
+  },
+  {
+    "title": "讓我們先一起捐熱血～份分享愛",
+    "date": "2025-11-29",
+    "time": "08:00-17:00",
+    "location": "竹北光明11路215巷8號(竹北愛心樓)",
     "city": "新竹縣",
     "district": "竹北市",
-    "organizer": "新竹捐血中心",
+    "organizer": "沂風磁磚有限公司",
     "gift": {
-      "name": "小丸家族鑰匙圈, 尺, 便條紙",
-      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P324515090177350052/1124-1126%E5%B0%8F%E4%B8%B8%E5%AE%B6%E6%97%8F.jpg"
+      "name": "全聯禮券",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574265473163141/1129%E6%B2%82%E9%A2%A8%E7%A3%81%E7%A3%9A.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
       "新竹縣"
     ],
-    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P324515090177350052/1124-1126%E5%B0%8F%E4%B8%B8%E5%AE%B6%E6%97%8F.jpg",
-    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-26%2000%3A00%3A00&sid=0P324514239655210595",
-    "id": 1764127453139.0938
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574265473163141/1129%E6%B2%82%E9%A2%A8%E7%A3%81%E7%A3%9A.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330573836942598501",
+    "id": 1764210932557.5327
   },
   {
-    "title": "桃園市湧德獅子會 捐血活動",
-    "date": "2025-11-26",
+    "title": "讓愛延續 熱血相挺",
+    "date": "2025-11-29",
     "time": "09:00-16:00",
-    "location": "南門捐血室 (桃園市桃園區南華街32號)",
+    "location": "龍潭國三橋下體育休閒園區，新龍路及東龍路口",
     "city": "桃園市",
-    "district": "桃園區",
-    "organizer": "桃園市湧德獅子會",
+    "district": "龍潭區",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": "7-11商品卡100元、雞蛋、洗碗精、麵條、Jack Wolfskin 飛狼不鏽鋼保溫瓶",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574265017032168/1129%E6%A1%83%E5%9C%92%E5%BF%97%E5%B7%A5%E6%9C%8D%E5%8B%99%E7%99%BC%E5%B1%95%E5%8D%94%E6%9C%83.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574265017032168/1129%E6%A1%83%E5%9C%92%E5%BF%97%E5%B7%A5%E6%9C%8D%E5%8B%99%E7%99%BC%E5%B1%95%E5%8D%94%E6%9C%83.png",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330573836942598501",
+    "id": 1764210944634.041
+  },
+  {
+    "title": "捐熱血 分享愛 好血有你 捐出希望",
+    "date": "2025-11-29",
+    "time": "09:00-16:00",
+    "location": "楊梅火車站前廣場",
+    "city": "桃園市",
+    "district": "楊梅區",
+    "organizer": "國際獅子會 300B 5 區",
     "gift": {
       "name": null,
-      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P324515103256673024/1126%E6%B9%A7%E5%BE%B7%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574266651901195/1129%E6%A5%8A%E6%A2%85%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
       "桃園市"
     ],
-    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P324515103256673024/1126%E6%B9%A7%E5%BE%B7%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
-    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-26%2000%3A00%3A00&sid=0P324514239655210595",
-    "id": 1764124516395.734
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574266651901195/1129%E6%A5%8A%E6%A2%85%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330573836942598501",
+    "id": 1764210953290.9678
   },
   {
-    "title": "愛心捐血活動",
-    "date": "2025-11-26",
+    "title": null,
+    "date": "2025-11-29",
     "time": "09:00-16:00",
-    "location": "桃園市蘆竹區公所前三角停車場",
+    "location": "桃園捐血站 (桃園區文康街61號); 南門捐血室 (桃園區三民路三段182號3樓)",
     "city": "桃園市",
-    "district": "蘆竹區",
-    "organizer": "蘆竹國際同濟會",
+    "district": "桃園區",
+    "organizer": "新竹捐血中心、桃園市蘋果網路獅子會、旅桃高雄同鄉會",
     "gift": {
-      "name": "精美贈品",
-      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P324515104891552051/1126%E8%98%86%E7%AB%B9%E5%90%8C%E6%BF%9F%E6%9C%83.jpg"
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574266296880113/1129%E8%98%8B%E6%9E%9C%E7%B6%B2%E8%B7%AF%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
       "桃園市"
     ],
-    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P324515104891552051/1126%E8%98%86%E7%AB%B9%E5%90%8C%E6%BF%9F%E6%9C%83.jpg",
-    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-26%2000%3A00%3A00&sid=0P324514239655210595",
-    "id": 1764124523504.2888
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574266296880113/1129%E8%98%8B%E6%9E%9C%E7%B6%B2%E8%B7%AF%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330573836942598501",
+    "id": 1764210968769.5242
+  },
+  {
+    "title": "#捐血 捲起袖子救病患",
+    "date": "2025-11-30",
+    "time": "08:00-16:00",
+    "location": "桃園捐血站 + 南門捐血室",
+    "city": "桃園市",
+    "district": "桃園區",
+    "organizer": "財團法人中華民國日蓮正宗基金會",
+    "gift": {
+      "name": "精美禮物一份",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574267830759140/1130%E6%97%A5%E8%93%AE%E6%AD%A3%E5%AE%97.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574267830759140/1130%E6%97%A5%E8%93%AE%E6%AD%A3%E5%AE%97.png",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330573836942598501",
+    "id": 1764210978432.022
+  },
+  {
+    "title": "國際獅子會300B6區 竹南聯合獅子會 獅子探索 捐血活動",
+    "date": "2025-11-30",
+    "time": "09:00-16:00",
+    "location": "尚順育樂世界空橋下廣場 (苗栗縣頭份市育樂街6號) / 竹南捐血室 (苗栗縣竹南鎮光復路372號)",
+    "city": "苗栗縣",
+    "district": "頭份市",
+    "organizer": "竹南聯合獅子會、頭份百吉獅子會",
+    "gift": {
+      "name": "露營燈, 保溫瓶, 黃燜雞米飯餐券",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574267474638167/1130%E7%AB%B9%E5%8D%97%E8%81%AF%E5%90%88%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "苗栗縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574267474638167/1130%E7%AB%B9%E5%8D%97%E8%81%AF%E5%90%88%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330573836942598501",
+    "id": 1764210997645.0715
+  },
+  {
+    "title": "攜手捐血 為生命加油",
+    "date": "2025-11-30",
+    "time": "09:00-16:00",
+    "location": "大園仁壽宮 (大觀路18號)",
+    "city": "桃園市",
+    "district": "大園區",
+    "organizer": "桃園市正義獅子會",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574268018507195/1130%E6%A1%83%E5%9C%92%E5%B8%82%E6%AD%A3%E7%BE%A9%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574268018507195/1130%E6%A1%83%E5%9C%92%E5%B8%82%E6%AD%A3%E7%BE%A9%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330573836942598501",
+    "id": 1764211008148.993
+  },
+  {
+    "title": "捐血助人 寒冬送暖",
+    "date": "2025-11-30",
+    "time": "09:00-16:00",
+    "location": "桃園市龜山區自強西路66號 (龜山國中)",
+    "city": "桃園市",
+    "district": "龜山區",
+    "organizer": "桃園市萬壽獅子會",
+    "gift": {
+      "name": "全聯禮券$100, 五木麵條(1.2KG), 高露潔牙刷(6入), 金時代香頌法國麵包",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574268653486112/1130%E8%90%AC%E5%A3%BD%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330574268653486112/1130%E8%90%AC%E5%A3%BD%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330573836942598501",
+    "id": 1764211018795.1345
+  },
+  {
+    "title": "愛捐血! 救人一命",
+    "date": "2025-12-01",
+    "time": "09:00-17:00",
+    "location": "八德三元宮廟後停車場",
+    "city": "桃園市",
+    "district": "八德區",
+    "organizer": "八德三元宮",
+    "gift": {
+      "name": "雞蛋1盒(10顆裝)、壽司米1包(1公斤)、濕紙巾1包、鮮麵1包、白煮蛋1顆、拋棄式洗臉巾1包(20入)、垃圾袋1捲、冰絲防曬袖套",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568172305799678/1201%E5%85%AB%E5%BE%B7%E4%B8%89%E5%85%83%E5%AE%AE.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568172305799678/1201%E5%85%AB%E5%BE%B7%E4%B8%89%E5%85%83%E5%AE%AE.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211040363.1323
+  },
+  {
+    "title": "平鎮三崇宮 捐血活動",
+    "date": "2025-12-01",
+    "time": "09:30-16:30",
+    "location": "平鎮三崇宮 (平鎮區振興西路112-1號)",
+    "city": "桃園市",
+    "district": "平鎮區",
+    "organizer": "平鎮獅子會",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568173949668605/1201%E5%B9%B3%E9%8E%AE%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568173949668605/1201%E5%B9%B3%E9%8E%AE%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211049892.3271
+  },
+  {
+    "title": "熱血挽袖 愛心永續",
+    "date": "2025-12-01",
+    "time": "09:00-17:00",
+    "location": "竹南捐血室 (竹南鎮光復路372號)",
+    "city": "苗栗縣",
+    "district": "竹南鎮",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": "西堤沙灘袋1組",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568173584547623/1201%E7%AB%B9%E5%8D%97.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "苗栗縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568173584547623/1201%E7%AB%B9%E5%8D%97.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211059509.2202
+  },
+  {
+    "title": "南崁獅子會愛心捐血活動",
+    "date": "2025-12-01",
+    "time": "09:00-16:00",
+    "location": "桃園捐血站 及 南門捐血室",
+    "city": "桃園市",
+    "district": "桃園區",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": "雞蛋、民生用品",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568174662395678/1201%E5%8D%97%E5%B4%81%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568174662395678/1201%E5%8D%97%E5%B4%81%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211076352.1772
+  },
+  {
+    "title": "熱血不打烊 邀您愛挽袖",
+    "date": "2025-12-02",
+    "time": "09:00-16:00",
+    "location": "竹東第一銀行前 (竹東鎮東林路30號)",
+    "city": "新竹縣",
+    "district": "竹東鎮",
+    "organizer": "竹東慈安獅子會",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568175841133622/1202%E7%AB%B9%E6%9D%B1%E6%85%88%E5%AE%89%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568175841133622/1202%E7%AB%B9%E6%9D%B1%E6%85%88%E5%AE%89%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211093062.032
+  },
+  {
+    "title": "台康捐血日",
+    "date": "2025-12-03",
+    "time": "09:30-16:30",
+    "location": "新竹縣竹北市生醫路一段168號 (新竹生物醫學園區內)",
+    "city": "新竹縣",
+    "district": "竹北市",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": "全聯禮券",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568175485012650/1203-%E5%8F%B0%E5%BA%B7%E7%94%9F%E6%8A%80.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568175485012650/1203-%E5%8F%B0%E5%BA%B7%E7%94%9F%E6%8A%80.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211102609.0283
+  },
+  {
+    "title": "捐出熱血 點亮生命 歡迎您踴躍來捐血",
+    "date": "2025-12-03",
+    "time": "09:00-16:00",
+    "location": "新竹市香山區中華路五段452號 (前廣場)",
+    "city": "新竹市",
+    "district": "香山區",
+    "organizer": "嘉鑫營造有限公司, 廣鑫營造有限公司",
+    "gift": {
+      "name": "全聯禮券及晴陽傘",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568177208738622/1203%E5%98%89%E9%91%AB%E7%87%9F%E9%80%A0.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568177208738622/1203%E5%98%89%E9%91%AB%E7%87%9F%E9%80%A0.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211145451.5586
+  },
+  {
+    "title": "愛要即刻 熱血不打烊",
+    "date": "2025-12-04",
+    "time": "09:30-16:30",
+    "location": "中壢圖書館, 中壢區中美路76號",
+    "city": "桃園市",
+    "district": "中壢區",
+    "organizer": "桃園市中壢區民眾服務社",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568177742617659/1204%E6%A1%83%E5%9C%92%E5%B8%82%E4%B8%AD%E5%A3%A2%E5%8D%80%E6%B0%91%E7%9C%BE%E6%9C%8D%E5%8B%99%E7%A4%BE.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568177742617659/1204%E6%A1%83%E5%9C%92%E5%B8%82%E4%B8%AD%E5%A3%A2%E5%8D%80%E6%B0%91%E7%9C%BE%E6%9C%8D%E5%8B%99%E7%A4%BE.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211153140.7292
+  },
+  {
+    "title": "捐熱血！獻愛心",
+    "date": "2025-12-04",
+    "time": "09:00-16:00",
+    "location": "大崗國小旁忠義路上福德宮 (龜山區大崗里20鄰大湖一路175號)",
+    "city": "桃園市",
+    "district": "龜山區",
+    "organizer": "桃園市坪頂獅子會",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568178386586677/1204%E6%A1%83%E5%9C%92%E5%B8%82%E5%9D%AA%E9%A0%82%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568178386586677/1204%E6%A1%83%E5%9C%92%E5%B8%82%E5%9D%AA%E9%A0%82%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211163242.0132
+  },
+  {
+    "title": "把愛傳出去 讓生命延續",
+    "date": "2025-12-05",
+    "time": "09:00-16:00",
+    "location": "桃園市大溪區公園路46號 (大溪圳頂派出所前)",
+    "city": "桃園市",
+    "district": "大溪區",
+    "organizer": "桃園市大溪崁獅子會",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568178921465604/1205%E5%A4%A7%E5%B5%99%E5%B4%81.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568178921465604/1205%E5%A4%A7%E5%B5%99%E5%B4%81.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211172486.2163
+  },
+  {
+    "title": "邀您熱血獻愛 ★什麼型都行★",
+    "date": "2025-12-05",
+    "time": "09:00-16:00",
+    "location": "竹南鹽內德勝宮廣場 (苗栗縣竹南鎮港墘里12鄰鹽內35-7號)",
+    "city": "苗栗縣",
+    "district": "竹南鎮",
+    "organizer": "竹南鹽內德勝宮, 新竹玉山獅子會",
+    "gift": {
+      "name": "全聯商品禮券200元, 雨傘, 米乙份, 米玉家椒麻雞腿兌換券, 旅行白人快樂組",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568178565334621/1205%E7%AB%B9%E5%8D%97%E5%A1%AD%E5%85%A7.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "苗栗縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568178565334621/1205%E7%AB%B9%E5%8D%97%E5%A1%AD%E5%85%A7.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211186548.6526
+  },
+  {
+    "title": "熱血隊友 愛挽袖",
+    "date": "2025-12-05",
+    "time": "09:30-16:30",
+    "location": "桃園市中壢區中央東路88號16樓 (中壢捐血室)",
+    "city": "桃園市",
+    "district": "中壢區",
+    "organizer": "埔心獅子會",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568179109213659/1205%E5%9F%94%E5%BF%83%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568179109213659/1205%E5%9F%94%E5%BF%83%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211202618.334
+  },
+  {
+    "title": "讓愛延續 熱血相挺",
+    "date": "2025-12-05",
+    "time": "09:00-16:00",
+    "location": "龜山捐血亭 (龜山區自強南路125號-龜山分局對面)",
+    "city": "桃園市",
+    "district": "龜山區",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": "7-11商品卡100元、洗潔精、口罩、Jack Wolfskin 飛狼不鏽鋼保溫瓶",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568179743182776/1205%E6%A1%83%E5%9C%92%E5%BF%97%E5%B7%A5.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568179743182776/1205%E6%A1%83%E5%9C%92%E5%BF%97%E5%B7%A5.png",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211212140.7388
+  },
+  {
+    "title": "捲起袖子 大家來捐血",
+    "date": "2025-12-05",
+    "time": "09:00-16:00",
+    "location": "1. 桃園市桃園區文康街61號 2. 桃園市桃園區三民路三段182號3樓",
+    "city": "桃園市",
+    "district": "桃園區",
+    "organizer": "桃園市真善美獅子會",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568170388061793/1205%E7%9C%9F%E5%96%84%E7%BE%8E.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568170388061793/1205%E7%9C%9F%E5%96%84%E7%BE%8E.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-11-27%2000%3A00%3A00&sid=0P330567377868860607",
+    "id": 1764211221229.3323
   },
   {
     "title": "中信房屋公益月 捐血有您 愛不止息【桃園場】",
@@ -189,25 +1071,25 @@
     "id": 1764124578844.498
   },
   {
-    "title": "捐血有愛 生命之愛 健康無礙",
-    "date": "2025-11-27",
-    "time": "09:30-16:00",
-    "location": "彰化縣北斗鎮光復路215號 (北斗分局旁)",
-    "city": "彰化縣",
-    "district": "北斗鎮",
-    "organizer": "北斗扶輪社",
+    "title": "名聲建設 捐血活動",
+    "date": "2025-11-29",
+    "time": "09:00-16:00",
+    "location": "地點一: 名聲建設 (台中市西屯區大隆路1號之20樓) / 地點二: 大里國民小學 (台中市大里區國光路二段100號)",
+    "city": "台中市",
+    "district": null,
+    "organizer": "台中捐血中心",
     "gift": {
-      "name": "白米一包, 玉米罐, 環保杯, 衛生紙一串, 保暖手套, 口罩, 購物袋, 雨傘",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuFoioSQjJ9jOETpTx78Pxjm5mv_3T-SCmig&s"
+      "name": "金額券",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEpnKnZ_QEhiFEVRtnCk9IXZQQky1-JTA80w&s"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "彰化縣"
+      "台中市"
     ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuFoioSQjJ9jOETpTx78Pxjm5mv_3T-SCmig&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuFoioSQjJ9jOETpTx78Pxjm5mv_3T-SCmig&s",
-    "id": 1764135377543.1716
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEpnKnZ_QEhiFEVRtnCk9IXZQQky1-JTA80w&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEpnKnZ_QEhiFEVRtnCk9IXZQQky1-JTA80w&s",
+    "id": 1764211320826.627
   },
   {
     "title": "捐血合力行 疫起護台灣",
@@ -231,90 +1113,6 @@
     "id": 1764127580878.2349
   },
   {
-    "title": "南投捐血室捐血活動",
-    "date": "2025-11-26",
-    "time": null,
-    "location": "南投縣南投市民族路489號",
-    "city": "南投縣",
-    "district": "南投市",
-    "organizer": "南投捐血室",
-    "gift": {
-      "name": "全聯禮券 (200元或400元), 鳳梨酥, 桃樂絲美髮店優惠券",
-      "image": "data:image/jpeg;base64,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"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "南投縣"
-    ],
-    "posterUrl": "data:image/jpeg;base64,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",
-    "sourceUrl": "data:image/jpeg;base64,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",
-    "id": 1764129265383.3557
-  },
-  {
-    "title": "熱血情繫你我他",
-    "date": "2105-02-03",
-    "time": "09:00-16:00",
-    "location": "虎尾鎮公所",
-    "city": "雲林縣",
-    "district": "虎尾鎮",
-    "organizer": "雲林捐血站",
-    "gift": {
-      "name": "全聯禮券",
-      "image": "data:image/jpeg;base64,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"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "雲林縣"
-    ],
-    "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAEIALgMBEQACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAADBAECBQAHBv/EADAQAAIBAgQEBgEDBQEAAAAAAAECAwQRABIhMQUTIkEGFFFhcZGBobHwFjJSgsEV/8QAGgEAAgMBAQAAAAAAAAAAAAAAAgMBBAUABv/EAC8RAAEEAQIBCwQDAQAAAAAAAAEAAgMRIQQSMQUTFDJBUVJhcYGhscHh8CKR8dH/2gAMAwEAAhEDEQA/APYGZV1ZgBe2pw+wOKzw0uNAKGkRVzM6hfUmwx24cVIjeTQGV00sFPYVFRFEd7MwB+vwcAZGhPj0ksmQFSWppo5BH5iIsWCgBgTc+2OEre9QdJNVhuERWV1zIwYeoODBByEgtLTRU4lCszxDw+XiNGsMBUOHv1bWykf9wiZhe0UtHk3VM00pc/hX3SP9NV0tDBCzQKUdmuST0m2h09jivzTqpaw18QeXi8gJmq8Mz1KwtJUpzEUKbgkGzXGvwB9YIxkoGa9rCQG4KI/hdWque1WQtlDKFtcLtrf1x3NWUI5QIZt2rSKUtMh5DxrHcsesWBxZiZsG0BY2pcXu3EqVIYAqQQe4wxVlDzxwOnMzdbZRlW+uEyyiOge1WdPAZSSOxK+IaWrqXp/Jq50a+V8ttt9beuLOmexoO9Bqo5HVs/fkLLl4PxSaekcc6NI8gYNUZrkbsRfb1ANzh7dRC1rhjN9n79EowyktI+qP/wCLxAtURzS80yAjnSsCHAIKi2476/vgekRCiMeSLmJDYcb81SXwzPLQLHJJTq9yxJj6gey5huD3v6YkaxofYBQdEIjo0tPh0IpqGGBSDy1ym21xviu6QSOLh3rthYACmdjgaBU2RwSdLxV+Iecpow0UlmWnlykA9Omp79/jFYm7AWnJE4RAjiQiR82joZ0reIw85mMgYy5cqEjYnbvY9r46NwZl5VSnMYQ52VdqykWCnWq4jTiWIZnIkBuyjq/nvhWoEcjgQ6qNprJmxtpxF1/qz34lEeMvIlekkMiCKOBHY3fcaWsDvrg2SN38UM2rgMIib1r4/a1owIY4gptfUm3qdTi2BQVRZVVxFJIJVEzRGbpUkf23FtPfGa3VMJLrOf6WkyDaxr5Bjy4+Vr5HwrwbidLxtfPmCaC+SCokqsxsoI6F7tbTUC2uBbBzhAJsHzWpqOUonwExWD2isXfafVegy8P4dUjNU0iSHlcoE3N1ve32MW+jR0BXkvPPfHIS6QZQamm4bCFBoo+tiLhM1yw1v84JsEY7Et+w4DUBkp4mjqY4qdIFGZxywGBFxf8AFrfeAdTXBwoN+U3ZC1rmkW68EcEZOJU5kaNpFuCbZLtoPjAs1rCSH47u1c+IY2Z71nwJRxSTQzeWVKdrCeRlZmYsQAe42/W2EN0TGtDfstR+pLjdK8rUSpkMtLHmXps4BINhf5ufvBHRxkV9kA1Twb2/P4RkMDRtyZKZshy2EigXyggb/H3g+jgCgUPPm+r8/hVhAnp2E6UkRvltzke4y+t/n98A/Sh7S26vFjii58g4F+6mDhkErlY2gkvqxVlbLff6vipHyQxjtxkccVn6+qLpbvD8o7+GoHAtUMtu6KAT84hnJLGX/Mm+9ObraN7AuvTmap8nPLNUB+qOYkKvWduntr+mNRxoKpGAXfyS608zTc2YhSGHQs7Fd17ZfY4VuzxVollUB8D/AKrS0kuZ1aWRAyhuiYizaWA020xJdnJXNeyhQH9flNUNBFJkJrKrmABnjEl1BsL7jUYlpB7Ut8lY2ivRdx01cRgWjVxE4KyNDEWe+lhpt319txvg3JUYB9UbgVPV08TioXJG1mVGcu9zuWO3poL/ADiQuk29htJ8QKy1jSxyRmPp6hVhRt/jg2zxBuXBIfBKXYaUxDMiUoQzAPnJsKpb6++AM0V9YIhDLXVKkVKjRp7ad6xcdz0XiCkQy+EpeWrVJMpmnuTcZakHS/xieei8QUcxMc7SrPxCMohEs/SCWyze49tfxiBNF4gpMEuBtKtR8RgjkvNM6plIvJNmF9O1v5riHTxV1gpZBNfVKyaAB4IM4DXU3vrfU4yNPljbWvPh7qVwq86UWFg620wQA3H2QWdrfdTKimrjBUWKsSLe+OcBvHuoaTzZ9kOqABJA1DAX/wBjgZMZ/eKOM5r94KbAZwBoEWw/OJofAUXw9Sl+KALQRECxLi5HfQ4TqRUQrvTtIblPov/Z",
-    "sourceUrl": "data:image/jpeg;base64,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",
-    "id": 1764135544503.842
-  },
-  {
-    "title": "聞聲救苦 捐血捐愛 捐善票",
-    "date": "2025-11-29",
-    "time": "12:00-17:00",
-    "location": "台中市中區雙十路一段291-3號 (台中公園捐血車)",
-    "city": "台中市",
-    "district": "中區",
-    "organizer": "社團法人中華民國善門互助協會",
-    "gift": {
-      "name": null,
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeCD2BqJl_56gau4D2WJGz31EMHT5j_qgxWw&s"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "台中市"
-    ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeCD2BqJl_56gau4D2WJGz31EMHT5j_qgxWw&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeCD2BqJl_56gau4D2WJGz31EMHT5j_qgxWw&s",
-    "id": 1764135555909.8442
-  },
-  {
-    "title": "一起捐血 台中市南天宮與骨文化協會",
-    "date": "2025-12-13",
-    "time": "09:00-16:00",
-    "location": "長億永成社區活動中心前 (台中市太平區新興路1-1號)",
-    "city": "台中市",
-    "district": "太平區",
-    "organizer": "台中市南天宮與骨文化協會",
-    "gift": {
-      "name": "全聯禮券100元、全聯禮券200元 (首次捐血)、好市多禮券500元 (捐500CC)、洗衣精、環保袋、雞蛋、沙拉油、白米 (捐500CC)、衛生紙 (捐500CC)、米粉、泡麵、牙膏、肥皂、毛巾、洗碗精、洗衣皂",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSS0z5PdkhgmRDYCL0QWesHUNY_gmy3FFj0A&s"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "台中市"
-    ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSS0z5PdkhgmRDYCL0QWesHUNY_gmy3FFj0A&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSS0z5PdkhgmRDYCL0QWesHUNY_gmy3FFj0A&s",
-    "id": 1764135578764.293
-  },
-  {
     "title": "捐血大放送 捐血送好禮",
     "date": "2025-12-07",
     "time": "09:00-16:00",
@@ -336,46 +1134,151 @@
     "id": 1764135672347.4832
   },
   {
-    "title": "蘆竹國際同濟會 愛心捐血活動",
-    "date": "2025-11-26",
-    "time": "09:00-13:00",
-    "location": "蘆竹區公所旁三角停車場",
-    "city": "桃園市",
-    "district": "蘆竹區",
-    "organizer": "蘆竹國際同濟會",
+    "title": "祀典大天后宮 捐血公益活動",
+    "date": "2025-11-30",
+    "time": "09:00-17:00",
+    "location": "中山捐血車 (台南轉運站對面)",
+    "city": "台南市",
+    "district": "北區",
+    "organizer": "祀典大天后宮",
     "gift": {
-      "name": null,
-      "image": "data:image/jpeg;base64,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"
+      "name": "全聯禮券、平安壽麵、虎爺存錢筒、平安水、旺旺沙士、媽祖麵線",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT32HBfqgRXt5skHXH2d1bQsDlkvrsCKWzww&s"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "桃園市"
+      "台南市"
     ],
-    "posterUrl": "data:image/jpeg;base64,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",
-    "sourceUrl": "data:image/jpeg;base64,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",
-    "id": 1764135683644.0784
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT32HBfqgRXt5skHXH2d1bQsDlkvrsCKWzww&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT32HBfqgRXt5skHXH2d1bQsDlkvrsCKWzww&s",
+    "id": 1764211456539.6162
   },
   {
-    "title": "左營捐血室捐血活動",
-    "date": "2025-11-29",
-    "time": "09:30-18:00",
-    "location": "左營捐血室 (左營區博愛三路635號)",
-    "city": "高雄市",
-    "district": "左營區",
-    "organizer": "高雄捐血中心",
+    "title": "南投捐血室 捐血活動",
+    "date": "2025-11-27",
+    "time": null,
+    "location": "南投捐血室",
+    "city": "南投縣",
+    "district": "南投市",
+    "organizer": "住商不動產中興新村店",
     "gift": {
-      "name": "全聯禮券",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmf9n4Zh5XmP7N8-9upBkyKMt07B1Pfxg6QA&s"
+      "name": "全聯禮券(最高400元)、鳳梨酥、桃樂絲美髮店優惠券",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4zWiCv_RsyAr_xxlv7JAcbVAJnfnh8B80Ww&s"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "南投縣"
+    ],
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4zWiCv_RsyAr_xxlv7JAcbVAJnfnh8B80Ww&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4zWiCv_RsyAr_xxlv7JAcbVAJnfnh8B80Ww&s",
+    "id": 1764211469787.6255
+  },
+  {
+    "title": "熱血募集 後惠傳愛心 你我捐熱血",
+    "date": "2025-12-06",
+    "time": "09:30-16:00",
+    "location": "花壇鄉郵局 (花壇中路 72 號)",
+    "city": "彰化縣",
+    "district": "花壇鄉",
+    "organizer": "彰化捐血站",
+    "gift": {
+      "name": "不倒杯杯、精美禮品、200元禮卷、魯士蛋糕",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPGWjfEKKLzCDYgGaAAUK3ScrF7MaW7PIsdg&s"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "彰化縣"
+    ],
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPGWjfEKKLzCDYgGaAAUK3ScrF7MaW7PIsdg&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPGWjfEKKLzCDYgGaAAUK3ScrF7MaW7PIsdg&s",
+    "id": 1764211523098.502
+  },
+  {
+    "title": "捐血活動",
+    "date": "2025-12-14",
+    "time": "09:00-16:00",
+    "location": "褒忠國小前廣場",
+    "city": "雲林縣",
+    "district": "褒忠鄉",
+    "organizer": "雲林捐血站",
+    "gift": {
+      "name": "環保提袋、擴香儀、按摩抱枕、設計襪、廚具組、隨身小包",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtJpNHdyowa4IFbWVEE8rvoPv0oal_GW_DfA&s"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "雲林縣"
+    ],
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtJpNHdyowa4IFbWVEE8rvoPv0oal_GW_DfA&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtJpNHdyowa4IFbWVEE8rvoPv0oal_GW_DfA&s",
+    "id": 1764211531566.1082
+  },
+  {
+    "title": "捐熱血 放大愛",
+    "date": "2025-11-30",
+    "time": "09:00-17:00",
+    "location": "岡山捐血室 (岡山區壽華路58號)",
+    "city": "高雄市",
+    "district": "岡山區",
+    "organizer": "信盛精工股份有限公司",
+    "gift": {
+      "name": "全聯好禮",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKi0NI2CRelx9_lQJaP5zF6wLMypSj9S2wAQ&s"
     },
     "tags": [
       "AI辨識",
       "自動更新",
       "高雄市"
     ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmf9n4Zh5XmP7N8-9upBkyKMt07B1Pfxg6QA&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmf9n4Zh5XmP7N8-9upBkyKMt07B1Pfxg6QA&s",
-    "id": 1764135774344.9119
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKi0NI2CRelx9_lQJaP5zF6wLMypSj9S2wAQ&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKi0NI2CRelx9_lQJaP5zF6wLMypSj9S2wAQ&s",
+    "id": 1764211639127.8975
+  },
+  {
+    "title": "台東捐血站 捐血活動",
+    "date": "2025-11-29",
+    "time": "08:00-16:00",
+    "location": "台東市博愛路332號",
+    "city": "台東縣",
+    "district": "台東市",
+    "organizer": "台東捐血站",
+    "gift": {
+      "name": "愛心傘、白米、沙拉油",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNu0cQ5CWscTBBkSWrfUPtlvmqaUq2p06A6Q&s"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台東縣"
+    ],
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNu0cQ5CWscTBBkSWrfUPtlvmqaUq2p06A6Q&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNu0cQ5CWscTBBkSWrfUPtlvmqaUq2p06A6Q&s",
+    "id": 1764135940453.3743
+  },
+  {
+    "title": "捐血活動",
+    "date": "2025-11-30",
+    "time": "08:00-16:00",
+    "location": "桃園捐血站, 南門捐血室, 財團法人中華民國日蓮正宗基金會 (龍昌寺院收受)",
+    "city": "桃園市",
+    "district": "桃園區",
+    "organizer": "財團法人中華民國日蓮正宗基金會 (龍昌寺院收受)",
+    "gift": {
+      "name": null,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJJXxeM5Jjv-MMNTZ_nSndU9PZfX0t4dmYOw&s"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJJXxeM5Jjv-MMNTZ_nSndU9PZfX0t4dmYOw&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJJXxeM5Jjv-MMNTZ_nSndU9PZfX0t4dmYOw&s",
+    "id": 1764211698075.7888
   },
   {
     "title": "捐血一袋 生命之艾",
@@ -420,67 +1323,109 @@
     "id": 1764126061359.4368
   },
   {
-    "title": "熱血傳愛．捐血活動",
-    "date": "2025-12-07",
-    "time": "09:00-16:00",
-    "location": "屏東縣里港鄉永樂社區活動中心",
+    "title": "讓愛循環 醫起捐血",
+    "date": "2025-12-03",
+    "time": "09:00-17:00",
+    "location": "屏東縣恆春鎮恆南路2巷30號",
     "city": "屏東縣",
-    "district": "里港鄉",
-    "organizer": "屏東捐血站",
+    "district": "恆春鎮",
+    "organizer": "屏東捐血站、恆春基督教醫院、屏東榮民總醫院",
     "gift": {
-      "name": "白米、米粉、抽取式衛生紙、沙拉油",
-      "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ALgMBIgACEQEDEQH/xAAZAAEBAQEBAQAAAAAAAAAAAAADBAIABwH/xAArEAACAQMDAgQGAwAAAAAAAAABAgMABBESITEFExRBUaEiMmFxgZEkQ+H/xAAZAQADAAMAAAAAAAAAAAAAAAACAwQAAQX/xAAhEQACAgICAQUAAAAAAAAAAAAAAQIRITEDEvATQUKBof/aAAwDAQACEQMRAD8A9MoUF69/GqRRG1/scudQ9MD1pqNx2rhZYLoC4ZCFglbSjkZxk7n14pFWdduk8GbK5llvpFns7lSzs4ZtOgYPH553o7RjPPPE1jc2wl1s07ONjwMUWnw964hg6eLjDspeWQAg6jzpxnZSR5b+lNZSHIuYILTQPhYq8gfAO+FK77ZP12rLvYrtWr8+z5Yi1Ak8IxkGrDSHlzjn7b1VSSk4A0aE+ZRpAO+9HWNJaG9nLLOoJhBDdI+mLuvHnLsuecbapFwPsPzT0vZmkWN0kChQQBlx7BgDv9K3FJ7F8knFYI7jpXS16pLetHD4hl7OWlG+dsYMuMkbcA1V0npPQ+lwMsEtuiZySLgnBP1Zj6jzp5LW6B1yXI5OQryjn0Gus23UHRQFtZiGbcyamI/dMpEXblfy/ROowxRiNotw4zq1ZyPKo6ae6e7jRpIWiIz8LLihpctlvDfRWdSC6ITtRIxlXHzI2kjk4wN9qOsHoUd1c+Meb5k06NGfIjmglJRWQOdtRVC2xYyzT/yFWdcqjwtlPbY1iFGhuYFjWfspE2R2mwTnz255NdcdN7MkTK+qQK3x8FeMAfs+dY8LFFPE7JltJbKnHn/nvQ+qn7EltFdw4kRGXON+QRQVL02xSwtnRHLa5dW442G1VUy7yi7hdwTP/9k="
+      "name": "7-11禮卷100元、精美紀念品",
+      "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAEEALgMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBgADBQIHAf/EADUQAAIBAgQEBAMFCQAAAAAAAAECAwQRAAUSIRMxQWEUIlFxBjKhJFKBkbEVJTNCc8HR4fD/xAAYAQADAQEAAAAAAAAAAAAAAAABAgQDAP/EACMRAAICAAUEAwAAAAAAAAAAAAECABEDEiFBUSIxsfETcaH/2gAMAwEAAhEDEQA/APR80pcznqqZ8vrkp4I78aMrfiX5b22tjJy6sqcqQ5fnWbpPmKB5yQrEGMqdI+XoQTYf6w0mq8OoDPpUn7t8UT02XTTxtPDBLxlaMs0YZmNibX9LBsQCjoJYpUHq/IoUdRmb5plkT/ECShdU08ZiZDNHc9NNhYKeZ6YZjmENPS8SetZQkHGZ1h4l1JNjy+nbHHhsqikP2OBWj8gIjF7dR7b/AFwB8UVlHlFAawwU1yrDTLESJDY2Q25A3Jv25c8BWs6R8uHiMFUGGQ5/Q1dWlNT5hI0skPGVTR28m5ve3p07Y1QwYBl5HcYxvhqmNWni6jLaOnksI4+DHY6Lb+bqN/bbDAeAoC8Nl07bHDasLMTEVEak83AK2eNYjGy3Yjbb64VqmtkeZKYx1bNDJpZaVZHDXUEsAo72Gu3Im/rrZ5l89VWU9XDKHSCxEF+bA323A36+wwHV09bV10jRUcMEbxDzSHfUNQttf1vf2wmE3Wc2ghdVAXe+/uD5XmEdJXutY9XYEJw5Uc6HC35MPLsCbgkcvXG7WZbmE2mEyK8RcuQ5sxtYrbsCPxvhfqqTNJeNAtIt+EESVZPLY87A9dufc4cKSrHhYDURMtRwlWQhQTe24vfFQ+J7szI2F7TCVKmkzCmgzKSQP55Fki3VgTezXHS21sMKSAxqQi7i+/PAWalasReHUho7/OBbF1O7CBOMy8S3m3GJ3JDlbsbRwbUCpn1VS8VdGBOQBGfIanSOSfy2/wCv3wQaox5MkstQRGGYyTeK3VRqJN7b2AJ/DBLVssaKIaOmmCpbW04U/KOe3rcfhijN2mqqOIU4kjkBYNHT1axggg7k236fnilCvMxYHiAyZhHHSU5esZdaM6k1pFydIUX08vMPb9NugpI6mnp6mOtqXUkP/FuCQdxy3G1sLy0uYJlzx6qozcRNP7zXUFBS9m0bcjt139ccv+146FooFnMmk6b5ugNyrddHQ26d+mNMy8xMpjxYYzc9H2VP6n9jgODM66GNI/CxShRYvJWLqP03+n+apswqa2mYVdJHTMsi6AlQsusadztysdsZYzL8Zox8NTmEyVrmhkemfMY0kEhj0GNn3vYeluv588F0orJq+d4c0heAqAkSMGK203272fqefbFD/D9ec0kqBo0NUmQFiPKuq+3Xl+uD48oro3GmcaBvfxMmrn7YxLKo0PiAWZxSzNPJpizKll1C4VRuRz+/7Yplhk0Sw/tGlExAVdKqpRgRc/MfUdOuPskKxVMsMVWwMLCwZ5R0B3IFuvTtgijoxUWtUvJoAvad+3qOxwpYH1HGcawSIjwBmGY0rrEicSRUDgE23NiL39hzwRSGOsLwU80U0yWLFFK6RuCDue2LHySY5VLBx5DO8WhhxmZTyvz7Lse59ccfDGTVGV1MzytaIoFVbDc9W2PblgkoUPP0IM7AxgxMTExPBKzzPvjpcTEx0O06xMTEx0E//9k="
     },
     "tags": [
       "AI辨識",
       "自動更新",
       "屏東縣"
     ],
-    "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ALgMBIgACEQEDEQH/xAAZAAEBAQEBAQAAAAAAAAAAAAADBAIABwH/xAArEAACAQMDAgQGAwAAAAAAAAABAgMABBESITEFExRBUaEiMmFxgZEkQ+H/xAAZAQADAAMAAAAAAAAAAAAAAAACAwQAAQX/xAAhEQACAgICAQUAAAAAAAAAAAAAAQIRITEDEvATQUKBof/aAAwDAQACEQMRAD8A9MoUF69/GqRRG1/scudQ9MD1pqNx2rhZYLoC4ZCFglbSjkZxk7n14pFWdduk8GbK5llvpFns7lSzs4ZtOgYPH553o7RjPPPE1jc2wl1s07ONjwMUWnw964hg6eLjDspeWQAg6jzpxnZSR5b+lNZSHIuYILTQPhYq8gfAO+FK77ZP12rLvYrtWr8+z5Yi1Ak8IxkGrDSHlzjn7b1VSSk4A0aE+ZRpAO+9HWNJaG9nLLOoJhBDdI+mLuvHnLsuecbapFwPsPzT0vZmkWN0kChQQBlx7BgDv9K3FJ7F8knFYI7jpXS16pLetHD4hl7OWlG+dsYMuMkbcA1V0npPQ+lwMsEtuiZySLgnBP1Zj6jzp5LW6B1yXI5OQryjn0Gus23UHRQFtZiGbcyamI/dMpEXblfy/ROowxRiNotw4zq1ZyPKo6ae6e7jRpIWiIz8LLihpctlvDfRWdSC6ITtRIxlXHzI2kjk4wN9qOsHoUd1c+Meb5k06NGfIjmglJRWQOdtRVC2xYyzT/yFWdcqjwtlPbY1iFGhuYFjWfspE2R2mwTnz255NdcdN7MkTK+qQK3x8FeMAfs+dY8LFFPE7JltJbKnHn/nvQ+qn7EltFdw4kRGXON+QRQVL02xSwtnRHLa5dW442G1VUy7yi7hdwTP/9k=",
-    "sourceUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ALgMBIgACEQEDEQH/xAAZAAEBAQEBAQAAAAAAAAAAAAADBAIABwH/xAArEAACAQMDAgQGAwAAAAAAAAABAgMABBESITEFExRBUaEiMmFxgZEkQ+H/xAAZAQADAAMAAAAAAAAAAAAAAAACAwQAAQX/xAAhEQACAgICAQUAAAAAAAAAAAAAAQIRITEDEvATQUKBof/aAAwDAQACEQMRAD8A9MoUF69/GqRRG1/scudQ9MD1pqNx2rhZYLoC4ZCFglbSjkZxk7n14pFWdduk8GbK5llvpFns7lSzs4ZtOgYPH553o7RjPPPE1jc2wl1s07ONjwMUWnw964hg6eLjDspeWQAg6jzpxnZSR5b+lNZSHIuYILTQPhYq8gfAO+FK77ZP12rLvYrtWr8+z5Yi1Ak8IxkGrDSHlzjn7b1VSSk4A0aE+ZRpAO+9HWNJaG9nLLOoJhBDdI+mLuvHnLsuecbapFwPsPzT0vZmkWN0kChQQBlx7BgDv9K3FJ7F8knFYI7jpXS16pLetHD4hl7OWlG+dsYMuMkbcA1V0npPQ+lwMsEtuiZySLgnBP1Zj6jzp5LW6B1yXI5OQryjn0Gus23UHRQFtZiGbcyamI/dMpEXblfy/ROowxRiNotw4zq1ZyPKo6ae6e7jRpIWiIz8LLihpctlvDfRWdSC6ITtRIxlXHzI2kjk4wN9qOsHoUd1c+Meb5k06NGfIjmglJRWQOdtRVC2xYyzT/yFWdcqjwtlPbY1iFGhuYFjWfspE2R2mwTnz255NdcdN7MkTK+qQK3x8FeMAfs+dY8LFFPE7JltJbKnHn/nvQ+qn7EltFdw4kRGXON+QRQVL02xSwtnRHLa5dW442G1VUy7yi7hdwTP/9k=",
-    "id": 1764135831036.651
+    "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAEEALgMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBgADBQIHAf/EADUQAAIBAgQEBAMFCQAAAAAAAAECAwQRAAUSIRMxQWEUIlFxBjKhJFKBkbEVJTNCc8HR4fD/xAAYAQADAQEAAAAAAAAAAAAAAAABAgQDAP/EACMRAAICAAUEAwAAAAAAAAAAAAECABEDEiFBUSIxsfETcaH/2gAMAwEAAhEDEQA/APR80pcznqqZ8vrkp4I78aMrfiX5b22tjJy6sqcqQ5fnWbpPmKB5yQrEGMqdI+XoQTYf6w0mq8OoDPpUn7t8UT02XTTxtPDBLxlaMs0YZmNibX9LBsQCjoJYpUHq/IoUdRmb5plkT/ECShdU08ZiZDNHc9NNhYKeZ6YZjmENPS8SetZQkHGZ1h4l1JNjy+nbHHhsqikP2OBWj8gIjF7dR7b/AFwB8UVlHlFAawwU1yrDTLESJDY2Q25A3Jv25c8BWs6R8uHiMFUGGQ5/Q1dWlNT5hI0skPGVTR28m5ve3p07Y1QwYBl5HcYxvhqmNWni6jLaOnksI4+DHY6Lb+bqN/bbDAeAoC8Nl07bHDasLMTEVEak83AK2eNYjGy3Yjbb64VqmtkeZKYx1bNDJpZaVZHDXUEsAo72Gu3Im/rrZ5l89VWU9XDKHSCxEF+bA323A36+wwHV09bV10jRUcMEbxDzSHfUNQttf1vf2wmE3Wc2ghdVAXe+/uD5XmEdJXutY9XYEJw5Uc6HC35MPLsCbgkcvXG7WZbmE2mEyK8RcuQ5sxtYrbsCPxvhfqqTNJeNAtIt+EESVZPLY87A9dufc4cKSrHhYDURMtRwlWQhQTe24vfFQ+J7szI2F7TCVKmkzCmgzKSQP55Fki3VgTezXHS21sMKSAxqQi7i+/PAWalasReHUho7/OBbF1O7CBOMy8S3m3GJ3JDlbsbRwbUCpn1VS8VdGBOQBGfIanSOSfy2/wCv3wQaox5MkstQRGGYyTeK3VRqJN7b2AJ/DBLVssaKIaOmmCpbW04U/KOe3rcfhijN2mqqOIU4kjkBYNHT1axggg7k236fnilCvMxYHiAyZhHHSU5esZdaM6k1pFydIUX08vMPb9NugpI6mnp6mOtqXUkP/FuCQdxy3G1sLy0uYJlzx6qozcRNP7zXUFBS9m0bcjt139ccv+146FooFnMmk6b5ugNyrddHQ26d+mNMy8xMpjxYYzc9H2VP6n9jgODM66GNI/CxShRYvJWLqP03+n+apswqa2mYVdJHTMsi6AlQsusadztysdsZYzL8Zox8NTmEyVrmhkemfMY0kEhj0GNn3vYeluv588F0orJq+d4c0heAqAkSMGK203272fqefbFD/D9ec0kqBo0NUmQFiPKuq+3Xl+uD48oro3GmcaBvfxMmrn7YxLKo0PiAWZxSzNPJpizKll1C4VRuRz+/7Yplhk0Sw/tGlExAVdKqpRgRc/MfUdOuPskKxVMsMVWwMLCwZ5R0B3IFuvTtgijoxUWtUvJoAvad+3qOxwpYH1HGcawSIjwBmGY0rrEicSRUDgE23NiL39hzwRSGOsLwU80U0yWLFFK6RuCDue2LHySY5VLBx5DO8WhhxmZTyvz7Lse59ccfDGTVGV1MzytaIoFVbDc9W2PblgkoUPP0IM7AxgxMTExPBKzzPvjpcTEx0O06xMTEx0E//9k=",
+    "sourceUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAEEALgMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBgADBQIHAf/EADUQAAIBAgQEBAMFCQAAAAAAAAECAwQRAAUSIRMxQWEUIlFxBjKhJFKBkbEVJTNCc8HR4fD/xAAYAQADAQEAAAAAAAAAAAAAAAABAgQDAP/EACMRAAICAAUEAwAAAAAAAAAAAAECABEDEiFBUSIxsfETcaH/2gAMAwEAAhEDEQA/APR80pcznqqZ8vrkp4I78aMrfiX5b22tjJy6sqcqQ5fnWbpPmKB5yQrEGMqdI+XoQTYf6w0mq8OoDPpUn7t8UT02XTTxtPDBLxlaMs0YZmNibX9LBsQCjoJYpUHq/IoUdRmb5plkT/ECShdU08ZiZDNHc9NNhYKeZ6YZjmENPS8SetZQkHGZ1h4l1JNjy+nbHHhsqikP2OBWj8gIjF7dR7b/AFwB8UVlHlFAawwU1yrDTLESJDY2Q25A3Jv25c8BWs6R8uHiMFUGGQ5/Q1dWlNT5hI0skPGVTR28m5ve3p07Y1QwYBl5HcYxvhqmNWni6jLaOnksI4+DHY6Lb+bqN/bbDAeAoC8Nl07bHDasLMTEVEak83AK2eNYjGy3Yjbb64VqmtkeZKYx1bNDJpZaVZHDXUEsAo72Gu3Im/rrZ5l89VWU9XDKHSCxEF+bA323A36+wwHV09bV10jRUcMEbxDzSHfUNQttf1vf2wmE3Wc2ghdVAXe+/uD5XmEdJXutY9XYEJw5Uc6HC35MPLsCbgkcvXG7WZbmE2mEyK8RcuQ5sxtYrbsCPxvhfqqTNJeNAtIt+EESVZPLY87A9dufc4cKSrHhYDURMtRwlWQhQTe24vfFQ+J7szI2F7TCVKmkzCmgzKSQP55Fki3VgTezXHS21sMKSAxqQi7i+/PAWalasReHUho7/OBbF1O7CBOMy8S3m3GJ3JDlbsbRwbUCpn1VS8VdGBOQBGfIanSOSfy2/wCv3wQaox5MkstQRGGYyTeK3VRqJN7b2AJ/DBLVssaKIaOmmCpbW04U/KOe3rcfhijN2mqqOIU4kjkBYNHT1axggg7k236fnilCvMxYHiAyZhHHSU5esZdaM6k1pFydIUX08vMPb9NugpI6mnp6mOtqXUkP/FuCQdxy3G1sLy0uYJlzx6qozcRNP7zXUFBS9m0bcjt139ccv+146FooFnMmk6b5ugNyrddHQ26d+mNMy8xMpjxYYzc9H2VP6n9jgODM66GNI/CxShRYvJWLqP03+n+apswqa2mYVdJHTMsi6AlQsusadztysdsZYzL8Zox8NTmEyVrmhkemfMY0kEhj0GNn3vYeluv588F0orJq+d4c0heAqAkSMGK203272fqefbFD/D9ec0kqBo0NUmQFiPKuq+3Xl+uD48oro3GmcaBvfxMmrn7YxLKo0PiAWZxSzNPJpizKll1C4VRuRz+/7Yplhk0Sw/tGlExAVdKqpRgRc/MfUdOuPskKxVMsMVWwMLCwZ5R0B3IFuvTtgijoxUWtUvJoAvad+3qOxwpYH1HGcawSIjwBmGY0rrEicSRUDgE23NiL39hzwRSGOsLwU80U0yWLFFK6RuCDue2LHySY5VLBx5DO8WhhxmZTyvz7Lse59ccfDGTVGV1MzytaIoFVbDc9W2PblgkoUPP0IM7AxgxMTExPBKzzPvjpcTEx0O06xMTEx0E//9k=",
+    "id": 1764211759599.8958
   },
   {
-    "title": "台東捐血站 捐血活動",
-    "date": "2025-11-29",
-    "time": "08:00-16:00",
-    "location": "台東市博愛路332號",
-    "city": "台東縣",
-    "district": "台東市",
-    "organizer": "台東捐血站",
-    "gift": {
-      "name": "愛心傘、白米、沙拉油",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNu0cQ5CWscTBBkSWrfUPtlvmqaUq2p06A6Q&s"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "台東縣"
-    ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNu0cQ5CWscTBBkSWrfUPtlvmqaUq2p06A6Q&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNu0cQ5CWscTBBkSWrfUPtlvmqaUq2p06A6Q&s",
-    "id": 1764135940453.3743
-  },
-  {
-    "title": "熱血相傳幸福滿滿",
-    "date": "2025-11-29",
-    "time": "09:00-17:00",
-    "location": "高雄市岡山區壽華路58號 (岡山捐血室)",
+    "title": "滴滴熱血 滿滿愛心",
+    "date": "2025-11-30",
+    "time": "09:30-18:00",
+    "location": "高雄市左營區博愛三路635號",
     "city": "高雄市",
-    "district": "岡山區",
-    "organizer": "慶圖金屬開發股份有限公司",
+    "district": "左營區",
+    "organizer": "鳳凰獅子會",
     "gift": {
-      "name": "全聯好禮, 冠軍濾掛咖啡5入/盒",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgowiLRvPGQF7WPZW4NIQO4BgbA-vMfLQuOQ&s"
+      "name": "全聯提貨券, 愛當勞券",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7DcjQPGmQUojazLXMjI6drjAJII8d_XsQiQ&s"
     },
     "tags": [
       "AI辨識",
       "自動更新",
       "高雄市"
     ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgowiLRvPGQF7WPZW4NIQO4BgbA-vMfLQuOQ&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgowiLRvPGQF7WPZW4NIQO4BgbA-vMfLQuOQ&s",
-    "id": 1764135950857.97
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7DcjQPGmQUojazLXMjI6drjAJII8d_XsQiQ&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7DcjQPGmQUojazLXMjI6drjAJII8d_XsQiQ&s",
+    "id": 1764211772533.5308
+  },
+  {
+    "title": "台東捐血站捐血活動",
+    "date": "2025-11-30",
+    "time": "08:00-16:00",
+    "location": "台東縣台東市博愛路332號",
+    "city": "台東縣",
+    "district": "台東市",
+    "organizer": "台東捐血站",
+    "gift": {
+      "name": "白米",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnpXAad4Y5eYaSB0FxLjnJmq-FPoxJAkyerQ&s"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台東縣"
+    ],
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnpXAad4Y5eYaSB0FxLjnJmq-FPoxJAkyerQ&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnpXAad4Y5eYaSB0FxLjnJmq-FPoxJAkyerQ&s",
+    "id": 1764211815786.7444
+  },
+  {
+    "title": "楠梓捐血活動",
+    "date": "2025-11-30",
+    "time": "08:00-17:00",
+    "location": "楠梓捐血室 (高雄市楠梓區加昌路1837號1F)",
+    "city": "高雄市",
+    "district": "楠梓區",
+    "organizer": "社團法人高雄市古嚴普濟會",
+    "gift": {
+      "name": "全聯提貨券",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_cCDBYlpTysX-ktMEE9kh3L7Wy1xFDnDmlA&s"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "高雄市"
+    ],
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_cCDBYlpTysX-ktMEE9kh3L7Wy1xFDnDmlA&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_cCDBYlpTysX-ktMEE9kh3L7Wy1xFDnDmlA&s",
+    "id": 1764211833548.1003
+  },
+  {
+    "title": "捐血找我",
+    "date": "2025-11-30",
+    "time": "08:30-17:00",
+    "location": "小東捐血室 (台南市東區小東路423巷1-2號)",
+    "city": "台南市",
+    "district": "東區",
+    "organizer": "亞東係股份有限公司",
+    "gift": {
+      "name": "澎湖鹹餅、手工麵線",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSER6GeCLLmLUXiCZ6SQobUZn9CC6ZqmyuhCQ&s"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台南市"
+    ],
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSER6GeCLLmLUXiCZ6SQobUZn9CC6ZqmyuhCQ&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSER6GeCLLmLUXiCZ6SQobUZn9CC6ZqmyuhCQ&s",
+    "id": 1764211870682.244
   },
   {
     "title": "國際獅子會300E-5區2025-2026年度獅子心登發情捐血義",

@@ -164,18 +164,22 @@ async function fetchGoogleImages(source) {
                 let result = { highResUrl: null, visitUrl: null };
 
                 if (clickSuccess) {
-                    // 等待側邊欄載入，給予更多時間並使用 waitForFunction 確保大圖出現
+                    // 等待側邊欄載入，並嘗試等待高畫質圖片 (非 gstatic)
                     try {
-                        // 等待右側面板出現大圖 (通常是 img 標籤，且 src 不是 base64 縮圖)
-                        // 這裡使用一個較寬鬆的等待條件，避免卡死
                         await page.waitForFunction(() => {
                             const images = Array.from(document.querySelectorAll('img'));
-                            // 尋找寬度大於 300 的圖片，且不是剛剛點擊的那個縮圖
-                            return images.some(img => img.getBoundingClientRect().width > 300);
-                        }, { timeout: 3000 }).catch(() => { }); // 忽略 timeout，繼續嘗試提取
+                            // 尋找寬度大於 300 且網址不是 gstatic 的圖片
+                            return images.some(img => {
+                                const rect = img.getBoundingClientRect();
+                                return rect.width > 300 &&
+                                    img.src.startsWith('http') &&
+                                    !img.src.includes('gstatic.com') &&
+                                    !img.src.includes('google.com');
+                            });
+                        }, { timeout: 5000 }).catch(() => { });
                     } catch (e) { }
 
-                    // 額外等待一下，確保圖片完全載入
+                    // 額外等待一下
                     await new Promise(r => setTimeout(r, 1000));
 
                     // 提取資料 (高畫質圖 + 前往連結)
@@ -198,7 +202,6 @@ async function fetchGoogleImages(source) {
                             const candidates = allImages.filter(img => {
                                 const rect = img.getBoundingClientRect();
                                 // Filter out small images (icons) and hidden images
-                                // Stricter size filter: 300x300
                                 if (rect.width < 300 || rect.height < 300) return false;
                                 if (rect.width === 0 || rect.height === 0) return false;
 
@@ -217,13 +220,15 @@ async function fetchGoogleImages(source) {
                             });
 
                             let highResUrl = null;
-                            // Prefer the first candidate that starts with http
-                            const httpCandidate = candidates.find(img => img.src.startsWith('http') && !img.src.includes('gstatic.com'));
+                            // Prefer the first candidate that starts with http AND is not gstatic
+                            const httpCandidate = candidates.find(img => img.src.startsWith('http') && !img.src.includes('gstatic.com') && !img.src.includes('google.com'));
 
                             if (httpCandidate) {
                                 highResUrl = httpCandidate.src;
                             } else if (candidates.length > 0) {
-                                // Fallback to base64 if it's the only large image found
+                                // Fallback: If no non-gstatic image found, try to find the largest one that isn't the thumbnail we clicked
+                                // But if it's gstatic, it's likely just the preview.
+                                // We'll take it if we have nothing else, but prefer httpCandidate.
                                 highResUrl = candidates[0].src;
                             }
 
@@ -231,27 +236,36 @@ async function fetchGoogleImages(source) {
                             const links = Array.from(document.querySelectorAll('a'));
                             let visitUrl = null;
 
-                            // Strategy 1: Text content
+                            // Strategy 1: Look for specific "Visit" button text/aria-label
+                            // Google often uses aria-label="Visit" or "Website"
                             const visitLink = links.find(a => {
                                 const text = a.innerText.trim();
+                                const ariaLabel = a.getAttribute('aria-label') || '';
                                 const rect = a.getBoundingClientRect();
-                                return rect.width > 0 && rect.height > 0 &&
-                                    (text.includes('前往') || text.includes('Visit') || text === '網站' || text === 'Website');
+
+                                // Must be visible
+                                if (rect.width === 0 || rect.height === 0) return false;
+
+                                return (text.includes('前往') || text.includes('Visit') || text === '網站' || text === 'Website') ||
+                                    (ariaLabel.includes('前往') || ariaLabel.includes('Visit') || ariaLabel === '網站' || ariaLabel === 'Website');
                             });
 
                             if (visitLink) {
                                 visitUrl = visitLink.href;
                             } else {
-                                // Strategy 2: Look for the link wrapping the image or immediately following it
+                                // Strategy 2: Look for the first external link in the right half of the screen
+                                // This is the most reliable fallback for the "Visit" button which is usually near the title/image
                                 const sidePanelLinks = links.filter(a => {
                                     const rect = a.getBoundingClientRect();
                                     return rect.left > window.innerWidth / 2 && // Right half
                                         rect.width > 0 && rect.height > 0 &&
                                         a.href.startsWith('http') &&
-                                        !a.href.includes('google.com');
+                                        !a.href.includes('google.com') &&
+                                        !a.href.includes('facebook.com/sharer'); // Exclude share buttons
                                 });
 
                                 if (sidePanelLinks.length > 0) {
+                                    // Usually the first one is the title link or the visit button
                                     visitUrl = sidePanelLinks[0].href;
                                 }
                             }

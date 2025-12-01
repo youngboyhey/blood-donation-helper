@@ -815,6 +815,13 @@ async function updateEvents() {
                         continue;
                     }
 
+                    // 地點過濾：排除模糊地點
+                    const genericKeywords = ['全台', '全國', '各校園', '各捐血點', '各地', '全省'];
+                    if (eventData.location && genericKeywords.some(kw => eventData.location.includes(kw)) && eventData.location.length < 10) {
+                        console.log(`[跳過] 通用地點: ${eventData.title} (${eventData.location})`);
+                        continue;
+                    }
+
                     if (item.type === 'image') {
                         eventData.posterUrl = item.url;
                         if (eventData.gift) {

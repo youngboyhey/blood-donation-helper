@@ -63,6 +63,27 @@
     "id": 1764575757894.6538
   },
   {
+    "title": "捐熱血 Go! 愛心",
+    "date": "2025-12-29",
+    "time": "09:00-17:00",
+    "location": "三重國小捷運站仁愛街15號 長泰派出所 (新北市三重區仁愛街15號)",
+    "city": "新北市",
+    "district": "三重區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": "三好米一包,U2電影票一張,加贈摺疊腳踏車",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331118749980674/1129%E4%B8%89%E9%87%8D%E5%9C%8B%E5%B0%8F.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P331331118749980674/1129%E4%B8%89%E9%87%8D%E5%9C%8B%E5%B0%8F.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-01%2000%3A00%3A00&sid=0P331329362250366406",
+    "id": 1764577781574.4265
+  },
+  {
     "title": "國際佛光會台北大安第四分會 邀請您一起捐血傳愛",
     "date": "2025-12-01",
     "time": "09:00-17:00",
@@ -483,48 +504,6 @@
     "id": 1764211221229.3323
   },
   {
-    "title": "捐血送口紅",
-    "date": "2025-12-01",
-    "time": null,
-    "location": "南投捐血室",
-    "city": "南投縣",
-    "district": null,
-    "organizer": "南投捐血室",
-    "gift": {
-      "name": "口紅",
-      "image": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/552637953_4209914759227408_8891977805126198358_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx1536x2048&ctp=p600x600&_nc_cat=101&ccb=1-7&_nc_sid=6376bf&_nc_ohc=e3CdpJ0iXAgQ7kNvwGikKNz&_nc_oc=AdnRPYahtvgEMCwwV2mn2Da6jwhcC6nBTD47kxQU5RPCiOGtCrwdvAlPu1EvGJME2Rw&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=6diKEbwh8ciJIvcUk5pDlQ&oh=00_AfhiX-CORtnFb0qYzNO6_h-pHuZ7rJpUZbMEmRGkoaQmpw&oe=6933145F"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "南投縣"
-    ],
-    "posterUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/552637953_4209914759227408_8891977805126198358_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx1536x2048&ctp=p600x600&_nc_cat=101&ccb=1-7&_nc_sid=6376bf&_nc_ohc=e3CdpJ0iXAgQ7kNvwGikKNz&_nc_oc=AdnRPYahtvgEMCwwV2mn2Da6jwhcC6nBTD47kxQU5RPCiOGtCrwdvAlPu1EvGJME2Rw&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=6diKEbwh8ciJIvcUk5pDlQ&oh=00_AfhiX-CORtnFb0qYzNO6_h-pHuZ7rJpUZbMEmRGkoaQmpw&oe=6933145F",
-    "sourceUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/552637953_4209914759227408_8891977805126198358_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx1536x2048&ctp=p600x600&_nc_cat=101&ccb=1-7&_nc_sid=6376bf&_nc_ohc=e3CdpJ0iXAgQ7kNvwGikKNz&_nc_oc=AdnRPYahtvgEMCwwV2mn2Da6jwhcC6nBTD47kxQU5RPCiOGtCrwdvAlPu1EvGJME2Rw&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=6diKEbwh8ciJIvcUk5pDlQ&oh=00_AfhiX-CORtnFb0qYzNO6_h-pHuZ7rJpUZbMEmRGkoaQmpw&oe=6933145F",
-    "id": 1764576177515.9656
-  },
-  {
-    "title": "嘉義大學蘭潭校區捐血活動",
-    "date": "2025-12-03",
-    "time": "10:00-17:00",
-    "location": "嘉義大學蘭潭校區學生生活中心對面",
-    "city": "嘉義市",
-    "district": null,
-    "organizer": "嘉義捐血站",
-    "gift": {
-      "name": "白爛貓後背包、小大人筆記本+貼紙/組、五鮮級火鍋券",
-      "image": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/584410107_1267670188739537_6613839573257618551_n.jpg?stp=dst-jpg_tt6&cstp=mx720x960&ctp=p600x600&_nc_cat=100&ccb=1-7&_nc_sid=cae128&_nc_ohc=skPWnXStH34Q7kNvwHxU48u&_nc_oc=AdlAecbeMyFKrOTjz3TYrS4m74ORkNtCx25IJSwBxYlWwSWWtNMQ2N-qSiMw0n-l8hU&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=h5x8mbMpIjDlvrFq_QvSmg&oh=00_AfhKjCPkFSDfyR-KplFY6zZc0P59hjhxqWnJR7TQQF4e-w&oe=69332B76"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "嘉義市"
-    ],
-    "posterUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/584410107_1267670188739537_6613839573257618551_n.jpg?stp=dst-jpg_tt6&cstp=mx720x960&ctp=p600x600&_nc_cat=100&ccb=1-7&_nc_sid=cae128&_nc_ohc=skPWnXStH34Q7kNvwHxU48u&_nc_oc=AdlAecbeMyFKrOTjz3TYrS4m74ORkNtCx25IJSwBxYlWwSWWtNMQ2N-qSiMw0n-l8hU&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=h5x8mbMpIjDlvrFq_QvSmg&oh=00_AfhKjCPkFSDfyR-KplFY6zZc0P59hjhxqWnJR7TQQF4e-w&oe=69332B76",
-    "sourceUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/584410107_1267670188739537_6613839573257618551_n.jpg?stp=dst-jpg_tt6&cstp=mx720x960&ctp=p600x600&_nc_cat=100&ccb=1-7&_nc_sid=cae128&_nc_ohc=skPWnXStH34Q7kNvwHxU48u&_nc_oc=AdlAecbeMyFKrOTjz3TYrS4m74ORkNtCx25IJSwBxYlWwSWWtNMQ2N-qSiMw0n-l8hU&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=h5x8mbMpIjDlvrFq_QvSmg&oh=00_AfhKjCPkFSDfyR-KplFY6zZc0P59hjhxqWnJR7TQQF4e-w&oe=69332B76",
-    "id": 1764576502809.1296
-  },
-  {
     "title": "捐血贈月餅",
     "date": "2025-12-01",
     "time": "09:00-17:00",
@@ -544,47 +523,5 @@
     "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ALgMBIgACEQEDEQH/xAAaAAACAwEBAAAAAAAAAAAAAAADBAIFBgEA/8QAMxAAAgEDAgMGBAQHAAAAAAAAAQIDAAQREiEiMVEFE0FhcdEUgZGxBkKToSMyMzRSYoL/xAAYAQADAQEAAAAAAAAAAAAAAAACAwQAAf/EACgRAAICAQEECwAAAAAAAAAAAAECABEDMhIhMZETFEFRYXGBobHw8f/aAAwDAQACEQMRAD8A0UzmNRhNWTjmdqGbiREZdBx3gGcE7daDJJKZ2RZCOLArjNODgtKR1CMfAHwHn96PLjN66++PP084/ZljaKs84jmkWBSDxsMgfSl2mILjTsp6HehRx3Uikq4wCRxSBTt5E1LuLzb+Iv6y+9GcbstB+/fu7brlftNsSbSyNsU2Ubb8uXvRlIKqcY25UjL8REAXk2JIGmQNy9KLZu7mTWxbGMZ+dEmIji1zFaFyMak3bOYhKitxLnmKbi7lQTJZK3CuRldiNIJ5+ROPOlEdUuyWK/1McTlftz+dNd7DcyxRgyMzIVA798blSAB9PTl4ms+Qg1OiyaEFJFC2nTa6RxZCzKPTck5+goBNqrkNDJt4CUdPSpvKILoLAhLxtniZiVYbdf8AU0IyMArmNcNuONvXrRK5PD5h7x+x3s3sS47RtzPFLCiAleMnOR8vOlOzJElEzxNqQPo1YIyR08txvRLP8TWltY3sLXBWWRsqoDkEnZt98bUPsy5gujM9sFEer+VRjBJLH70KZGLlTFFyTUq+2bowzOusxqDqZgceO1djvm+HR2R2YnSQuPrzqw7T7M+NkjdHVNIOrbds48RR+zbC3s0VZEMvLWc7k48OlLQZRmYnTLHy4urqBqlUb4AZ7uXHy96kLpSVGl8k43xtvjrWhZbD8tow/wCx19OleVbD81ox9HHtVNyXpJiEnkgDASMSGfSmHGk56g48P3q6/Deox3TM7OWlzrYYLedXumw1f2jY6ax7VGQW4I+GhMf+WWBz+wpKY9lriFQKbn//2Q==",
     "sourceUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ALgMBIgACEQEDEQH/xAAaAAACAwEBAAAAAAAAAAAAAAADBAIFBgEA/8QAMxAAAgEDAgMGBAQHAAAAAAAAAQIDAAQREiEiMVEFE0FhcdEUgZGxBkKToSMyMzRSYoL/xAAYAQADAQEAAAAAAAAAAAAAAAACAwQAAf/EACgRAAICAQEECwAAAAAAAAAAAAECABEDMhIhMZETFEFRYXGBobHw8f/aAAwDAQACEQMRAD8A0UzmNRhNWTjmdqGbiREZdBx3gGcE7daDJJKZ2RZCOLArjNODgtKR1CMfAHwHn96PLjN66++PP084/ZljaKs84jmkWBSDxsMgfSl2mILjTsp6HehRx3Uikq4wCRxSBTt5E1LuLzb+Iv6y+9GcbstB+/fu7brlftNsSbSyNsU2Ubb8uXvRlIKqcY25UjL8REAXk2JIGmQNy9KLZu7mTWxbGMZ+dEmIji1zFaFyMak3bOYhKitxLnmKbi7lQTJZK3CuRldiNIJ5+ROPOlEdUuyWK/1McTlftz+dNd7DcyxRgyMzIVA798blSAB9PTl4ms+Qg1OiyaEFJFC2nTa6RxZCzKPTck5+goBNqrkNDJt4CUdPSpvKILoLAhLxtniZiVYbdf8AU0IyMArmNcNuONvXrRK5PD5h7x+x3s3sS47RtzPFLCiAleMnOR8vOlOzJElEzxNqQPo1YIyR08txvRLP8TWltY3sLXBWWRsqoDkEnZt98bUPsy5gujM9sFEer+VRjBJLH70KZGLlTFFyTUq+2bowzOusxqDqZgceO1djvm+HR2R2YnSQuPrzqw7T7M+NkjdHVNIOrbds48RR+zbC3s0VZEMvLWc7k48OlLQZRmYnTLHy4urqBqlUb4AZ7uXHy96kLpSVGl8k43xtvjrWhZbD8tow/wCx19OleVbD81ox9HHtVNyXpJiEnkgDASMSGfSmHGk56g48P3q6/Deox3TM7OWlzrYYLedXumw1f2jY6ax7VGQW4I+GhMf+WWBz+wpKY9lriFQKbn//2Q==",
     "id": 1764576939883.4683
-  },
-  {
-    "title": "熱血出動 為病人加油打氣",
-    "date": "2025-12-01",
-    "time": "10:30-17:00",
-    "location": "漢民公園 (小港區漢民路與大鵬路口)",
-    "city": "高雄市",
-    "district": "小港區",
-    "organizer": "釜江海事工程有限公司、肌肉書僮有限公司、立法委員賴瑞隆、市議員黃彥毓",
-    "gift": {
-      "name": "福利券",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAwT1W-LbM8ELWqDbh-7qCWf7s6Qz3JiN1ag&s"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "高雄市"
-    ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAwT1W-LbM8ELWqDbh-7qCWf7s6Qz3JiN1ag&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAwT1W-LbM8ELWqDbh-7qCWf7s6Qz3JiN1ag&s",
-    "id": 1764572866833.1191
-  },
-  {
-    "title": "褒忠義民祠捐血活動",
-    "date": "2025-12-03",
-    "time": "09:00-17:00",
-    "location": "高雄市三民區褒忠街114號 (褒忠義民祠)",
-    "city": "高雄市",
-    "district": "三民區",
-    "organizer": "馬公捐血站",
-    "gift": {
-      "name": "全聯好禮、精美好禮、版丸屋兌換券",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCsPRXvtIqZZz_FcwuQnnopA8P_1hHL7q8Iw&s"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "高雄市"
-    ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCsPRXvtIqZZz_FcwuQnnopA8P_1hHL7q8Iw&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCsPRXvtIqZZz_FcwuQnnopA8P_1hHL7q8Iw&s",
-    "id": 1764572877288.411
   }
 ]

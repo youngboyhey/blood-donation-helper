@@ -87,17 +87,29 @@ async function fetchHTMLWithPuppeteer(url) {
 }
 
 async function loadCookies() {
+    // 1. Try to load from environment variable (for CI)
+    if (process.env.COOKIES_JSON) {
+        try {
+            const cookies = JSON.parse(process.env.COOKIES_JSON);
+            console.log(`[Cookies] Loaded ${cookies.length} cookies from environment variable.`);
+            return cookies;
+        } catch (e) {
+            console.error('[Cookies] Failed to parse COOKIES_JSON env var:', e.message);
+        }
+    }
+
+    // 2. Try to load from local file
     const cookiePath = path.join(__dirname, '../cookies.json');
     if (fs.existsSync(cookiePath)) {
         try {
             const cookies = JSON.parse(fs.readFileSync(cookiePath, 'utf8'));
-            console.log(`[Cookies] Loaded ${cookies.length} cookies.`);
+            console.log(`[Cookies] Loaded ${cookies.length} cookies from local file.`);
             return cookies;
         } catch (e) {
-            console.error('[Cookies] Failed to load cookies:', e.message);
+            console.error('[Cookies] Failed to load cookies from file:', e.message);
         }
     } else {
-        console.log('[Cookies] No cookies.json found. Skipping deep scraping.');
+        console.log('[Cookies] No cookies found (env or file). Skipping deep scraping.');
     }
     return [];
 }

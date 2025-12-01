@@ -86,8 +86,89 @@ async function fetchHTMLWithPuppeteer(url) {
     }
 }
 
+async function loadCookies() {
+    const cookiePath = path.join(__dirname, '../cookies.json');
+    if (fs.existsSync(cookiePath)) {
+        try {
+            const cookies = JSON.parse(fs.readFileSync(cookiePath, 'utf8'));
+            console.log(`[Cookies] Loaded ${cookies.length} cookies.`);
+            return cookies;
+        } catch (e) {
+            console.error('[Cookies] Failed to load cookies:', e.message);
+        }
+    } else {
+        console.log('[Cookies] No cookies.json found. Skipping deep scraping.');
+    }
+    return [];
+}
+
+async function fetchSourcePage(url, browser, cookies) {
+    if (!url || !url.startsWith('http')) return null;
+
+    console.log(`[Source] Deep scraping: ${url}`);
+    const page = await browser.newPage();
+
+    try {
+        if (cookies && cookies.length > 0) {
+            await page.setCookie(...cookies);
+        }
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+        // Facebook specific: disable notifications to avoid popups blocking content
+        const context = browser.defaultBrowserContext();
+        await context.overridePermissions(url, ['notifications']);
+
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+
+        // Try to extract og:image first (most reliable for social media)
+        const ogImage = await page.evaluate(() => {
+            const meta = document.querySelector('meta[property="og:image"]');
+            return meta ? meta.content : null;
+        });
+
+        if (ogImage) {
+            console.log(`[Source] Found og:image: ${ogImage.substring(0, 50)}...`);
+            return ogImage;
+        }
+
+        // Fallback: Find largest image on page
+        const largestImage = await page.evaluate(() => {
+            const images = Array.from(document.querySelectorAll('img'));
+            const candidates = images.filter(img => {
+                const rect = img.getBoundingClientRect();
+                return rect.width > 300 && rect.height > 300 && img.src.startsWith('http');
+            });
+
+            if (candidates.length === 0) return null;
+
+            candidates.sort((a, b) => {
+                const areaA = a.getBoundingClientRect().width * a.getBoundingClientRect().height;
+                const areaB = b.getBoundingClientRect().width * b.getBoundingClientRect().height;
+                return areaB - areaA;
+            });
+
+            return candidates[0].src;
+        });
+
+        if (largestImage) {
+            console.log(`[Source] Found largest image: ${largestImage.substring(0, 50)}...`);
+            return largestImage;
+        }
+
+    } catch (e) {
+        console.error(`[Source] Error scraping ${url}:`, e.message);
+    } finally {
+        await page.close();
+    }
+    return null;
+}
+
 async function fetchGoogleImages(source) {
     console.log(`[Google] 正在搜尋圖片: ${source.query}`);
+
+    // Load cookies for deep scraping
+    const cookies = await loadCookies();
+
     const browser = await puppeteer.launch({
         headless: "new",
         args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -278,6 +359,15 @@ async function fetchGoogleImages(source) {
                 }
 
                 let finalImageUrl = result.highResUrl;
+
+                // Deep scraping: If we have a visitUrl, try to get a better image from the source
+                if (result.visitUrl) {
+                    const deepImage = await fetchSourcePage(result.visitUrl, browser, cookies);
+                    if (deepImage) {
+                        console.log(`[Google] 使用深入抓取的圖片取代: ${deepImage.substring(0, 50)}...`);
+                        finalImageUrl = deepImage;
+                    }
+                }
 
                 // Double check if highResUrl is a placeholder or too short (only for data URLs)
                 if (finalImageUrl && finalImageUrl.startsWith('data:') && (finalImageUrl.includes('data:image/gif') || finalImageUrl.length < 100)) {

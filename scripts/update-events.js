@@ -888,11 +888,9 @@ async function updateEvents() {
                             eventData.gift.image = item.url;
                         }
                     } else {
-                        // 若非圖片來源 (例如純文字)，確保圖片欄位為 null
-                        eventData.posterUrl = null;
-                        if (eventData.gift) {
-                            eventData.gift.image = null;
-                        }
+                        // 使用者要求：沒有圖片就不要顯示
+                        console.log(`[跳過] 無圖片活動: ${eventData.title}`);
+                        continue;
                     }
                     eventData.sourceUrl = item.postUrl || item.url || source.url || item.sourceUrl;
                     eventData.id = Date.now() + Math.random();

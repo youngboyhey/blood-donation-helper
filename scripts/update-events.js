@@ -60,7 +60,11 @@ const SOURCES = [
     { type: 'google', id: 'kaohsiung', name: '高雄捐血中心', query: '高雄 捐血活動 贈品', city: '高雄市' },
     { type: 'google', id: 'pingtung', name: '屏東捐血站', query: '屏東 捐血活動 贈品', city: '屏東縣' },
     { type: 'google', id: 'taitung', name: '台東捐血站', query: '台東 捐血活動 贈品', city: '台東縣' },
-    { type: 'google', id: 'penghu', name: '馬公捐血站', query: '澎湖 捐血活動 贈品', city: '澎湖縣' }
+    { type: 'google', id: 'penghu', name: '馬公捐血站', query: '澎湖 捐血活動 贈品', city: '澎湖縣' },
+    // Social Media Sources (FB/IG)
+    { type: 'google', id: 'social_taichung', name: '台中捐血 (社群)', query: 'site:facebook.com OR site:instagram.com 台中 捐血活動 海報', city: '台中市' },
+    { type: 'google', id: 'social_tainan', name: '台南捐血 (社群)', query: 'site:facebook.com OR site:instagram.com 台南 捐血活動 海報', city: '台南市' },
+    { type: 'google', id: 'social_kaohsiung', name: '高雄捐血 (社群)', query: 'site:facebook.com OR site:instagram.com 高雄 捐血活動 海報', city: '高雄市' }
 ];
 
 async function fetchHTMLWithPuppeteer(url) {
@@ -896,6 +900,15 @@ async function updateEvents() {
     // 輔助函式：標準化地點字串 (移除空白、括號等)
     const normalize = (str) => (str || '').replace(/[()\s\-\uff08\uff09]/g, '').toLowerCase();
 
+    // 輔助函式：提取地點名稱 (移除括號後的地址部分)
+    // 例如: "中埔鄉公所(嘉義縣中埔鄉中正路120號)" -> "中埔鄉公所"
+    const getVenueName = (str) => {
+        if (!str) return '';
+        // Split by full-width or half-width parenthesis
+        const parts = str.split(/[(\uff08]/);
+        return normalize(parts[0]);
+    };
+
     for (const evt of allNewEvents) {
         // 1. 嘗試在已加入的清單中找到重複活動
         const duplicateIndex = uniqueEvents.findIndex(existing => {
@@ -909,7 +922,18 @@ async function updateEvents() {
             const loc2 = normalize(evt.location);
 
             // 判斷地點是否高度相似或包含
-            const isMatch = loc1.includes(loc2) || loc2.includes(loc1);
+            let isMatch = loc1.includes(loc2) || loc2.includes(loc1);
+
+            // 如果基本包含檢查失敗，嘗試 "地點名稱" 比對
+            if (!isMatch) {
+                const venue1 = getVenueName(existing.location);
+                const venue2 = getVenueName(evt.location);
+                // 只有當地點名稱夠長 (>2字) 且完全相同時才視為重複
+                if (venue1.length > 2 && venue2.length > 2 && venue1 === venue2) {
+                    isMatch = true;
+                }
+            }
+
             if (isMatch) {
                 console.log(`[去重] 發現重複: "${existing.title}" vs "${evt.title}"`);
             }

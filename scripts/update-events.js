@@ -614,7 +614,7 @@ async function analyzeContentWithAI(item, sourceContext) {
 
     try {
         const model = genAI.getGenerativeModel({
-            model: "gemini-2.5-flash-lite",
+            model: "gemini-2.0-flash-lite",
             generationConfig: { responseMimeType: "application/json" }
         });
 
@@ -776,6 +776,10 @@ async function updateEvents() {
             }
 
             // 3. 無快取，執行 AI 分析
+            // Rate Limit Protection: 增加 4 秒延遲，確保不超過 15 RPM (60s/4s = 15)
+            // 雖然 gemini-2.0-flash-lite 支援 30 RPM，但保留緩衝更安全
+            await new Promise(resolve => setTimeout(resolve, 4000));
+
             const eventDataList = await analyzeContentWithAI(item, source);
 
             if (eventDataList && eventDataList.length > 0) {

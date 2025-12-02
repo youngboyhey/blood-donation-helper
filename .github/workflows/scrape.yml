@@ -34,6 +34,7 @@ jobs:
       - name: Run Scraper Script
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
           COOKIES_JSON: ${{ secrets.COOKIES_JSON }}
         run: node scripts/update-events.js
 

@@ -614,7 +614,21 @@ async function analyzeContentWithAI(item, sourceContext) {
     console.log(`[AI] 正在分析${isImage ? '圖片' : '文字'} (${sourceContext.city}): ${contentPreview}...`);
 
     // API Key Rotation Logic
-    const apiKeys = process.env.GEMINI_API_KEYS ? process.env.GEMINI_API_KEYS.split(',') : [process.env.GEMINI_API_KEY];
+    let apiKeys = [];
+    if (process.env.GEMINI_API_KEYS) {
+        apiKeys = process.env.GEMINI_API_KEYS.split(',').map(k => k.trim()).filter(k => k);
+    }
+
+    // Fallback or merge with GEMINI_API_KEY
+    if (process.env.GEMINI_API_KEY) {
+        const legacyKeys = process.env.GEMINI_API_KEY.split(',').map(k => k.trim()).filter(k => k);
+        apiKeys = [...new Set([...apiKeys, ...legacyKeys])];
+    }
+
+    if (apiKeys.length === 0) {
+        console.error("[AI] No valid API keys found!");
+        return null;
+    }
 
     // Helper to get model with specific key index
     const getModel = (index) => {

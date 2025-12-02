@@ -223,7 +223,7 @@ async function fetchGoogleImages(source) {
         // 隨機等待一下
         await new Promise(r => setTimeout(r, 1000 + Math.random() * 2000));
 
-        const MAX_RESULTS = 10; // 限制搜尋數量至 10
+        const MAX_RESULTS = 8; // 限制搜尋數量至 8 (RPD Optimization)
 
         console.log(`[Google] 準備處理前 ${MAX_RESULTS} 筆結果以獲取高畫質圖片與來源連結...`);
 
@@ -578,7 +578,8 @@ async function fetchWebImages(source) {
             }
         }
 
-        return uniqueResult;
+        // RPD Optimization: Limit to max 10 images per web source
+        return uniqueResult.slice(0, 10);
 
     } catch (error) {
         console.error(`[Web] 抓取失敗 ${source.name}:`, error);

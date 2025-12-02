@@ -875,10 +875,23 @@ async function updateEvents() {
                         continue;
                     }
 
+                    // 標題過濾：排除 "一覽表"、"場次表" 等彙整類標題
+                    const listKeywords = ['一覽表', '場次表', '行程表'];
+                    if (eventData.title && listKeywords.some(kw => eventData.title.includes(kw))) {
+                        console.log(`[跳過] 彙整類標題: ${eventData.title}`);
+                        continue;
+                    }
+
                     if (item.type === 'image') {
                         eventData.posterUrl = item.url;
                         if (eventData.gift) {
                             eventData.gift.image = item.url;
+                        }
+                    } else {
+                        // 若非圖片來源 (例如純文字)，確保圖片欄位為 null
+                        eventData.posterUrl = null;
+                        if (eventData.gift) {
+                            eventData.gift.image = null;
                         }
                     }
                     eventData.sourceUrl = item.postUrl || item.url || source.url || item.sourceUrl;

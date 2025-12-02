@@ -591,6 +591,7 @@ async function fetchWebImages(source) {
     }
 }
 
+
 async function fetchImageAsBase64(url) {
     try {
         // 如果是 Data URL，直接回傳內容 (去掉前綴)
@@ -611,12 +612,202 @@ async function fetchImageAsBase64(url) {
         return null;
     }
 }
-
 async function analyzeContentWithAI(item, sourceContext) {
     const isImage = item.type === 'image';
     const contentPreview = isImage ? item.url.substring(0, 50) : item.content.substring(0, 50);
     console.log(`[AI] 正在分析${isImage ? '圖片' : '文字'} (${sourceContext.city}): ${contentPreview}...`);
 
+    // API Key Rotation Logic
+    let apiKeys = [];
+    if (process.env.GEMINI_API_KEYS) {
+        apiKeys = process.env.GEMINI_API_KEYS.split(',').map(k => k.trim()).filter(k => k);
+    }
+
+    // Fallback or merge with GEMINI_API_KEY
+    if (process.env.GEMINI_API_KEY) {
+        const legacyKeys = process.env.GEMINI_API_KEY.split(',').map(k => k.trim()).filter(k => k);
+        apiKeys = [...new Set([...apiKeys, ...legacyKeys])];
+    }
+
+    if (apiKeys.length === 0) {
+        console.error("[AI] No valid API keys found!");
+        return null;
+    }
+
+    // Model Rotation List (Ordered by preference/cost)
+    const MODELS = [
+        "gemini-2.5-flash-lite",
+        "gemini-2.0-flash-lite",
+        "gemini-2.0-flash",
+        "gemini-1.5-flash"
+    ];
+
+    // Helper to get model with specific key and model index
+    const getModel = (keyIndex, modelIndex) => {
+        const key = apiKeys[keyIndex % apiKeys.length].trim();
+        const modelName = MODELS[modelIndex % MODELS.length];
+        const genAI = new GoogleGenerativeAI(key);
+        return {
+            model: genAI.getGenerativeModel({
+                model: modelName,
+                generationConfig: { responseMimeType: "application/json" }
+            }),
+            keyMasked: key.substring(0, 5) + '...',
+            modelName: modelName
+        };
+    };
+
+    let retryCount = 0;
+    // Total attempts = Keys * Models * 2 (allow 2 full cycles)
+    const maxRetries = apiKeys.length * MODELS.length * 2;
+
+    while (retryCount < maxRetries) {
+        try {
+            // Strategy: Exhaust all keys on the first model, then move to the next model
+            const currentModelIndex = Math.floor(retryCount / apiKeys.length) % MODELS.length;
+            const currentKeyIndex = retryCount % apiKeys.length;
+
+            const { model, keyMasked, modelName } = getModel(currentKeyIndex, currentModelIndex);
+
+            // Only log if it's a retry or first attempt
+            if (retryCount > 0) {
+                console.log(`[AI] Retry ${retryCount}: Using Key ${keyMasked} with Model ${modelName}`);
+            }
+
+
+            let prompt = '';
+            let parts = [];
+            const today = new Date().toISOString().split('T')[0];
+
+            if (isImage) {
+                const base64Image = await fetchImageAsBase64(item.url);
+                if (!base64Image) return null;
+
+                prompt = `請分析這張捐血活動海報。
+來源脈絡：這張海報來自「${sourceContext.name}」，搜尋時設定的地點為「${sourceContext.city}」。
+今天是 ${today}，請特別留意活動日期。
+
+嚴格區分與過濾規則：
+1. **日期精確性**：
+   - 必須包含明確的「年份」或「日期」。
+   - 若海報上只有 "12/25" 且無年份，請根據今天 (${today}) 判斷：
+     - 若 12/25 已過，假設是明年。
+     - 若 12/25 還沒到，假設是今年。
+   - 若海報是「每週五」、「每月1號」等週期性活動，請 **回傳 null** (本系統暫不支援週期性活動)。
+   - 若海報是「113年」或「114年」請自動轉換為西元 2024 或 2025。
+
+2. **地點精確性**：
+   - 必須包含明確的活動地點 (如 "中正公園", "某某路123號")。
+   - 若地點是 "全台各地", "各捐血室", "詳見官網" 等模糊地點，請 **回傳 null**。
+   - 若海報是多個場次的列表 (例如 "1月場次表")，請 **回傳 null** (本系統只處理單一或少數特定場次)。
+
+3. **內容相關性**：
+   - 必須是「捐血活動」。
+   - 若是「捐血榮譽榜」、「缺血公告」、「新聞稿」、「衛教資訊」，請 **回傳 null**。
+
+請輸出 JSON 格式 (不要 Markdown code block)，包含以下欄位：
+[
+  {
+    "title": "活動標題 (請包含地點與關鍵特色)",
+    "date": "YYYY-MM-DD (若有多天請列出第一天，或拆成多個物件)",
+    "time": "時間 (HH:MM-HH:MM)",
+    "location": "地點 (請盡量完整)",
+    "city": "縣市 (請務必從地點判斷，例如：桃園市、苗栗縣、新北市。若無法判斷才填 ${sourceContext.city})",
+    "district": "行政區 (請仔細從地址中提取，例如：中區、北區、西屯區。若無法判斷請填 null)",
+    "organizer": "主辦單位 (預設: ${sourceContext.name})",
+    "gift": {
+      "name": "贈品名稱 (請列出實質贈品，**嚴格排除**『捐血』、『捐發票』、『集點』、『健康檢查』等非物質項目。若無實質贈品請填 null)",
+      "image": null
+    },
+    "tags": ["AI辨識", "自動更新", "縣市名稱(請填入實際判斷的縣市)"]
+  }
+]
+`;
+                parts = [prompt, { inlineData: { data: base64Image, mimeType: "image/jpeg" } }];
+            } else {
+                prompt = `請分析以下捐血活動資訊文字。
+來源脈絡：來自「${sourceContext.name}」，地點「${sourceContext.city}」。
+今天是 ${today}。
+
+文字內容：
+${item.content}
+
+嚴格區分與過濾規則：
+1. **日期精確性**：
+   - 必須包含明確的「年份」或「日期」。
+   - 若只有 "12/25" 且無年份，請根據今天 (${today}) 判斷：
+     - 若 12/25 已過，假設是明年。
+     - 若 12/25 還沒到，假設是今年。
+   - 若是「每週五」、「每月1號」等週期性活動，請 **回傳 null**。
+   - 若是「113年」或「114年」請自動轉換為西元 2024 或 2025。
+
+2. **地點精確性**：
+   - 必須包含明確的活動地點。
+   - 若地點是 "全台各地", "各捐血室", "詳見官網" 等模糊地點，請 **回傳 null**。
+   - 若是多個場次的列表 (例如 "1月場次表")，請 **回傳 null**。
+
+3. **內容相關性**：
+   - 必須是「捐血活動」。
+   - 若是「捐血榮譽榜」、「缺血公告」、「新聞稿」，請 **回傳 null**。
+
+請輸出 JSON 格式 (不要 Markdown code block)，包含以下欄位：
+[
+  {
+    "title": "活動標題 (請包含地點與關鍵特色)",
+    "date": "YYYY-MM-DD",
+    "time": "時間 (HH:MM-HH:MM)",
+    "location": "地點 (請盡量完整)",
+    "city": "縣市 (請務必從地點判斷，例如：桃園市、苗栗縣、新北市。若無法判斷才填 ${sourceContext.city})",
+    "district": "行政區 (請仔細從地址中提取，例如：中區、北區、西屯區。若無法判斷請填 null)",
+    "organizer": "主辦單位 (預設: ${sourceContext.name})",
+      "name": "贈品名稱 (請列出實質贈品，**嚴格排除**『捐血』、『捐發票』、『集點』、『健康檢查』等非物質項目。若無實質贈品請填 null)",
+      "image": null
+    },
+    "tags": ["AI辨識", "自動更新", "縣市名稱(請填入實際判斷的縣市)"]
+  }
+]
+`;
+                parts = [prompt];
+            }
+
+            const result = await model.generateContent(parts);
+            const response = await result.response;
+            const text = response.text();
+            const jsonStr = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+
+            if (jsonStr === 'null') return null;
+
+            try {
+                const parsed = JSON.parse(jsonStr);
+                return Array.isArray(parsed) ? parsed : [parsed];
+            } catch (e) {
+                console.error("JSON 解析失敗:", text);
+                return null;
+            }
+
+        } catch (error) {
+            // Check for Rate Limit (429) or Quota Exceeded
+            if (error.message.includes('429') || error.message.includes('Resource has been exhausted')) {
+                console.warn(`[AI] Rate Limit hit. Switching...`);
+                retryCount++;
+                // Add a small delay before retrying with new key/model
+                await new Promise(r => setTimeout(r, 1000));
+                continue;
+            }
+
+            console.error(`AI 分析失敗:`, error);
+            return null;
+        }
+        break; // Success or non-retriable error (handled inside try/catch)
+    }
+
+    if (retryCount >= maxRetries) {
+        console.error(`[AI] All API keys and Models exhausted after ${maxRetries} attempts.`);
+    }
+    return null;
+}
+
+async function updateEvents() {
     const allNewEvents = [];
     const today = new Date();
     today.setHours(0, 0, 0, 0);

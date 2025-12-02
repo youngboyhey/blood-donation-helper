@@ -9,8 +9,8 @@ import 'dotenv/config';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 初始化 Gemini 客戶端
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// 初始化 Gemini 客戶端 (Moved to local scope for rotation)
+// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // 清理資料的輔助函式
 function sanitizeData(data) {
@@ -197,232 +197,65 @@ async function fetchGoogleImages(source) {
         try {
             await page.waitForSelector('div[data-id] img', { timeout: 10000 });
         } catch (e) {
-            console.log(`[Google] 等待搜尋結果超時: ${source.name}`);
-            return [];
-        }
-
-        const images = [];
-        // 模擬人類行為：先捲動頁面以觸發 lazy loading
-        await page.evaluate(async () => {
-            await new Promise((resolve) => {
-                let totalHeight = 0;
-                const distance = 100;
-                const timer = setInterval(() => {
-                    const scrollHeight = document.body.scrollHeight;
-                    window.scrollBy(0, distance);
-                    totalHeight += distance;
-
-                    if (totalHeight >= scrollHeight || totalHeight > 3000) { // 捲動一部分即可，不用到底
-                        clearInterval(timer);
-                        resolve();
-                    }
-                }, 100);
-            });
         });
+    } catch (e) {
+        // console.log(`[Google] 提取詳細資料失敗: ${e.message}`);
+    }
+}
 
-        // 隨機等待一下
-        await new Promise(r => setTimeout(r, 1000 + Math.random() * 2000));
+let finalImageUrl = result.highResUrl;
 
-        const MAX_RESULTS = 8; // 限制搜尋數量至 8 (RPD Optimization)
+// Deep scraping: If we have a visitUrl, try to get a better image from the source
+if (result.visitUrl) {
+    const deepImage = await fetchSourcePage(result.visitUrl, browser, cookies);
+    if (deepImage) {
+        console.log(`[Google] 使用深入抓取的圖片取代: ${deepImage.substring(0, 50)}...`);
+        finalImageUrl = deepImage;
+    }
+}
 
-        console.log(`[Google] 準備處理前 ${MAX_RESULTS} 筆結果以獲取高畫質圖片與來源連結...`);
+// Double check if highResUrl is a placeholder or too short (only for data URLs)
+if (finalImageUrl && finalImageUrl.startsWith('data:') && (finalImageUrl.includes('data:image/gif') || finalImageUrl.length < 100)) {
+    // console.log(`[Google] High res URL looks like a placeholder, falling back to thumbnail.`);
+    finalImageUrl = null;
+}
 
-        for (let i = 0; i < MAX_RESULTS; i++) {
-            try {
-                // 每次重新查詢元素以避免 stale element
-                const thumbnails = await page.$$('div[data-id] img');
-                if (i >= thumbnails.length) break;
+finalImageUrl = finalImageUrl || thumbSrc;
+const finalSourceUrl = result.visitUrl || searchUrl;
 
-                const thumb = thumbnails[i];
-
-                // 先提取縮圖 src 作為備案
-                let thumbSrc = null;
-                try {
-                    thumbSrc = await page.evaluate(el => el.src, thumb);
-                } catch (e) {
-                    // console.log(`[Google] 無法預先提取縮圖: ${e.message}`);
-                }
-
-                // 點擊縮圖
-                let clickSuccess = false;
-                try {
-                    // 隨機延遲點擊
-                    await new Promise(r => setTimeout(r, 500 + Math.random() * 1000));
-                    await page.evaluate(el => el.click(), thumb);
-                    clickSuccess = true;
-                } catch (e) {
-                    console.log(`[Google] 點擊縮圖失敗: ${e.message}，將使用縮圖作為備案`);
-                }
-
-                let result = { highResUrl: null, visitUrl: null };
-
-                if (clickSuccess) {
-                    // 等待側邊欄載入，並嘗試等待高畫質圖片 (非 gstatic)
-                    try {
-                        await page.waitForFunction(() => {
-                            const images = Array.from(document.querySelectorAll('img'));
-                            // 尋找寬度大於 300 且網址不是 gstatic 的圖片
-                            return images.some(img => {
-                                const rect = img.getBoundingClientRect();
-                                return rect.width > 300 &&
-                                    img.src.startsWith('http') &&
-                                    !img.src.includes('gstatic.com') &&
-                                    !img.src.includes('google.com');
-                            });
-                        }, { timeout: 5000 }).catch(() => { });
-                    } catch (e) { }
-
-                    // 額外等待一下
-                    await new Promise(r => setTimeout(r, 1000));
-
-                    // 提取資料 (高畫質圖 + 前往連結)
-                    try {
-                        result = await page.evaluate(() => {
-                            // Helper to check if an image is likely an icon/logo
-                            const isIcon = (img) => {
-                                const src = img.src.toLowerCase();
-                                return src.includes('icon') || src.includes('logo') || src.includes('favicon');
-                            };
-
-                            // Helper to check if image is a placeholder
-                            const isPlaceholder = (img) => {
-                                const src = img.src;
-                                return src.includes('data:image/gif') || src.includes('R0lGODlhAQABA');
-                            };
-
-                            const allImages = Array.from(document.querySelectorAll('img'));
-
-                            const candidates = allImages.filter(img => {
-                                const rect = img.getBoundingClientRect();
-                                // Filter out small images (icons) and hidden images
-                                if (rect.width < 300 || rect.height < 300) return false;
-                                if (rect.width === 0 || rect.height === 0) return false;
-
-                                // Filter out known icon patterns
-                                if (isIcon(img)) return false;
-                                if (isPlaceholder(img)) return false;
-
-                                return true;
-                            });
-
-                            // Sort by size (largest first)
-                            candidates.sort((a, b) => {
-                                const areaA = a.getBoundingClientRect().width * a.getBoundingClientRect().height;
-                                const areaB = b.getBoundingClientRect().width * b.getBoundingClientRect().height;
-                                return areaB - areaA;
-                            });
-
-                            let highResUrl = null;
-                            // Prefer the first candidate that starts with http AND is not gstatic
-                            const httpCandidate = candidates.find(img => img.src.startsWith('http') && !img.src.includes('gstatic.com') && !img.src.includes('google.com'));
-
-                            if (httpCandidate) {
-                                highResUrl = httpCandidate.src;
-                            } else if (candidates.length > 0) {
-                                // Fallback: If no non-gstatic image found, try to find the largest one that isn't the thumbnail we clicked
-                                // But if it's gstatic, it's likely just the preview.
-                                // We'll take it if we have nothing else, but prefer httpCandidate.
-                                highResUrl = candidates[0].src;
-                            }
-
-                            // 2. Find "Visit" link
-                            const links = Array.from(document.querySelectorAll('a'));
-                            let visitUrl = null;
-
-                            // Strategy 1: Look for specific "Visit" button text/aria-label
-                            // Google often uses aria-label="Visit" or "Website"
-                            const visitLink = links.find(a => {
-                                const text = a.innerText.trim();
-                                const ariaLabel = a.getAttribute('aria-label') || '';
-                                const rect = a.getBoundingClientRect();
-
-                                // Must be visible
-                                if (rect.width === 0 || rect.height === 0) return false;
-
-                                return (text.includes('前往') || text.includes('Visit') || text === '網站' || text === 'Website') ||
-                                    (ariaLabel.includes('前往') || ariaLabel.includes('Visit') || ariaLabel === '網站' || ariaLabel === 'Website');
-                            });
-
-                            if (visitLink) {
-                                visitUrl = visitLink.href;
-                            } else {
-                                // Strategy 2: Look for the first external link in the right half of the screen
-                                // This is the most reliable fallback for the "Visit" button which is usually near the title/image
-                                const sidePanelLinks = links.filter(a => {
-                                    const rect = a.getBoundingClientRect();
-                                    return rect.left > window.innerWidth / 2 && // Right half
-                                        rect.width > 0 && rect.height > 0 &&
-                                        a.href.startsWith('http') &&
-                                        !a.href.includes('google.com') &&
-                                        !a.href.includes('facebook.com/sharer'); // Exclude share buttons
-                                });
-
-                                if (sidePanelLinks.length > 0) {
-                                    // Usually the first one is the title link or the visit button
-                                    visitUrl = sidePanelLinks[0].href;
-                                }
-                            }
-
-                            return { highResUrl, visitUrl };
-                        });
-                    } catch (e) {
-                        // console.log(`[Google] 提取詳細資料失敗: ${e.message}`);
-                    }
-                }
-
-                let finalImageUrl = result.highResUrl;
-
-                // Deep scraping: If we have a visitUrl, try to get a better image from the source
-                if (result.visitUrl) {
-                    const deepImage = await fetchSourcePage(result.visitUrl, browser, cookies);
-                    if (deepImage) {
-                        console.log(`[Google] 使用深入抓取的圖片取代: ${deepImage.substring(0, 50)}...`);
-                        finalImageUrl = deepImage;
-                    }
-                }
-
-                // Double check if highResUrl is a placeholder or too short (only for data URLs)
-                if (finalImageUrl && finalImageUrl.startsWith('data:') && (finalImageUrl.includes('data:image/gif') || finalImageUrl.length < 100)) {
-                    // console.log(`[Google] High res URL looks like a placeholder, falling back to thumbnail.`);
-                    finalImageUrl = null;
-                }
-
-                finalImageUrl = finalImageUrl || thumbSrc;
-                const finalSourceUrl = result.visitUrl || searchUrl;
-
-                if (finalImageUrl && (finalImageUrl.startsWith('http') || finalImageUrl.length > 100)) {
-                    images.push({
-                        type: 'image',
-                        url: finalImageUrl,
-                        sourceUrl: finalSourceUrl // 儲存真實來源連結
-                    });
-                }
+if (finalImageUrl && (finalImageUrl.startsWith('http') || finalImageUrl.length > 100)) {
+    images.push({
+        type: 'image',
+        url: finalImageUrl,
+        sourceUrl: finalSourceUrl // 儲存真實來源連結
+    });
+}
 
             } catch (err) {
-                console.error(`[Google] 處理第 ${i + 1} 筆圖片時發生錯誤:`, err.message);
-            }
+    console.error(`[Google] 處理第 ${i + 1} 筆圖片時發生錯誤:`, err.message);
+}
         }
 
-        console.log(`[Google] 共收集 ${images.length} 張圖片`);
+console.log(`[Google] 共收集 ${images.length} 張圖片`);
 
-        // 去重
-        const uniqueImages = [];
-        const seenUrls = new Set();
-        for (const img of images) {
-            if (!seenUrls.has(img.url)) {
-                seenUrls.add(img.url);
-                uniqueImages.push(img);
-            }
-        }
+// 去重
+const uniqueImages = [];
+const seenUrls = new Set();
+for (const img of images) {
+    if (!seenUrls.has(img.url)) {
+        seenUrls.add(img.url);
+        uniqueImages.push(img);
+    }
+}
 
-        return uniqueImages;
+return uniqueImages;
 
     } catch (error) {
-        console.error(`[Google] 搜尋失敗 ${source.name}:`, error);
-        return [];
-    } finally {
-        await browser.close();
-    }
+    console.error(`[Google] 搜尋失敗 ${source.name}:`, error);
+    return [];
+} finally {
+    await browser.close();
+}
 }
 
 async function fetchWebImages(source) {
@@ -613,21 +446,36 @@ async function analyzeContentWithAI(item, sourceContext) {
     const contentPreview = isImage ? item.url.substring(0, 50) : item.content.substring(0, 50);
     console.log(`[AI] 正在分析${isImage ? '圖片' : '文字'} (${sourceContext.city}): ${contentPreview}...`);
 
-    try {
-        const model = genAI.getGenerativeModel({
+    // API Key Rotation Logic
+    const apiKeys = process.env.GEMINI_API_KEYS ? process.env.GEMINI_API_KEYS.split(',') : [process.env.GEMINI_API_KEY];
+
+    // Helper to get model with specific key index
+    const getModel = (index) => {
+        const key = apiKeys[index % apiKeys.length].trim();
+        const genAI = new GoogleGenerativeAI(key);
+        return genAI.getGenerativeModel({
             model: "gemini-2.0-flash-lite",
             generationConfig: { responseMimeType: "application/json" }
         });
+    };
 
-        let prompt = '';
-        let parts = [];
-        const today = new Date().toISOString().split('T')[0];
+    let retryCount = 0;
+    const maxRetries = apiKeys.length * 2; // Allow cycling through keys twice
 
-        if (isImage) {
-            const base64Image = await fetchImageAsBase64(item.url);
-            if (!base64Image) return null;
+    while (retryCount < maxRetries) {
+        try {
+            const model = getModel(retryCount);
 
-            prompt = `請分析這張捐血活動海報。
+
+            let prompt = '';
+            let parts = [];
+            const today = new Date().toISOString().split('T')[0];
+
+            if (isImage) {
+                const base64Image = await fetchImageAsBase64(item.url);
+                if (!base64Image) return null;
+
+                prompt = `請分析這張捐血活動海報。
 來源脈絡：這張海報來自「${sourceContext.name}」，搜尋時設定的地點為「${sourceContext.city}」。
 今天是 ${today}，請特別留意活動日期。
 
@@ -661,10 +509,10 @@ async function analyzeContentWithAI(item, sourceContext) {
   "tags": ["AI辨識", "自動更新", "縣市名稱(請填入實際判斷的縣市)"]
 }
 `;
-            parts = [prompt, { inlineData: { data: base64Image, mimeType: "image/jpeg" } }];
-        } else {
-            // 文字分析模式
-            prompt = `請分析以下捐血活動公告文字。
+                parts = [prompt, { inlineData: { data: base64Image, mimeType: "image/jpeg" } }];
+            } else {
+                // 文字分析模式
+                prompt = `請分析以下捐血活動公告文字。
 來源脈絡：來自「${sourceContext.name}」，搜尋時設定的地點為「${sourceContext.city}」。
 今天是 ${today}，請特別留意活動日期。
 
@@ -687,7 +535,6 @@ ${item.content}
     "city": "縣市 (請務必從地點判斷，例如：桃園市、苗栗縣、新北市。若無法判斷才填 ${sourceContext.city})",
     "district": "行政區 (請仔細從地址中提取，例如：中區、北區、西屯區。若無法判斷請填 null)",
     "organizer": "主辦單位 (預設: ${sourceContext.name})",
-    "gift": {
       "name": "贈品名稱 (請列出實質贈品，**嚴格排除**『捐血』、『捐發票』、『集點』、『健康檢查』等非物質項目。若無實質贈品請填 null)",
       "image": null
     },
@@ -695,28 +542,44 @@ ${item.content}
   }
 ]
 `;
-            parts = [prompt];
-        }
+                parts = [prompt];
+            }
 
-        const result = await model.generateContent(parts);
-        const response = await result.response;
-        const text = response.text();
-        const jsonStr = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+            const result = await model.generateContent(parts);
+            const response = await result.response;
+            const text = response.text();
+            const jsonStr = text.replace(/```json/gi, '').replace(/```/g, '').trim();
 
-        if (jsonStr === 'null') return null;
+            if (jsonStr === 'null') return null;
 
-        try {
-            const parsed = JSON.parse(jsonStr);
-            return Array.isArray(parsed) ? parsed : [parsed];
-        } catch (e) {
-            console.error("JSON 解析失敗:", text);
+            try {
+                const parsed = JSON.parse(jsonStr);
+                return Array.isArray(parsed) ? parsed : [parsed];
+            } catch (e) {
+                console.error("JSON 解析失敗:", text);
+                return null;
+            }
+
+        } catch (error) {
+            // Check for Rate Limit (429) or Quota Exceeded
+            if (error.message.includes('429') || error.message.includes('Resource has been exhausted')) {
+                console.warn(`[AI] Rate Limit hit on key ${retryCount % apiKeys.length}. Switching key...`);
+                retryCount++;
+                // Add a small delay before retrying with new key
+                await new Promise(r => setTimeout(r, 1000));
+                continue;
+            }
+
+            console.error(`AI 分析失敗:`, error);
             return null;
         }
-
-    } catch (error) {
-        console.error(`AI 分析失敗:`, error);
-        return null;
+        break; // Success or non-retriable error (handled inside try/catch)
     }
+
+    if (retryCount >= maxRetries) {
+        console.error(`[AI] All API keys exhausted after ${maxRetries} attempts.`);
+    }
+    return null;
 }
 
 async function updateEvents() {

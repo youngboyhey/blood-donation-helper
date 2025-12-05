@@ -1,5 +1,1013 @@
 [
   {
+    "title": "台北地區捐血作業 - 台北捐血中心",
+    "date": "2025-12-06",
+    "time": "10:00-17:00",
+    "location": "台北市南港區經貿二路1號 (南港展覽館1館4樓)",
+    "city": "台北市",
+    "district": "南港區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883476.043
+  },
+  {
+    "title": "台北地區捐血作業 - 國際佛光會中華總會萬華第二分會",
+    "date": "2025-12-06",
+    "time": "10:00-17:00",
+    "location": "台北市萬華區艋舺商圈服飾",
+    "city": "台北市",
+    "district": "萬華區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883476.1313
+  },
+  {
+    "title": "台北地區捐血作業 - 國際獅子會300A-2區台北市建華獅子會",
+    "date": "2025-12-06",
+    "time": "13:00-21:00",
+    "location": "台北市萬華區峨嵋街83號峨嵋立體停車場旁(配合峨嵋號)",
+    "city": "台北市",
+    "district": "萬華區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883476.4724
+  },
+  {
+    "title": "台北地區捐血作業 - 國際輪椅3482地區",
+    "date": "2025-12-06",
+    "time": "10:00-17:00",
+    "location": "台北市信義區松壽路16巷",
+    "city": "台北市",
+    "district": "信義區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883476.8765
+  },
+  {
+    "title": "台北地區捐血作業 - 社團法人臺灣普善慈善會",
+    "date": "2025-12-06",
+    "time": "09:00-17:00",
+    "location": "台北市松山區復興北路69號5樓(配合長春賓)",
+    "city": "台北市",
+    "district": "松山區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883476.7275
+  },
+  {
+    "title": "台北地區捐血作業 - 東湖獅子會A3",
+    "date": "2025-12-06",
+    "time": "09:30-16:30",
+    "location": "台北市內湖區東湖路115號(東湖國小前)",
+    "city": "台北市",
+    "district": "內湖區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.3518
+  },
+  {
+    "title": "台北地區捐血作業 - 國際佛光會中華總會台北中山第二分會",
+    "date": "2025-12-06",
+    "time": "10:00-18:00",
+    "location": "台北市中正區襄陽路與公園路交叉口(配合公園號)",
+    "city": "台北市",
+    "district": "中正區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.4534
+  },
+  {
+    "title": "台北地區捐血作業 - 國際佛光會300A-2區台北市建國獅子會",
+    "date": "2025-12-06",
+    "time": "08:00-17:30",
+    "location": "台北市中正區南海路1號3樓(配合南海室)",
+    "city": "台北市",
+    "district": "中正區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.7922
+  },
+  {
+    "title": "台北地區捐血作業 - 台北市小英之友會",
+    "date": "2025-12-06",
+    "time": "09:00-17:00",
+    "location": "台北市大安區建國南路二段地下停車場入口旁空地(配合大安號)",
+    "city": "台北市",
+    "district": "大安區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.0596
+  },
+  {
+    "title": "台北地區捐血作業 - 國際獅子會300A-2區台北市建華獅子會",
+    "date": "2025-12-06",
+    "time": "11:00-19:00",
+    "location": "台北市大安區B1東區地下街9號出口旁副走道(第四廣場旁)(配合忠孝忠室)",
+    "city": "台北市",
+    "district": "大安區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.1514
+  },
+  {
+    "title": "新北地區捐血作業 - 新北市菸齡志工協會",
+    "date": "2025-12-06",
+    "time": "09:00-17:00",
+    "location": "新北市樹林區中山路一段276號6樓(配合樹林室)",
+    "city": "新北市",
+    "district": "樹林區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.4397
+  },
+  {
+    "title": "新北地區捐血作業 - 財團法人茂德社會福利慈善基金會",
+    "date": "2025-12-06",
+    "time": "09:30-17:00",
+    "location": "新北市新莊區中華路三段156號6樓(國王大道KING PARK)",
+    "city": "新北市",
+    "district": "新莊區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.2234
+  },
+  {
+    "title": "新北地區捐血作業 - 中華捐血人協會",
+    "date": "2025-12-06",
+    "time": "09:00-17:00",
+    "location": "新北市新店區民權路95號6樓之2(配合新店室)",
+    "city": "新北市",
+    "district": "新店區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.733
+  },
+  {
+    "title": "新北地區捐血作業 - 新北市板橋區退伍軍協會",
+    "date": "2025-12-06",
+    "time": "08:00-17:00",
+    "location": "新北市板橋區雙十路二段27號2樓(配合板橋站)",
+    "city": "新北市",
+    "district": "板橋區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.2588
+  },
+  {
+    "title": "新北地區捐血作業 - 新北市中和區巡守隊義工關懷服務協會",
+    "date": "2025-12-06",
+    "time": "09:30-16:30",
+    "location": "新北市中和區圓通路160號",
+    "city": "新北市",
+    "district": "中和區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.6174
+  },
+  {
+    "title": "新北地區捐血作業 - 土城獅子會B2",
+    "date": "2025-12-06",
+    "time": "09:30-17:00",
+    "location": "新北市土城區青雲路152號家樂福",
+    "city": "新北市",
+    "district": "土城區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.2434
+  },
+  {
+    "title": "新北地區捐血作業 - 土城獅子會B2",
+    "date": "2025-12-06",
+    "time": "09:00-17:00",
+    "location": "新北市土城區中央路二段61巷27號(日月光廣場)",
+    "city": "新北市",
+    "district": "土城區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.3823
+  },
+  {
+    "title": "新北地區捐血作業 - 國際輪3490地區新北市陽光扶輪社",
+    "date": "2025-12-06",
+    "time": "09:00-17:00",
+    "location": "新北市三重區自強路一段158號(市立圖書館)",
+    "city": "新北市",
+    "district": "三重區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.761
+  },
+  {
+    "title": "基隆地區捐血作業 - 國際佛光會中華總會基隆安樂第一分會",
+    "date": "2025-12-06",
+    "time": "08:00-17:00",
+    "location": "基隆市信義區信一路14號1樓(配合基隆站)",
+    "city": "基隆市",
+    "district": "信義區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "基隆市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.8987
+  },
+  {
+    "title": "宜蘭地區捐血作業 - (宜蘭)祥昌昌行",
+    "date": "2025-12-06",
+    "time": "09:00-16:00",
+    "location": "宜蘭縣羅東鎮中興路3號宜蘭羅東鎮公所前(配合羅東號)",
+    "city": "宜蘭縣",
+    "district": "羅東鎮",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "宜蘭縣"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.8657
+  },
+  {
+    "title": "宜蘭地區捐血作業 - 宜蘭縣九芎網路獅子會",
+    "date": "2025-12-06",
+    "time": "08:00-17:00",
+    "location": "宜蘭縣宜蘭市擺尾路16-7號1樓(配合宜蘭站)",
+    "city": "宜蘭縣",
+    "district": "宜蘭市",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "宜蘭縣"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.3813
+  },
+  {
+    "title": "宜蘭地區捐血作業 - HAPPY HAIR宜蘭店",
+    "date": "2025-12-06",
+    "time": "09:30-16:30",
+    "location": "宜蘭縣宜蘭市中山路二段462號(市民之森廣場)",
+    "city": "宜蘭縣",
+    "district": "宜蘭市",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "宜蘭縣"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.5698
+  },
+  {
+    "title": "花蓮地區捐血作業 - 台大EMBA校友基金會(花蓮)",
+    "date": "2025-12-06",
+    "time": "08:30-17:00",
+    "location": "花蓮縣花蓮市中山路一段170號(配合花蓮站)",
+    "city": "花蓮縣",
+    "district": "花蓮市",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "花蓮縣"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.3574
+  },
+  {
+    "title": "花蓮地區捐血作業 - 三清功德會東區聯絡處",
+    "date": "2025-12-06",
+    "time": "09:30-16:00",
+    "location": "花蓮縣壽豐鄉美度酒店前廣場(花蓮市中正路599號)",
+    "city": "花蓮縣",
+    "district": "壽豐鄉",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "花蓮縣"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337233014858/1.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902883477.9377
+  },
+  {
+    "title": "114年12月07日 台北捐血活動 (台北捐血中心)",
+    "date": "2025-12-07",
+    "time": "10:00-15:00",
+    "location": "台北市南港區經貿二路1號(南港展覽館1館4樓)",
+    "city": "台北市",
+    "district": "南港區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903390.1362
+  },
+  {
+    "title": "114年12月07日 台北捐血活動 (財團法人王文怡紀念基金會)",
+    "date": "2025-12-07",
+    "time": "09:30-16:30",
+    "location": "台北市信義區忠孝東路五段297號前",
+    "city": "台北市",
+    "district": "信義區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903390.9385
+  },
+  {
+    "title": "114年12月07日 台北捐血活動 (文山區木柵里辦公處)",
+    "date": "2025-12-07",
+    "time": "09:30-16:30",
+    "location": "台北市文山區久康街24巷42號",
+    "city": "台北市",
+    "district": "文山區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903390.8972
+  },
+  {
+    "title": "114年12月07日 台北捐血活動 (台北市國華獅子會A3)",
+    "date": "2025-12-07",
+    "time": "08:00-17:30",
+    "location": "台北市中正區南海路1號3樓(配合南海室)",
+    "city": "台北市",
+    "district": "中正區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903390.6028
+  },
+  {
+    "title": "114年12月07日 台北捐血活動 (財團法人宇宙彌勒教基金會)",
+    "date": "2025-12-07",
+    "time": "09:00-17:00",
+    "location": "台北市大安區建國南路二段地下停車場入口旁空地(配合大安安檢)",
+    "city": "台北市",
+    "district": "大安區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903390.5251
+  },
+  {
+    "title": "114年12月07日 新北捐血活動 (新北市蘆洲區後備憲兵荷松協會)",
+    "date": "2025-12-07",
+    "time": "09:00-17:00",
+    "location": "新北市蘆洲區長安街311號成功國小",
+    "city": "新北市",
+    "district": "蘆洲區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.6182
+  },
+  {
+    "title": "114年12月07日 新北捐血活動 (新北市蘆洲區體育會游泳委員會)",
+    "date": "2025-12-07",
+    "time": "09:00-17:00",
+    "location": "新北市蘆洲區三民路96號三民高中",
+    "city": "新北市",
+    "district": "蘆洲區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.2983
+  },
+  {
+    "title": "114年12月07日 新北捐血活動 (泰山同濟會(北一區))",
+    "date": "2025-12-07",
+    "time": "10:00-18:00",
+    "location": "新北市新莊區中華路+復興路口(配合新莊號)",
+    "city": "新北市",
+    "district": "新莊區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.5488
+  },
+  {
+    "title": "114年12月07日 新北捐血活動 (中華民國一貫道總會新北市分會)",
+    "date": "2025-12-07",
+    "time": "08:00-17:00",
+    "location": "新北市板橋區雙十路三段27號2樓(配合板橋站)",
+    "city": "新北市",
+    "district": "板橋區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.097
+  },
+  {
+    "title": "114年12月07日 新北捐血活動 (中華獅子會A3)",
+    "date": "2025-12-07",
+    "time": "10:00-18:00",
+    "location": "新北市板橋區中山路一段50巷36號2樓之4(配合府中室)",
+    "city": "新北市",
+    "district": "板橋區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.2957
+  },
+  {
+    "title": "114年12月07日 新北捐血活動 (中華民國一貫道總會新北市分會)",
+    "date": "2025-12-07",
+    "time": "09:30-16:30",
+    "location": "新北市三峽區大學路151號(台北大學內)",
+    "city": "新北市",
+    "district": "三峽區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.8826
+  },
+  {
+    "title": "114年12月07日 新北捐血活動 (光明復式童軍團)",
+    "date": "2025-12-07",
+    "time": "09:00-17:00",
+    "location": "新北市三重區重新路四段12號7樓之2(配合三重室)",
+    "city": "新北市",
+    "district": "三重區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.455
+  },
+  {
+    "title": "114年12月07日 新北捐血活動 (新北市三重區孝順促進會)",
+    "date": "2025-12-07",
+    "time": "09:00-17:00",
+    "location": "新北市三重區仁愛街111號土膏公",
+    "city": "新北市",
+    "district": "三重區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.5088
+  },
+  {
+    "title": "114年12月07日 基隆捐血活動 (國際獅子會300A5區基隆慈暉會)",
+    "date": "2025-12-07",
+    "time": "08:00-17:00",
+    "location": "基隆市信義區信一一路14號1樓(配合基隆站)",
+    "city": "基隆市",
+    "district": null,
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "基隆市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.563
+  },
+  {
+    "title": "114年12月07日 基隆捐血活動 (國際獅子會300A5區基隆慈暉會)",
+    "date": "2025-12-07",
+    "time": "09:30-16:30",
+    "location": "基隆市仁愛區愛二路78號(基隆二信)",
+    "city": "基隆市",
+    "district": "仁愛區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "基隆市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.6077
+  },
+  {
+    "title": "114年12月07日 基隆捐血活動 (基隆市慈母協會)",
+    "date": "2025-12-07",
+    "time": "09:30-16:30",
+    "location": "基隆市七堵區光明路+自治街口(台鐵七堵火車站門口)",
+    "city": "基隆市",
+    "district": "七堵區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "基隆市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.3726
+  },
+  {
+    "title": "114年12月07日 宜蘭捐血活動 (宜蘭縣澳濱港口灣同濟會)",
+    "date": "2025-12-07",
+    "time": "09:00-16:00",
+    "location": "宜蘭縣蘇澳鎮新馬路2號(文化國中體育館旁)",
+    "city": "宜蘭縣",
+    "district": "蘇澳鎮",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "宜蘭縣"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.1555
+  },
+  {
+    "title": "114年12月07日 宜蘭捐血活動 (宜蘭縣蘭中愛心志工協會)",
+    "date": "2025-12-07",
+    "time": "08:00-17:00",
+    "location": "宜蘭縣宜蘭市擺厘路16-7號1樓(配合宜蘭站)",
+    "city": "宜蘭縣",
+    "district": "宜蘭市",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "宜蘭縣"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.547
+  },
+  {
+    "title": "114年12月07日 花蓮捐血活動 (台大EMBA校友基金會(花蓮))",
+    "date": "2025-12-07",
+    "time": "08:30-17:00",
+    "location": "花蓮縣花蓮市中山路一段170號(配合花蓮站)",
+    "city": "花蓮縣",
+    "district": "花蓮市",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "花蓮縣"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.4028
+  },
+  {
+    "title": "114年12月07日 花蓮捐血活動 (國際扶輪3490地區花蓮港區扶輪社)",
+    "date": "2025-12-07",
+    "time": "09:30-16:30",
+    "location": "花蓮縣花蓮市貨百貨和和平廣場前(花蓮市和平路581號)",
+    "city": "花蓮縣",
+    "district": "花蓮市",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "花蓮縣"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338586337877982875/2.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902903391.6887
+  },
+  {
+    "title": "團結行善 捐血有愛 於 台北市信義區 威秀影城旁廣場",
+    "date": "2025-12-06",
+    "time": "10:00-17:00",
+    "location": "台北市信義區 威秀影城旁廣場",
+    "city": "台北市",
+    "district": "信義區",
+    "organizer": "台北捐血中心",
+    "gift": {
+      "name": "威秀影城門票兌換券一張、平溪折疊盒茶包10入、電動牙刷、手帕巾、牙膏、盥洗用品、手提雙層網袋、21速折疊自行車二輛、百夫長14吋愛蒐兒箱二只",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338587200012749304/1206%E5%A8%81%E7%A7%80.png"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338587200012749304/1206%E5%A8%81%E7%A7%80.png",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902919146.1863
+  },
+  {
+    "title": "公益捐血 為愛流動",
+    "date": "2025-12-06",
+    "time": "09:00-17:00",
+    "location": "台北捐血中心長春捐血室 (台北市松山區復興北路69號五樓)",
+    "city": "台北市",
+    "district": "松山區",
+    "organizer": "社團法人 台灣善馨慈善會",
+    "gift": {
+      "name": "GO 勁瑪卡 一包 或 兩包, 骨膜麪西班牙蛋殼膜 一盒",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338587200588870387/1206%E9%95%B7%E6%98%A5.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338587200588870387/1206%E9%95%B7%E6%98%A5.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902926647.3955
+  },
+  {
+    "title": "捐血活動：台北市萬華區大理街179號對面",
+    "date": "2025-12-06",
+    "time": "10:00-17:00",
+    "location": "萬華區大理街179號對面 (艋舺商圈)",
+    "city": "台北市",
+    "district": "萬華區",
+    "organizer": "國際佛光會萬華第二分會",
+    "gift": {
+      "name": "贈禮券1張 (250CC), 贈禮券2張 (500CC), 50元商品券 (兩人同行加贈)",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338587201290597359/1206%E8%90%AC%E8%8F%AF%E4%BA%8C.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338587201290597359/1206%E8%90%AC%E8%8F%AF%E4%BA%8C.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902934294.118
+  },
+  {
+    "title": "你的熱血 是點亮他人生命的一盞燈 - 114年12月6日",
+    "date": "2025-12-06",
+    "time": "09:30-17:00",
+    "location": "新北市新莊區中華路三段156號 (國王大道KING PARK)",
+    "city": "新北市",
+    "district": "新莊區",
+    "organizer": "財團法人茂德社會福利慈善基金會",
+    "gift": {
+      "name": "全聯禮券300元 (250cc捐贈)",
+      "image": "https://www.tp.blood.org.tw/files/file_pool/1/0P338587201656628332/1206%E8%8C%82%E5%BE%B7.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新北市"
+    ],
+    "posterUrl": "https://www.tp.blood.org.tw/files/file_pool/1/0P338587201656628332/1206%E8%8C%82%E5%BE%B7.jpg",
+    "sourceUrl": "https://www.tp.blood.org.tw/xmdoc/cont?xsmsid=0P062646965467323284&edate=2025-12-05%2000%3A00%3A00&sid=0P338585368072893788",
+    "id": 1764902944524.446
+  },
+  {
     "title": "Go For It! 熱血補給中-全台校園熱血開跑",
     "date": "2025-12-10",
     "time": "09:30-16:30",
@@ -21,46 +1029,571 @@
     "id": 1764667566072.5647
   },
   {
-    "title": "百萬C.C.熱情公益捐血活動 桃園愛心捐血活動",
-    "date": "2025-12-05",
-    "time": "09:00-17:00",
-    "location": "龍岡捐血室(中壢區後寮一路188號)",
-    "city": "桃園市",
-    "district": "中壢區",
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "09:00-16:00",
+    "location": "新豐池和宮",
+    "city": "新竹縣",
+    "district": null,
     "organizer": "新竹捐血中心",
     "gift": {
       "name": null,
-      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568172761810651/1201-1205%E6%A1%83%E5%9C%92%E4%B8%AD%E6%B2%B9.jpg"
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.7566
+  },
+  {
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "09:30-16:30",
+    "location": "文化一路及文青路富御接待中心",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
       "桃園市"
     ],
-    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P330568172761810651/1201-1205%E6%A1%83%E5%9C%92%E4%B8%AD%E6%B2%B9.jpg",
-    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-02%2000%3A00%3A00&sid=0P330567377868860607",
-    "id": 1764653334377.3203
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.5676
   },
   {
-    "title": "2025年冬季 全台校園熱血開跑 青春接棒, 立刻行動! - 仁德醫護管理專科學校",
-    "date": "2025-12-10",
-    "time": "09:30-16:30",
-    "location": "苗栗縣後龍鎮79-9號",
-    "city": "苗栗縣",
-    "district": "後龍鎮",
+    "title": "新竹市博愛獅子會 捐血一袋 救人一命 ~大家一起做愛心~",
+    "date": "2025-12-06",
+    "time": "10:00-16:30",
+    "location": "西大捐血室 (新竹市文雅街6號)",
+    "city": "新竹市",
+    "district": null,
     "organizer": "新竹捐血中心",
     "gift": {
-      "name": "帆布袋",
-      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P336546947097927071/1201-1205%E6%A0%A1%E5%9C%92.jpg"
+      "name": "襪子+洗衣精",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562006793172476/1206%E5%8D%9A%E6%84%9B%E7%8D%85.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.2136
+  },
+  {
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "09:00-16:00",
+    "location": "龜山分局對面",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.488
+  },
+  {
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "09:30-16:30",
+    "location": "龍岡捐血室",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.3394
+  },
+  {
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "09:30-16:00",
+    "location": "竹北愛心樓",
+    "city": "新竹縣",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.2266
+  },
+  {
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "09:30-16:30",
+    "location": "桃園捐血站",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.5571
+  },
+  {
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "09:30-16:00",
+    "location": "南門捐血室",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.49
+  },
+  {
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "09:30-16:00",
+    "location": "中壢家樂福 (中壢區中山東路二段510號)",
+    "city": "桃園市",
+    "district": "中壢區",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.221
+  },
+  {
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "08:00-16:00",
+    "location": "苗栗捐血站",
+    "city": "苗栗縣",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg"
     },
     "tags": [
       "AI辨識",
       "自動更新",
       "苗栗縣"
     ],
-    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P336546947097927071/1201-1205%E6%A0%A1%E5%9C%92.jpg",
-    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-02%2000%3A00%3A00&sid=0P330567377868860607",
-    "id": 1764667617366.7485
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.6082
+  },
+  {
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "10:30-17:30",
+    "location": "台茂購物中心 桃園市蘆竹區南崁路一段112號",
+    "city": "桃園市",
+    "district": "蘆竹區",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": "304不鏽鋼保溫杯,全聯禮卷,盥洗旅行組",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562005514324421/1206%E8%BE%B0%E5%A8%81%E6%8D%90%E8%A1%80.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.2188
+  },
+  {
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "09:30-16:30",
+    "location": "中壢捐血室",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.2612
+  },
+  {
+    "title": "12月06日捐血點 定期捐血・健康相隨",
+    "date": "2025-12-06",
+    "time": "09:00-17:00",
+    "location": "苗栗縣竹南鎮光復路372號",
+    "city": "苗栗縣",
+    "district": "竹南鎮",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "苗栗縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000051253402/11401206-1141207-01.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903051600.7751
+  },
+  {
+    "title": "12月07日捐血地點",
+    "date": "2025-12-07",
+    "time": "09:30-16:30",
+    "location": "桃園捐血站",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903064773.0122
+  },
+  {
+    "title": "12月07日捐血地點",
+    "date": "2025-12-07",
+    "time": "09:00-17:30",
+    "location": "中壢捐血室",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903064773.8396
+  },
+  {
+    "title": "12月07日捐血地點",
+    "date": "2025-12-07",
+    "time": "09:30-16:00",
+    "location": "南門捐血室",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903064773.693
+  },
+  {
+    "title": "12月07日捐血地點",
+    "date": "2025-12-07",
+    "time": "10:00-17:00",
+    "location": "台茂購物中心",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903064773.732
+  },
+  {
+    "title": "12月07日捐血地點",
+    "date": "2025-12-07",
+    "time": "10:00-17:00",
+    "location": "桃園同德六街捐血亭",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903064773.0286
+  },
+  {
+    "title": "12月07日捐血地點",
+    "date": "2025-12-07",
+    "time": "08:30-16:30",
+    "location": "竹北愛心樓",
+    "city": "新竹縣",
+    "district": "竹北市",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903064773.424
+  },
+  {
+    "title": "12月07日捐血地點",
+    "date": "2025-12-07",
+    "time": "09:00-16:00",
+    "location": "苑裡渣打銀行",
+    "city": "苗栗縣",
+    "district": "苑裡鎮",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "苗栗縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903064773.711
+  },
+  {
+    "title": "12月07日捐血地點",
+    "date": "2025-12-07",
+    "time": "09:30-16:30",
+    "location": "龍岡捐血室",
+    "city": "桃園市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903064773.785
+  },
+  {
+    "title": "12月07日捐血地點",
+    "date": "2025-12-07",
+    "time": "08:00-17:00",
+    "location": "苗栗縣苗栗市為公路282號",
+    "city": "苗栗縣",
+    "district": "苗栗市",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "苗栗縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903064773.0437
+  },
+  {
+    "title": "12月07日捐血地點",
+    "date": "2025-12-07",
+    "time": "09:00-17:00",
+    "location": "新竹市文雅街6號",
+    "city": "新竹市",
+    "district": "東區",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "新竹市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903064773.773
+  },
+  {
+    "title": "12月07日捐血地點",
+    "date": "2025-12-07",
+    "time": "09:00-17:00",
+    "location": "苗栗縣竹南鎮光復路372號",
+    "city": "苗栗縣",
+    "district": "竹南鎮",
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": null,
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "苗栗縣"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562000695122420/11401206-1141207-02.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903064773.6006
+  },
+  {
+    "title": "捐血活動",
+    "date": "2025-12-06",
+    "time": "08:00-16:00",
+    "location": "苗栗捐血站 (苗栗市中山路282號)",
+    "city": "苗栗市",
+    "district": null,
+    "organizer": "新竹捐血中心",
+    "gift": {
+      "name": "米, 餅乾, 吊飾, 娃娃",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562006158203458/1206%E8%8B%97%E6%A0%97%E6%86%B2%E5%85%B5%E9%9A%8A.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "苗栗市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562006158203458/1206%E8%8B%97%E6%A0%97%E6%86%B2%E5%85%B5%E9%9A%8A.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903089619.9053
+  },
+  {
+    "title": "讓愛在寒冬流動 捐血拯救生命",
+    "date": "2025-12-06",
+    "time": "09:00-16:00",
+    "location": "龜山捐血亭 (龜山區自強南路123號對面)",
+    "city": "桃園市",
+    "district": "龜山區",
+    "organizer": "桃園市博愛獅子會",
+    "gift": {
+      "name": "現炸雞排",
+      "image": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562006337051403/1206%E5%8D%9A%E6%84%9B%E7%8D%85%E5%AD%90%E6%9C%83.jpg"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "桃園市"
+    ],
+    "posterUrl": "https://www.sc.blood.org.tw/files/file_pool/1/0P338562006337051403/1206%E5%8D%9A%E6%84%9B%E7%8D%85%E5%AD%90%E6%9C%83.jpg",
+    "sourceUrl": "https://www.sc.blood.org.tw/xmdoc/cont?xsmsid=0P066666699492479492&edate=2025-12-05%2000%3A00%3A00&sid=0P338560857531952306",
+    "id": 1764903105183.1724
+  },
+  {
+    "title": "暖心捐血活動",
+    "date": "2025-12-25",
+    "time": "09:00-17:00",
+    "location": "文心樓頂樓",
+    "city": "台中市",
+    "district": null,
+    "organizer": "台中捐血中心",
+    "gift": {
+      "name": "御守",
+      "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIADgALgMBIgACEQEDEQH/xAAbAAADAQADAQAAAAAAAAAAAAADBAUAAQYHAv/EADMQAAEEAAUDAAcHBQAAAAAAAAECAwQRAAUSITETQVEGFCJhgZGxFRYjMnGh8EJSgpLR/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAECA//EAB4RAQADAAICAwAAAAAAAAAAAAEAAhEhMQNBEiJR/9oADAMBAAIRAxEAPwD1rOnEsvw1rzYQUkuNhBAPVUoUnn+074XGV5mmKGD6QrLyIzSFOKZTZWkjU4QD/VRFe874+/SDKYeYyILskqS5GUpxspZ1g1RpW3G3HfG6GWrlqnAygpQOpPSXuogpvdOoGiRsR+mJ12XlcOeYrBWXBLlN+kpeYTJW+dTYCWm1IpLd+Em1X5wxBady6Uwufn5kpUz0g24lKQ4pSrSsUeeR4rxWEW/RrKUZdIjB+Z0HtK3Pw/aOizsNPv8AHbDQybLXhFAdmVCS1p/DKbSNRSD7IvkivoTuht+S2vi3hY5PlJnpeg5ZPZRNRYUArdNAXuOCNQ84dgNPsxUIluh14XqUOP5/NsScqyTLmc5k5nGU+ZC1KUvqIITa99rA/b44v98MOdZncqP1ic5l53QpjcgLBHWU2KIO+wNm6/TnCa4U51xLik6VBZUQie4Abb0HbT8hxftc4ZzHNIeW9MTJjMfWFFPU7gVfysfPCf3mygED7WiWRYFHcc3z7xg+VT3GeO9jQYylEuI4+tKG1MmjqelLNAJAutO3Hx3ODpnspSPWHWkLIJoLsVzd0OxGJ/3nyjST9rRKAsmjt+/vGK4DhFhaP9D/ANw9HpitS1ezIEZjDJoSEE0Tz2q/oDg7biHUhbagpJuiMLGEoqWfWHBruwFqoXfG+3P08YOw0WWwgrUs2TqUSTubwG+5BskekcKHLMZUyOh0o1JSVSHGqBKb/JzwDR8DEV3KcmZQgSYbDcpI3QcxkEITpB2NeK2rxjs2ahwoZ6ZI9vf8VxG3+I+uEfVZUxaFlZSuqdDcx9KR7NbCgOa/c84TWr2TU8nkqYLkmuejuWGWISssZK1t6yhWYv7p79q5r+DHaZEluMEJUlRKtkpSLJwAR5BmR5K9OsN6HQl9ejuTpRwTdbnerwDMZDKJzbbs8MOUChrqhJX8O+EhU4h8rXfsrEVZ7JbmO1EceBWlAjJpLiAASpW/Pah3+GLsSQJUdt9LbjYWLCXU6VD9RiSX4S0LX6w11aIIS7uCLva+dj79sUcrebkQm3GXFONm9K1XZF973wqOsLnvIV5xxvT02S5ZN0oCvngLMqQtSAuC62k8qK0beyD58kj4Y4xsaSNmXNfS7oGXSVJ1VrCm6qyL/Nfa/jgb0GHmMhSpuWpUpApLjqUmx7t7xsbBAc6nIyXKg/1xAj9XVq16Bd+cPir2xsbBkFXuf//Z"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "台中市"
+    ],
+    "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIADgALgMBIgACEQEDEQH/xAAbAAADAQADAQAAAAAAAAAAAAADBAUAAQYHAv/EADMQAAEEAAUDAAcHBQAAAAAAAAECAwQRAAUSITETQVEGFCJhgZGxFRYjMnGh8EJSgpLR/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAECA//EAB4RAQADAAICAwAAAAAAAAAAAAEAAhEhMQNBEiJR/9oADAMBAAIRAxEAPwD1rOnEsvw1rzYQUkuNhBAPVUoUnn+074XGV5mmKGD6QrLyIzSFOKZTZWkjU4QD/VRFe874+/SDKYeYyILskqS5GUpxspZ1g1RpW3G3HfG6GWrlqnAygpQOpPSXuogpvdOoGiRsR+mJ12XlcOeYrBWXBLlN+kpeYTJW+dTYCWm1IpLd+Em1X5wxBady6Uwufn5kpUz0g24lKQ4pSrSsUeeR4rxWEW/RrKUZdIjB+Z0HtK3Pw/aOizsNPv8AHbDQybLXhFAdmVCS1p/DKbSNRSD7IvkivoTuht+S2vi3hY5PlJnpeg5ZPZRNRYUArdNAXuOCNQ84dgNPsxUIluh14XqUOP5/NsScqyTLmc5k5nGU+ZC1KUvqIITa99rA/b44v98MOdZncqP1ic5l53QpjcgLBHWU2KIO+wNm6/TnCa4U51xLik6VBZUQie4Abb0HbT8hxftc4ZzHNIeW9MTJjMfWFFPU7gVfysfPCf3mygED7WiWRYFHcc3z7xg+VT3GeO9jQYylEuI4+tKG1MmjqelLNAJAutO3Hx3ODpnspSPWHWkLIJoLsVzd0OxGJ/3nyjST9rRKAsmjt+/vGK4DhFhaP9D/ANw9HpitS1ezIEZjDJoSEE0Tz2q/oDg7biHUhbagpJuiMLGEoqWfWHBruwFqoXfG+3P08YOw0WWwgrUs2TqUSTubwG+5BskekcKHLMZUyOh0o1JSVSHGqBKb/JzwDR8DEV3KcmZQgSYbDcpI3QcxkEITpB2NeK2rxjs2ahwoZ6ZI9vf8VxG3+I+uEfVZUxaFlZSuqdDcx9KR7NbCgOa/c84TWr2TU8nkqYLkmuejuWGWISssZK1t6yhWYv7p79q5r+DHaZEluMEJUlRKtkpSLJwAR5BmR5K9OsN6HQl9ejuTpRwTdbnerwDMZDKJzbbs8MOUChrqhJX8O+EhU4h8rXfsrEVZ7JbmO1EceBWlAjJpLiAASpW/Pah3+GLsSQJUdt9LbjYWLCXU6VD9RiSX4S0LX6w11aIIS7uCLva+dj79sUcrebkQm3GXFONm9K1XZF973wqOsLnvIV5xxvT02S5ZN0oCvngLMqQtSAuC62k8qK0beyD58kj4Y4xsaSNmXNfS7oGXSVJ1VrCm6qyL/Nfa/jgb0GHmMhSpuWpUpApLjqUmx7t7xsbBAc6nIyXKg/1xAj9XVq16Bd+cPir2xsbBkFXuf//Z",
+    "sourceUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIADgALgMBIgACEQEDEQH/xAAbAAADAQADAQAAAAAAAAAAAAADBAUAAQYHAv/EADMQAAEEAAUDAAcHBQAAAAAAAAECAwQRAAUSITETQVEGFCJhgZGxFRYjMnGh8EJSgpLR/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAECA//EAB4RAQADAAICAwAAAAAAAAAAAAEAAhEhMQNBEiJR/9oADAMBAAIRAxEAPwD1rOnEsvw1rzYQUkuNhBAPVUoUnn+074XGV5mmKGD6QrLyIzSFOKZTZWkjU4QD/VRFe874+/SDKYeYyILskqS5GUpxspZ1g1RpW3G3HfG6GWrlqnAygpQOpPSXuogpvdOoGiRsR+mJ12XlcOeYrBWXBLlN+kpeYTJW+dTYCWm1IpLd+Em1X5wxBady6Uwufn5kpUz0g24lKQ4pSrSsUeeR4rxWEW/RrKUZdIjB+Z0HtK3Pw/aOizsNPv8AHbDQybLXhFAdmVCS1p/DKbSNRSD7IvkivoTuht+S2vi3hY5PlJnpeg5ZPZRNRYUArdNAXuOCNQ84dgNPsxUIluh14XqUOP5/NsScqyTLmc5k5nGU+ZC1KUvqIITa99rA/b44v98MOdZncqP1ic5l53QpjcgLBHWU2KIO+wNm6/TnCa4U51xLik6VBZUQie4Abb0HbT8hxftc4ZzHNIeW9MTJjMfWFFPU7gVfysfPCf3mygED7WiWRYFHcc3z7xg+VT3GeO9jQYylEuI4+tKG1MmjqelLNAJAutO3Hx3ODpnspSPWHWkLIJoLsVzd0OxGJ/3nyjST9rRKAsmjt+/vGK4DhFhaP9D/ANw9HpitS1ezIEZjDJoSEE0Tz2q/oDg7biHUhbagpJuiMLGEoqWfWHBruwFqoXfG+3P08YOw0WWwgrUs2TqUSTubwG+5BskekcKHLMZUyOh0o1JSVSHGqBKb/JzwDR8DEV3KcmZQgSYbDcpI3QcxkEITpB2NeK2rxjs2ahwoZ6ZI9vf8VxG3+I+uEfVZUxaFlZSuqdDcx9KR7NbCgOa/c84TWr2TU8nkqYLkmuejuWGWISssZK1t6yhWYv7p79q5r+DHaZEluMEJUlRKtkpSLJwAR5BmR5K9OsN6HQl9ejuTpRwTdbnerwDMZDKJzbbs8MOUChrqhJX8O+EhU4h8rXfsrEVZ7JbmO1EceBWlAjJpLiAASpW/Pah3+GLsSQJUdt9LbjYWLCXU6VD9RiSX4S0LX6w11aIIS7uCLva+dj79sUcrebkQm3GXFONm9K1XZF973wqOsLnvIV5xxvT02S5ZN0oCvngLMqQtSAuC62k8qK0beyD58kj4Y4xsaSNmXNfS7oGXSVJ1VrCm6qyL/Nfa/jgb0GHmMhSpuWpUpApLjqUmx7t7xsbBAc6nIyXKg/1xAj9XVq16Bd+cPir2xsbBkFXuf//Z",
+    "id": 1764903187104.2842
   },
   {
     "title": "「捐血一袋，救人一命」愛心捐血活動",
@@ -84,67 +1617,25 @@
     "id": 1764816818877.6292
   },
   {
-    "title": "彰化捐血站 試營運",
-    "date": "2025-12-10",
-    "time": "08:00-17:00",
-    "location": "彰化市中山路一段348號",
-    "city": "彰化市",
+    "title": "捐血送好禮",
+    "date": "2025-12-25",
+    "time": "09:00-17:00",
+    "location": "台東捐血站",
+    "city": "台東縣",
     "district": null,
-    "organizer": "彰化捐血站",
+    "organizer": "台東捐血站",
     "gift": {
-      "name": null,
-      "image": "https://scontent-lhr8-2.xx.fbcdn.net/v/t39.30808-1/594058224_1369986981580804_8249271354711600448_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x2048&ctp=s720x720&_nc_cat=101&ccb=1-7&_nc_sid=3ab345&_nc_ohc=Fq4c-fgD1JgQ7kNvwFbdeFt&_nc_oc=AdnEHVHpqdd3kQ3QSoQSg6-gWNwvxvpaYm-D6xs2n7v_F4FKUQPL7O1O5tyMFyyLDWk&_nc_zt=24&_nc_ht=scontent-lhr8-2.xx&_nc_gid=MfzblU1Q2sL4lYM6hT2tIg&oh=00_AflAicNfVdRd0XY2qAQBBKY8gqjQwRloyDqQPKlkRCMF_w&oe=6936B5A5"
+      "name": "實用生活小物",
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAPFBMVEVHcEwAUf////8ASv8Haf8IZv8Iaf8IZ/8IZ/8HZ/8HZv8AXv////8AVf+Vrv8ARv92mf/a4f+5yP8nbv/DICIdAAAACnRSTlMA2dmTHvwf2KKTxrkP/wAAAH5JREFUGJVFj9EWwyAIQ92qRQSs7f7/X0eotfHFXDgBUnJlplKIc5qqbarenvAX89do1a2r6inoyVGHB2g5cYDT7RgO+E4wr5u495SChsPBYQAFQC4NXQJAL0AGIVQGhvT+awjdVwYifGwsFlPW8vQCeo6boD7n5u2r+uEd/z+1twjmS1jXagAAAABJRU5ErkJggg=="
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "彰化市"
+      "台東縣"
     ],
-    "posterUrl": "https://scontent-lhr8-2.xx.fbcdn.net/v/t39.30808-1/594058224_1369986981580804_8249271354711600448_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x2048&ctp=s720x720&_nc_cat=101&ccb=1-7&_nc_sid=3ab345&_nc_ohc=Fq4c-fgD1JgQ7kNvwFbdeFt&_nc_oc=AdnEHVHpqdd3kQ3QSoQSg6-gWNwvxvpaYm-D6xs2n7v_F4FKUQPL7O1O5tyMFyyLDWk&_nc_zt=24&_nc_ht=scontent-lhr8-2.xx&_nc_gid=MfzblU1Q2sL4lYM6hT2tIg&oh=00_AflAicNfVdRd0XY2qAQBBKY8gqjQwRloyDqQPKlkRCMF_w&oe=6936B5A5",
-    "sourceUrl": "https://scontent-lhr8-2.xx.fbcdn.net/v/t39.30808-1/594058224_1369986981580804_8249271354711600448_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x2048&ctp=s720x720&_nc_cat=101&ccb=1-7&_nc_sid=3ab345&_nc_ohc=Fq4c-fgD1JgQ7kNvwFbdeFt&_nc_oc=AdnEHVHpqdd3kQ3QSoQSg6-gWNwvxvpaYm-D6xs2n7v_F4FKUQPL7O1O5tyMFyyLDWk&_nc_zt=24&_nc_ht=scontent-lhr8-2.xx&_nc_gid=MfzblU1Q2sL4lYM6hT2tIg&oh=00_AflAicNfVdRd0XY2qAQBBKY8gqjQwRloyDqQPKlkRCMF_w&oe=6936B5A5",
-    "id": 1764816843203.6545
-  },
-  {
-    "title": "彰化捐血站 試營運",
-    "date": "2025-12-10",
-    "time": "08:00-17:00",
-    "location": "彰化市中山路一段348號",
-    "city": "彰化縣",
-    "district": null,
-    "organizer": "彰化捐血站",
-    "gift": {
-      "name": null,
-      "image": "https://scontent-lhr8-2.xx.fbcdn.net/v/t39.30808-1/594058224_1369986981580804_8249271354711600448_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x2048&ctp=s720x720&_nc_cat=101&ccb=1-7&_nc_sid=3ab345&_nc_ohc=Fq4c-fgD1JgQ7kNvwFbdeFt&_nc_oc=AdnEHVHpqdd3kQ3QSoQSg6-gWNwvxvpaYm-D6xs2n7v_F4FKUQPL7O1O5tyMFyyLDWk&_nc_zt=24&_nc_ht=scontent-lhr8-2.xx&_nc_gid=AcTd4mWrYbkLcEPV6J5DHg&oh=00_AfmpJE6X91bLqM58_MFJZOdD3cIAj-8P_ddJicrHq0PUbw&oe=6936B5A5"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "彰化縣"
-    ],
-    "posterUrl": "https://scontent-lhr8-2.xx.fbcdn.net/v/t39.30808-1/594058224_1369986981580804_8249271354711600448_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x2048&ctp=s720x720&_nc_cat=101&ccb=1-7&_nc_sid=3ab345&_nc_ohc=Fq4c-fgD1JgQ7kNvwFbdeFt&_nc_oc=AdnEHVHpqdd3kQ3QSoQSg6-gWNwvxvpaYm-D6xs2n7v_F4FKUQPL7O1O5tyMFyyLDWk&_nc_zt=24&_nc_ht=scontent-lhr8-2.xx&_nc_gid=AcTd4mWrYbkLcEPV6J5DHg&oh=00_AfmpJE6X91bLqM58_MFJZOdD3cIAj-8P_ddJicrHq0PUbw&oe=6936B5A5",
-    "sourceUrl": "https://scontent-lhr8-2.xx.fbcdn.net/v/t39.30808-1/594058224_1369986981580804_8249271354711600448_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x2048&ctp=s720x720&_nc_cat=101&ccb=1-7&_nc_sid=3ab345&_nc_ohc=Fq4c-fgD1JgQ7kNvwFbdeFt&_nc_oc=AdnEHVHpqdd3kQ3QSoQSg6-gWNwvxvpaYm-D6xs2n7v_F4FKUQPL7O1O5tyMFyyLDWk&_nc_zt=24&_nc_ht=scontent-lhr8-2.xx&_nc_gid=AcTd4mWrYbkLcEPV6J5DHg&oh=00_AfmpJE6X91bLqM58_MFJZOdD3cIAj-8P_ddJicrHq0PUbw&oe=6936B5A5",
-    "id": 1764816849536.6802
-  },
-  {
-    "title": "捐血傳愛 生命續航",
-    "date": "2025-12-08",
-    "time": "08:00-16:00",
-    "location": "埔里捐血站 (北興路222號)",
-    "city": "南投縣",
-    "district": null,
-    "organizer": "彰化捐血站",
-    "gift": {
-      "name": "牛排餐館",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnCLNuzTKra8nDtjcNykGxQgSrUHAiyHf5iA&s"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "南投縣"
-    ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnCLNuzTKra8nDtjcNykGxQgSrUHAiyHf5iA&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnCLNuzTKra8nDtjcNykGxQgSrUHAiyHf5iA&s",
-    "id": 1764816855540.7432
+    "posterUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAPFBMVEVHcEwAUf////8ASv8Haf8IZv8Iaf8IZ/8IZ/8HZ/8HZv8AXv////8AVf+Vrv8ARv92mf/a4f+5yP8nbv/DICIdAAAACnRSTlMA2dmTHvwf2KKTxrkP/wAAAH5JREFUGJVFj9EWwyAIQ92qRQSs7f7/X0eotfHFXDgBUnJlplKIc5qqbarenvAX89do1a2r6inoyVGHB2g5cYDT7RgO+E4wr5u495SChsPBYQAFQC4NXQJAL0AGIVQGhvT+awjdVwYifGwsFlPW8vQCeo6boD7n5u2r+uEd/z+1twjmS1jXagAAAABJRU5ErkJggg==",
+    "sourceUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAPFBMVEVHcEwAUf////8ASv8Haf8IZv8Iaf8IZ/8IZ/8HZ/8HZv8AXv////8AVf+Vrv8ARv92mf/a4f+5yP8nbv/DICIdAAAACnRSTlMA2dmTHvwf2KKTxrkP/wAAAH5JREFUGJVFj9EWwyAIQ92qRQSs7f7/X0eotfHFXDgBUnJlplKIc5qqbarenvAX89do1a2r6inoyVGHB2g5cYDT7RgO+E4wr5u495SChsPBYQAFQC4NXQJAL0AGIVQGhvT+awjdVwYifGwsFlPW8vQCeo6boD7n5u2r+uEd/z+1twjmS1jXagAAAABJRU5ErkJggg==",
+    "id": 1764817691011.5771
   },
   {
     "title": "捐血傳愛 生命續航",
@@ -168,15 +1659,78 @@
     "id": 1764816855540.0447
   },
   {
-    "title": "聖誕佳節 溫馨送暖 捐血贈禮",
+    "title": "南投捐血室熱情響應愛心捐血活動",
+    "date": "2025-12-25",
+    "time": null,
+    "location": "南投捐血室",
+    "city": "南投縣",
+    "district": null,
+    "organizer": "南投捐血室",
+    "gift": {
+      "name": null,
+      "image": "https://scontent-lhr6-2.xx.fbcdn.net/v/t39.30808-6/542751089_24625510313710348_8473201111190245085_n.jpg?stp=dst-jpg_tt6&cstp=mx960x708&ctp=p600x600&_nc_cat=105&ccb=1-7&_nc_sid=0b1479&_nc_ohc=9YiBao9GPM8Q7kNvwFoyTuH&_nc_oc=AdkRbyEs60FCCS1zNx3uHvTnXjzQgaeMnKbJEwmnd5_qGAtOduKxyI0XAMNtLRwQICE&_nc_zt=23&_nc_ht=scontent-lhr6-2.xx&_nc_gid=2HUv_jjYEYjysuGQR8qKuA&oh=00_AfmOlxN_7BJBhGHpWujLXcjV721Y2VKYsMr8FwcGQzzoAg&oe=69380B97"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "南投縣"
+    ],
+    "posterUrl": "https://scontent-lhr6-2.xx.fbcdn.net/v/t39.30808-6/542751089_24625510313710348_8473201111190245085_n.jpg?stp=dst-jpg_tt6&cstp=mx960x708&ctp=p600x600&_nc_cat=105&ccb=1-7&_nc_sid=0b1479&_nc_ohc=9YiBao9GPM8Q7kNvwFoyTuH&_nc_oc=AdkRbyEs60FCCS1zNx3uHvTnXjzQgaeMnKbJEwmnd5_qGAtOduKxyI0XAMNtLRwQICE&_nc_zt=23&_nc_ht=scontent-lhr6-2.xx&_nc_gid=2HUv_jjYEYjysuGQR8qKuA&oh=00_AfmOlxN_7BJBhGHpWujLXcjV721Y2VKYsMr8FwcGQzzoAg&oe=69380B97",
+    "sourceUrl": "https://scontent-lhr6-2.xx.fbcdn.net/v/t39.30808-6/542751089_24625510313710348_8473201111190245085_n.jpg?stp=dst-jpg_tt6&cstp=mx960x708&ctp=p600x600&_nc_cat=105&ccb=1-7&_nc_sid=0b1479&_nc_ohc=9YiBao9GPM8Q7kNvwFoyTuH&_nc_oc=AdkRbyEs60FCCS1zNx3uHvTnXjzQgaeMnKbJEwmnd5_qGAtOduKxyI0XAMNtLRwQICE&_nc_zt=23&_nc_ht=scontent-lhr6-2.xx&_nc_gid=2HUv_jjYEYjysuGQR8qKuA&oh=00_AfmOlxN_7BJBhGHpWujLXcjV721Y2VKYsMr8FwcGQzzoAg&oe=69380B97",
+    "id": 1764903414515.3655
+  },
+  {
+    "title": "大林慈濟醫院慈善捐血公益活動",
+    "date": "2025-12-25",
+    "time": null,
+    "location": "大林慈濟醫院",
+    "city": "嘉義縣",
+    "district": "大林鎮",
+    "organizer": "大林慈濟醫院",
+    "gift": {
+      "name": "贈品",
+      "image": "https://scontent-lhr6-2.xx.fbcdn.net/v/t39.30808-6/465249026_8928378773841548_5680463153668512198_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1359&ctp=p600x600&_nc_cat=104&ccb=1-7&_nc_sid=0b1479&_nc_ohc=cR9rGByMokYQ7kNvwEg-sYK&_nc_oc=Adnc3NLjVPRr57C_ObeXHtIenaR8EqJ-Ch1WAh7GQlZ_jJ9B2hfEexXEnKCysiC322I&_nc_zt=23&_nc_ht=scontent-lhr6-2.xx&_nc_gid=Yh7Cs5I9ehFzLOkoQhPeqw&oh=00_AfmqlzgijBReOXw1cwawZo45M5VmdMbEQ4b-0bCuCA9WMQ&oe=693837E3"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "嘉義縣"
+    ],
+    "posterUrl": "https://scontent-lhr6-2.xx.fbcdn.net/v/t39.30808-6/465249026_8928378773841548_5680463153668512198_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1359&ctp=p600x600&_nc_cat=104&ccb=1-7&_nc_sid=0b1479&_nc_ohc=cR9rGByMokYQ7kNvwEg-sYK&_nc_oc=Adnc3NLjVPRr57C_ObeXHtIenaR8EqJ-Ch1WAh7GQlZ_jJ9B2hfEexXEnKCysiC322I&_nc_zt=23&_nc_ht=scontent-lhr6-2.xx&_nc_gid=Yh7Cs5I9ehFzLOkoQhPeqw&oh=00_AfmqlzgijBReOXw1cwawZo45M5VmdMbEQ4b-0bCuCA9WMQ&oe=693837E3",
+    "sourceUrl": "https://scontent-lhr6-2.xx.fbcdn.net/v/t39.30808-6/465249026_8928378773841548_5680463153668512198_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1359&ctp=p600x600&_nc_cat=104&ccb=1-7&_nc_sid=0b1479&_nc_ohc=cR9rGByMokYQ7kNvwEg-sYK&_nc_oc=Adnc3NLjVPRr57C_ObeXHtIenaR8EqJ-Ch1WAh7GQlZ_jJ9B2hfEexXEnKCysiC322I&_nc_zt=23&_nc_ht=scontent-lhr6-2.xx&_nc_gid=Yh7Cs5I9ehFzLOkoQhPeqw&oh=00_AfmqlzgijBReOXw1cwawZo45M5VmdMbEQ4b-0bCuCA9WMQ&oe=693837E3",
+    "id": 1764903570117.6846
+  },
+  {
+    "title": "捐血即贈限量好禮-大醇蛋捲",
+    "date": "2025-12-25",
+    "time": null,
+    "location": "嘉義捐血站",
+    "city": "嘉義市",
+    "district": null,
+    "organizer": "嘉義捐血站",
+    "gift": {
+      "name": "大醇蛋捲",
+      "image": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592403757_1272680911571798_5432799612437221839_n.jpg?stp=c300.0.900.900a_dst-jpg_e35_s640x640_tt6&_nc_cat=105&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=yWV8tbIdLGcQ7kNvwHZkDuf&_nc_oc=Adler0J-z8mMlhSm4CRnB5ikmIukNHZqtxfGkN08CWRvu1ba7Sy5bsjPdJPmoVyIBE0&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=AA-3qqyFwySrSIYCtUfDGw&oh=00_AfmeIjg5YA5mUwMqpJNuvJoYs5JJr2j4rs4J2V-lpmN_3g&oe=69381BB9"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "嘉義市"
+    ],
+    "posterUrl": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592403757_1272680911571798_5432799612437221839_n.jpg?stp=c300.0.900.900a_dst-jpg_e35_s640x640_tt6&_nc_cat=105&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=yWV8tbIdLGcQ7kNvwHZkDuf&_nc_oc=Adler0J-z8mMlhSm4CRnB5ikmIukNHZqtxfGkN08CWRvu1ba7Sy5bsjPdJPmoVyIBE0&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=AA-3qqyFwySrSIYCtUfDGw&oh=00_AfmeIjg5YA5mUwMqpJNuvJoYs5JJr2j4rs4J2V-lpmN_3g&oe=69381BB9",
+    "sourceUrl": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592403757_1272680911571798_5432799612437221839_n.jpg?stp=c300.0.900.900a_dst-jpg_e35_s640x640_tt6&_nc_cat=105&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=yWV8tbIdLGcQ7kNvwHZkDuf&_nc_oc=Adler0J-z8mMlhSm4CRnB5ikmIukNHZqtxfGkN08CWRvu1ba7Sy5bsjPdJPmoVyIBE0&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=AA-3qqyFwySrSIYCtUfDGw&oh=00_AfmeIjg5YA5mUwMqpJNuvJoYs5JJr2j4rs4J2V-lpmN_3g&oe=69381BB9",
+    "id": 1764903811459.5332
+  },
+  {
+    "title": "捐血救人一命~聖誕節溫馨捐血活動",
     "date": "2025-12-25",
     "time": "09:00-17:00",
-    "location": "高雄捐血中心-三民捐血室",
+    "location": "家樂福高雄鼎中店",
     "city": "高雄市",
-    "district": "三民區",
+    "district": null,
     "organizer": "高雄捐血中心",
     "gift": {
-      "name": "捐血者感恩紀念品",
+      "name": "摸彩券",
       "image": "data:image/jpeg;base64,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"
     },
     "tags": [
@@ -184,156 +1738,93 @@
       "自動更新",
       "高雄市"
     ],
-    "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ARQMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAFBgAEBwMCCP/EADQQAAIBAgQEAwUHBQAAAAAAAAECAwQRAAUSIQYTMUEiUWEUMnGRwRUjUoGhsfAHF0Jy0f/EABgBAAMBAQAAAAAAAAAAAAAAAAIDBAEA/8QAIxEAAgMAAQMEAwAAAAAAAAAAAQIAAxEhBBJBE2Fx8CIxUv/aAAwDAQACEQMRAD8AK8BVk8nC+XyjlllLxlGJBZxdtBsDtpY276lHnhwhm50SzU0h5TgMpJubEXsRjLRmtLw1lTPPHVCinq5Jacw2cRk28BJN7rYb48f3hpKcuKfK6qUMxP3sygdB0AGw2whDvxLLa+088TWGjWQWcMQfTYb7keV++MH/AK0Uop+LdappEsSkD8gf3Jweh/q1mNWziDLaanQKW1FmYi35jCJxhn1RnlfE9SkQ5QIXQLXubm+53vg95iiVCkb92UcneFaiPnK/KLASlRuF726Xww5JWjJeIftLKZ6nRHcRLNIFcjbZyAQRcdLfrvhciOgWXbFmmc6h5YWxPiU00IM7uTGjiErNwxkolmy9qjVPreFLSpsvhe/X0bvhX4fgq6jPoqbLJfv5GKxMQAdVja1+hvtf1wSqEWfLp16uqFl+IwEyR5afMaeop5OVNEwlRyCQrL4gSBv2xyHQYrq6vSsGfow29FTUWYVlJUVsitBJyzoX/IXDDr2P8HTEwPrNUtVLUF/vZnZ5diAWJJNu9t++JjMMlJhzjDimlzHL/sqgCmmDIFfTYhUvY/7EtvhI06mAXrg1DlEsqa78q3XUvkMCEOiS5/XDEAUYIbWG19aX4RyMsmWIye0vIpJFtPLAO3ne5HyxUgpaqrkvDDJK19yq3Hzx1afcXay97Y3fg/I8sl4XyxJ6OCWYwXOpSWazejDoNPxuMbrR5rq3ecmPU/D1fIuqUxRG2ys1yfljm9HNRtaojZL9GtdT+eN+HCeSPs2XOp7FJ3H6FjihW8MZHHUQQBZ9ExAv7QNgSANivmf288LKv5li29NnG77zGWkaOhldU1+G1vjt9ce+FcjlkzKmaZVf3jym6MADe5GG3PqSgyvL5EWnKRu1TGrEj76z6VIHYi2/zwr5FPmCZpBzC/sohk0EeDUWUgDUR+KwNu17YAb2nIFz1tYFYbkrZhT+wVTUxkZioUmw81B+uJhhiy6dZJEbL5JKlLLUEoWJe25P09MTHSZumJOrwPmDcweL2SsjpqiBKgWQq8mjY7336kfzrhVkoqpV1NCW1G+qPxj5i4wy8Z5NPkuYqXeKSOfRyyOoOhSb7eZwPyF6KHO4HzCOR6ZFkaRY/eNo2IA3HcDDR+I4kmYcgX2drgFSDqsQRbH0Jl00MdBSUictZI6eLWWY7nSWIK9/A7W9bbHGG5jOYcyqBEzFDM4UN1A1Gw67bYKZdxfnlNWwg5hUzRA6OQ8zBDfYDw2Nt8c2nDG1uqggzfy2phLCfCwDKPK/7WvjpdZZBE4AGrUWBsB27n6YxuDifiI5mYftN1S5dBZX0jyJI32sL+mLg4mzPmOlRMsqp4iCgsSPhbGG0CCXUHNlbijJ5c0mpWp0EcSR1ckk0KtKWIcsqso90m1h12tinFWR8O5KkUapJmFXADIyyc2MoT4SPwsCV7f9xx41qpqesyJ43UO0DSKyJoNy59438Vt7HCnU1tSKmNZ3EjU/hRiovbtv3xigkR1lq95ZfM0ygyqlnBqOJc2rDWzKrsIqnQEO407DewC7/HExnCVdVMWkeViznUWJJJOJjCDF+qn8z//Z",
-    "sourceUrl": "data:image/jpeg;base64,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",
-    "id": 1764730822474.5168
+    "posterUrl": "data:image/jpeg;base64,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",
+    "sourceUrl": "data:image/jpeg;base64,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",
+    "id": 1764903932307.0227
   },
   {
-    "title": "雲林捐血站-聖誕節溫馨捐血日",
-    "date": "2025-12-25",
-    "time": "08:00-17:00",
-    "location": "雲林捐血站",
-    "city": "雲林縣",
-    "district": null,
-    "organizer": "雲林捐血站",
-    "gift": {
-      "name": "聖誕小禮",
-      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABGlBMVEV/us6r5PKn1d+PydmFwNSUzd2d1eN9uc6Kxdd6tMx7tsxlj6GKw9ae2eaYz9+X0OGJu8yx1t+l3uqi2OWw6PV1s8SWw9JZjaGo4e6Gi4z+gYf/sX7xgzTF4OiCt8aLq7icydkrUmuRYnNwobH5u8D///7woKjjXgBpX1/Q5+zM7fO73eWRc4T3rq6Za05glKjgeTB4qbnA7/jI9vvwzcmEyts0e5ercYDsm6Dtuov80KzjbneXZHpwqr7pfYN2i5iavsWAoaupmo6wcn+OUitBboWkfGd/W0OtxNLoZWypZBz4tIXUrbnekZv809XHZwD+7u7thonVtb3IbQAWPE8hQk7zcwv88N2zcTjHlXbQe03+y6bukE4ANkzssLTdAAAACnRSTlP+////+///SvX2qzuGvwAAAPlJREFUGJUNzdWWgzAUQNGb0AQIENyhpaVUVt1tpOPubv//G9PzuF8OiBLRAifgHDkWJZIIErEdO/x8ebgOEaKkBAJFQr+5+lg1m6d2QAXglnX+/rv+WSfJsO9oBHR0lCTfi1qt9XoxrAQ6UHQcx19/rbfWTRyHiAPVFlfL6eZp0yumB7UdcO3kvigeG416vd7bswgQq3tXuX1uRMsoikJN2G1H87k745ezstI1uAoqsc+qg9x1c7/qa0IJQNWpko0nk7GX20RlwPb9gTpSdpXLiu8ycE1c2WKc4g7G2PQYyFlWPTTNdtox0rZnyiDKzFPBAAYGY4Ys/gMaLx2k9Vx24AAAAABJRU5ErkJggg=="
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "雲林縣"
-    ],
-    "posterUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABGlBMVEV/us6r5PKn1d+PydmFwNSUzd2d1eN9uc6Kxdd6tMx7tsxlj6GKw9ae2eaYz9+X0OGJu8yx1t+l3uqi2OWw6PV1s8SWw9JZjaGo4e6Gi4z+gYf/sX7xgzTF4OiCt8aLq7icydkrUmuRYnNwobH5u8D///7woKjjXgBpX1/Q5+zM7fO73eWRc4T3rq6Za05glKjgeTB4qbnA7/jI9vvwzcmEyts0e5ercYDsm6Dtuov80KzjbneXZHpwqr7pfYN2i5iavsWAoaupmo6wcn+OUitBboWkfGd/W0OtxNLoZWypZBz4tIXUrbnekZv809XHZwD+7u7thonVtb3IbQAWPE8hQk7zcwv88N2zcTjHlXbQe03+y6bukE4ANkzssLTdAAAACnRSTlP+////+///SvX2qzuGvwAAAPlJREFUGJUNzdWWgzAUQNGb0AQIENyhpaVUVt1tpOPubv//G9PzuF8OiBLRAifgHDkWJZIIErEdO/x8ebgOEaKkBAJFQr+5+lg1m6d2QAXglnX+/rv+WSfJsO9oBHR0lCTfi1qt9XoxrAQ6UHQcx19/rbfWTRyHiAPVFlfL6eZp0yumB7UdcO3kvigeG416vd7bswgQq3tXuX1uRMsoikJN2G1H87k745ezstI1uAoqsc+qg9x1c7/qa0IJQNWpko0nk7GX20RlwPb9gTpSdpXLiu8ycE1c2WKc4g7G2PQYyFlWPTTNdtox0rZnyiDKzFPBAAYGY4Ys/gMaLx2k9Vx24AAAAABJRU5ErkJggg==",
-    "sourceUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABGlBMVEV/us6r5PKn1d+PydmFwNSUzd2d1eN9uc6Kxdd6tMx7tsxlj6GKw9ae2eaYz9+X0OGJu8yx1t+l3uqi2OWw6PV1s8SWw9JZjaGo4e6Gi4z+gYf/sX7xgzTF4OiCt8aLq7icydkrUmuRYnNwobH5u8D///7woKjjXgBpX1/Q5+zM7fO73eWRc4T3rq6Za05glKjgeTB4qbnA7/jI9vvwzcmEyts0e5ercYDsm6Dtuov80KzjbneXZHpwqr7pfYN2i5iavsWAoaupmo6wcn+OUitBboWkfGd/W0OtxNLoZWypZBz4tIXUrbnekZv809XHZwD+7u7thonVtb3IbQAWPE8hQk7zcwv88N2zcTjHlXbQe03+y6bukE4ANkzssLTdAAAACnRSTlP+////+///SvX2qzuGvwAAAPlJREFUGJUNzdWWgzAUQNGb0AQIENyhpaVUVt1tpOPubv//G9PzuF8OiBLRAifgHDkWJZIIErEdO/x8ebgOEaKkBAJFQr+5+lg1m6d2QAXglnX+/rv+WSfJsO9oBHR0lCTfi1qt9XoxrAQ6UHQcx19/rbfWTRyHiAPVFlfL6eZp0yumB7UdcO3kvigeG416vd7bswgQq3tXuX1uRMsoikJN2G1H87k745ezstI1uAoqsc+qg9x1c7/qa0IJQNWpko0nk7GX20RlwPb9gTpSdpXLiu8ycE1c2WKc4g7G2PQYyFlWPTTNdtox0rZnyiDKzFPBAAYGY4Ys/gMaLx2k9Vx24AAAAABJRU5ErkJggg==",
-    "id": 1764817072731.8557
-  },
-  {
-    "title": "扶輪有愛 捐血最樂 - 斗南火車站前廣場",
-    "date": "2025-12-13",
-    "time": "09:00-16:00",
-    "location": "斗南火車站前廣場",
-    "city": "雲林縣",
-    "district": null,
-    "organizer": "雲林捐血站",
-    "gift": {
-      "name": "250cc 摸彩券1次, 500cc 摸彩券2次",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCjinFMqEVK06wmUjPReG5R8rUzNvHBpuiTw&s"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "雲林縣"
-    ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCjinFMqEVK06wmUjPReG5R8rUzNvHBpuiTw&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCjinFMqEVK06wmUjPReG5R8rUzNvHBpuiTw&s",
-    "id": 1764817089460.7307
-  },
-  {
-    "title": "114年度大專院校捐血活動",
+    "title": "捐血一分鐘，意義非凡",
     "date": "2025-12-25",
     "time": "09:00-17:00",
-    "location": "台南捐血中心",
-    "city": "台南市",
-    "district": null,
-    "organizer": "台南捐血中心",
-    "gift": {
-      "name": "紀念品",
-      "image": "data:image/jpeg;base64,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"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "台南市"
-    ],
-    "posterUrl": "data:image/jpeg;base64,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",
-    "sourceUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIADYALgMBEQACEQEDEQH/xAAaAAEAAwEBAQAAAAAAAAAAAAAEAgMFBgEA/8QALxAAAgECBQMCBQMFAAAAAAAAAQIDBBEABRIhMRNBUSJxBhRhkaEjMoEVYtHh8P/EABkBAQADAQEAAAAAAAAAAAAAAAIAAQMEBf/EAC8RAAICAQIDBQYHAAAAAAAAAAECAAMREiEEMUFRkaHB8BMiMkJhgRRScbHR4fH/2gAMAwEAAhEDEQA/AO1zbMYstja7xrMyEoZOFA7nAZtInu01G0/SGhzRc3y5arKgkkpsChP7W2uD7A4QcsmViao0tpflK1OaCppAIo+iQvzBa1wS5vax7LbBzZtJmsq2+/Tu/mMj/qppmCQxmcyArpso6d773J3tt4vbci5xRDYmTGvVudvPw/ySlGaF52ji9Og9JdK7tbub+b/4xWGlApgZP6y/LlqmpVNegWe51AW87cf6wlBxvI5XPu8pl/FmS0+bmISy9KVQVU6Sbg2H4JGLsqV+cdHEtQdjAZdR0VFlf9PjqEYMvWZ40trCsLt9f22viCsBNMT8Wrvqz63ioaOnpqikQTENGWWNSu5AkLsLjjmxPe2KFQGN4XvU5yefkMT2SkpamnWH5tQHlFiIr3JDJb8kX52tfbaGoEc4F4lFOoH1z8pVUR5RUyzJJmY6skLU7jpnsoJ2440nFGodsCcaqYA6HM3slgjp6ILDN1kZiwa1vew97n+TjRV0jEjWiw6hGNA0zELpFtyWNgP5ws4gNioMtMto0MjzfOo0UclmCWKja1ifexxNQgFobLBthCQUtRXk/J5lLcIEusK7PqJ1C/cjb2GCGB5GUQTvr8IuCFahJZKat60cbMjaQpEbndTx2Gw7YCXLZ8MijJxqiaTLp0nlklZpUmVdEZhA0kLYkEc35/nDzLChSSTFxrp9Kra21rWtiZmmwk6laYQySVraKZV/VYkAAcd/fEZtIyTOW6sPjMHDQ5aKKqmopCaWqpnVpuoAAov6gRa1rfjACq67dZVKik6+oI8IT4NpjTioqIKijq4ppEUpSuXRWVTddR5Nn8YFdDVAq/WdN3E1cQvunlnf79kdQ0lRTNWsJHMLzaTEUXTftvubcWsQOdsCql6QdTZ8piro7DHSMqC05q5o5Y4nkRQup2BBFvHt2x0rYpGYlXTpBGe6ezTq7lhtfAVw3KNVIGJlZ3W0r5XWUM8/R68W76C+gA3BIHbY/wDDF2AEYMX4d3IKc4bK80y+hySDKDWAsIHh1iFwWLk7gW8kbYK6AunMo8HaQW6y74cen+HslQRyvUxNVNKXSnYG5FraRcgADnG5OvGOgnKOHNQIc7nskqXNaWFK6JGqnL/rN1YGAVQTsu2/tziOCQIeGoFblif3lc2e0iSi6zkooNlpna/Pgbn0nb284wWhsYnXrVQR5GaQGw5t9ecRF0jEc5jOejN0zL0gEUly8Wuy7f2mw2ON81j4xOkrdt7NsffEFDHlqGNHalLlwDqpdybWsP0+dVvvii9HZ4SgvF4+M9/0mxQpWtSIKKpijRdgqekA99tHm/4wwa8bCclldxOWO8kcjMs7TVMdPVPsQZlBudtzZfIHHgYntOg2mfsj1iqbKoIqiKUUVJGUvZkB1La9rfc/fALZHOMJgjYTUtfnBjnM12XNWGPT0vTe+tQdrjyD9cajR8wzOmx7PkOJ9BkBtGGSmYXGomNL8dvR5xCKvyzH2nED5z3/ANREGX5hCEijmihVbC0RAH120e/4xeUHITMi1t2PrujqKDMk0lqlZbXuHIsfHC4JKHpMyrjr67o2IT6nM6xAbadBJ+98AgdIwT1luIJc/9k=",
-    "id": 1764817195488.0457
-  },
-  {
-    "title": "愛在12月25日 竹北場 捐血活動",
-    "date": "2025-12-25",
-    "time": null,
-    "location": "竹北",
-    "city": "新竹縣",
+    "location": "國賓影城",
+    "city": "高雄市",
     "district": null,
     "organizer": "高雄捐血中心",
     "gift": {
-      "name": null,
-      "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4APQMBIgACEQEDEQH/xAAbAAADAQEAAwAAAAAAAAAAAAAEBQYCAwABB//EADIQAAIBAgUCBAQEBwAAAAAAAAECAwQRAAUSITETQQYiUWEUcYGRQlKhwSMyM2JywtH/xAAYAQEBAAMAAAAAAAAAAAAAAAADAgABBP/EACERAAICAgEEAwAAAAAAAAAAAAABAhESIQMTMWGhBEFR/9oADAMBAAIRAxEAPwD6b4k8TrljQQ0sLyzSMrXt5dAPmHN7kbDsL37Yz4i8QVFJlUM9GggqJZEQCotZSw779ufp34x5V0cNVDKkikGWNkZ02axFsS1NBnM2ZyJJTTDJ5pgCoPTIjAIG2oMPwX9d7g4m6exlGM4a017GPhvxXXZhXRmaXVDPGNCiDSusKdW+/t3HyxSVWbNTxmSWRUUc2W+EseSxUsKtTvK1YkYjWdn0swFgA2mwI29MFwUoa0lWgeaxXzbjTfbbjtim1lQcFHvICzLP6unqikUnVIYaohzYjaxHvba1/wBMMkleeCFnkCu4DeVtQbvtfkYW1nh2jqRdWlicfysp4/c8k7nnEj4or0GZSipiqIFoH6NJK0ci9QmMMxVtgSSpRQu9/ocLzThgsFs62vj8mMU6/XRRZ/nq5LVU8DtVzySgsRGqaVUW3YkbDY/c+1mOSZiK2gWpmcJrPlV2FwBt7dwcSyZ74ZrZIIKtquGu1JTNKQxcuHKaWIJ7kbnjWu+LmmpFp4VigjYIvHLH7nA3J9zkdXQHWfELWpodhGNLONenQASWNtrgggG598Bx0eaRLp+MHU0xteScEBje5sdyO1rb/TFBm8NTLWxJTzQQpJE6szxajytzf1A49+cA1NY/Qy4v8GJJoo2I2W92Ta1jZbE774VE42cVynOLxsHsQh3EpI4a1wWte+nsfnhiuWVSyBus7Kzjym3kGof63+vrzg2DNaaQINXmYKfKpKm4uLG2+CoKiOf+mSdgdxbEtsygb4akjNpJd/RnAwPVTRwyUyUdLHVdSULIRKP4a/m99t8A5uS8twCf4u9ow22478YCponYo0bGFlAN2gUHgWxvHYfU8HQZZC2YUVavhdIpoOtIrxS9MB2JNiq7NqKobtex35GKmB3khR5IzG7KCyE30n0wmgnq4wepUs++1xwMdxXTj8QPzGKcGzfUR2zADWdUkulltZWQD9cZRYpVKtUvGTtpLoSR9vcffBNXDJKVMTWt/cR+2MR0rhgHdtA4s5v2/wCYIS2b6HUCslRIF0gDQRb58Y3BCYdZaaSS+/ntt9hjcadNbBmP+Rvj241Iyg2JFr4wyyar0MqpZAxD6iCpPY+nzwB0ei6nRH1EF1IRtvKB64ZZw0+X26SRS3Rm8zFeLex9cLpGl65aaKMFtro9/wAVu6+2GUoN7BfDyY5IOSrXpgsrk6bmyY6wTLOpZAwsbeYWwLliJJQxO8a3ZdxYH9h6YLSNIwRGiqD+UWwuvoKpJ0z/2Q=="
+      "name": "國賓影城電影票",
+      "image": "data:image/jpeg;base64,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"
     },
     "tags": [
       "AI辨識",
       "自動更新",
-      "新竹縣"
+      "高雄市"
     ],
-    "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4APQMBIgACEQEDEQH/xAAbAAADAQEAAwAAAAAAAAAAAAAEBQYCAwABB//EADIQAAIBAgUCBAQEBwAAAAAAAAECAwQRAAUSITETQQYiUWEUcYGRQlKhwSMyM2JywtH/xAAYAQEBAAMAAAAAAAAAAAAAAAADAgABBP/EACERAAICAgEEAwAAAAAAAAAAAAABAhESIQMTMWGhBEFR/9oADAMBAAIRAxEAPwD6b4k8TrljQQ0sLyzSMrXt5dAPmHN7kbDsL37Yz4i8QVFJlUM9GggqJZEQCotZSw779ufp34x5V0cNVDKkikGWNkZ02axFsS1NBnM2ZyJJTTDJ5pgCoPTIjAIG2oMPwX9d7g4m6exlGM4a017GPhvxXXZhXRmaXVDPGNCiDSusKdW+/t3HyxSVWbNTxmSWRUUc2W+EseSxUsKtTvK1YkYjWdn0swFgA2mwI29MFwUoa0lWgeaxXzbjTfbbjtim1lQcFHvICzLP6unqikUnVIYaohzYjaxHvba1/wBMMkleeCFnkCu4DeVtQbvtfkYW1nh2jqRdWlicfysp4/c8k7nnEj4or0GZSipiqIFoH6NJK0ci9QmMMxVtgSSpRQu9/ocLzThgsFs62vj8mMU6/XRRZ/nq5LVU8DtVzySgsRGqaVUW3YkbDY/c+1mOSZiK2gWpmcJrPlV2FwBt7dwcSyZ74ZrZIIKtquGu1JTNKQxcuHKaWIJ7kbnjWu+LmmpFp4VigjYIvHLH7nA3J9zkdXQHWfELWpodhGNLONenQASWNtrgggG598Bx0eaRLp+MHU0xteScEBje5sdyO1rb/TFBm8NTLWxJTzQQpJE6szxajytzf1A49+cA1NY/Qy4v8GJJoo2I2W92Ta1jZbE774VE42cVynOLxsHsQh3EpI4a1wWte+nsfnhiuWVSyBus7Kzjym3kGof63+vrzg2DNaaQINXmYKfKpKm4uLG2+CoKiOf+mSdgdxbEtsygb4akjNpJd/RnAwPVTRwyUyUdLHVdSULIRKP4a/m99t8A5uS8twCf4u9ow22478YCponYo0bGFlAN2gUHgWxvHYfU8HQZZC2YUVavhdIpoOtIrxS9MB2JNiq7NqKobtex35GKmB3khR5IzG7KCyE30n0wmgnq4wepUs++1xwMdxXTj8QPzGKcGzfUR2zADWdUkulltZWQD9cZRYpVKtUvGTtpLoSR9vcffBNXDJKVMTWt/cR+2MR0rhgHdtA4s5v2/wCYIS2b6HUCslRIF0gDQRb58Y3BCYdZaaSS+/ntt9hjcadNbBmP+Rvj241Iyg2JFr4wyyar0MqpZAxD6iCpPY+nzwB0ei6nRH1EF1IRtvKB64ZZw0+X26SRS3Rm8zFeLex9cLpGl65aaKMFtro9/wAVu6+2GUoN7BfDyY5IOSrXpgsrk6bmyY6wTLOpZAwsbeYWwLliJJQxO8a3ZdxYH9h6YLSNIwRGiqD+UWwuvoKpJ0z/2Q==",
-    "sourceUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4APQMBIgACEQEDEQH/xAAbAAADAQEAAwAAAAAAAAAAAAAEBQYCAwABB//EADIQAAIBAgUCBAQEBwAAAAAAAAECAwQRAAUSITETQQYiUWEUcYGRQlKhwSMyM2JywtH/xAAYAQEBAAMAAAAAAAAAAAAAAAADAgABBP/EACERAAICAgEEAwAAAAAAAAAAAAABAhESIQMTMWGhBEFR/9oADAMBAAIRAxEAPwD6b4k8TrljQQ0sLyzSMrXt5dAPmHN7kbDsL37Yz4i8QVFJlUM9GggqJZEQCotZSw779ufp34x5V0cNVDKkikGWNkZ02axFsS1NBnM2ZyJJTTDJ5pgCoPTIjAIG2oMPwX9d7g4m6exlGM4a017GPhvxXXZhXRmaXVDPGNCiDSusKdW+/t3HyxSVWbNTxmSWRUUc2W+EseSxUsKtTvK1YkYjWdn0swFgA2mwI29MFwUoa0lWgeaxXzbjTfbbjtim1lQcFHvICzLP6unqikUnVIYaohzYjaxHvba1/wBMMkleeCFnkCu4DeVtQbvtfkYW1nh2jqRdWlicfysp4/c8k7nnEj4or0GZSipiqIFoH6NJK0ci9QmMMxVtgSSpRQu9/ocLzThgsFs62vj8mMU6/XRRZ/nq5LVU8DtVzySgsRGqaVUW3YkbDY/c+1mOSZiK2gWpmcJrPlV2FwBt7dwcSyZ74ZrZIIKtquGu1JTNKQxcuHKaWIJ7kbnjWu+LmmpFp4VigjYIvHLH7nA3J9zkdXQHWfELWpodhGNLONenQASWNtrgggG598Bx0eaRLp+MHU0xteScEBje5sdyO1rb/TFBm8NTLWxJTzQQpJE6szxajytzf1A49+cA1NY/Qy4v8GJJoo2I2W92Ta1jZbE774VE42cVynOLxsHsQh3EpI4a1wWte+nsfnhiuWVSyBus7Kzjym3kGof63+vrzg2DNaaQINXmYKfKpKm4uLG2+CoKiOf+mSdgdxbEtsygb4akjNpJd/RnAwPVTRwyUyUdLHVdSULIRKP4a/m99t8A5uS8twCf4u9ow22478YCponYo0bGFlAN2gUHgWxvHYfU8HQZZC2YUVavhdIpoOtIrxS9MB2JNiq7NqKobtex35GKmB3khR5IzG7KCyE30n0wmgnq4wepUs++1xwMdxXTj8QPzGKcGzfUR2zADWdUkulltZWQD9cZRYpVKtUvGTtpLoSR9vcffBNXDJKVMTWt/cR+2MR0rhgHdtA4s5v2/wCYIS2b6HUCslRIF0gDQRb58Y3BCYdZaaSS+/ntt9hjcadNbBmP+Rvj241Iyg2JFr4wyyar0MqpZAxD6iCpPY+nzwB0ei6nRH1EF1IRtvKB64ZZw0+X26SRS3Rm8zFeLex9cLpGl65aaKMFtro9/wAVu6+2GUoN7BfDyY5IOSrXpgsrk6bmyY6wTLOpZAwsbeYWwLliJJQxO8a3ZdxYH9h6YLSNIwRGiqD+UWwuvoKpJ0z/2Q==",
-    "id": 1764817451627.9836
+    "posterUrl": "data:image/jpeg;base64,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",
+    "sourceUrl": "data:image/jpeg;base64,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",
+    "id": 1764903937447.261
   },
   {
-    "title": "您的熱血，是生命的禮物 - 臺中捐血中心",
-    "date": "2025-12-26",
-    "time": "08:00-16:00",
-    "location": "台中市南屯區文心南路289號",
-    "city": "台中市",
-    "district": "南屯區",
-    "organizer": "南投捐血室",
-    "gift": {
-      "name": "完成290cc捐血量送環保杯一個、500cc捐血量送好禮",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSQqip5NBPRPAMbpYWfn5SbOyEc2UowSLTsA&s"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "臺中市"
-    ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSQqip5NBPRPAMbpYWfn5SbOyEc2UowSLTsA&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSQqip5NBPRPAMbpYWfn5SbOyEc2UowSLTsA&s",
-    "id": 1764653747700.7737
-  },
-  {
-    "title": "台東捐血活動",
-    "date": "2025-12-06",
-    "time": "08:00-16:00",
-    "location": "台東市四維路三段198號",
-    "city": "台東市",
+    "title": "「捐血一袋 救人一命」耶誕點燈祈福活動",
+    "date": "2025-12-25",
+    "time": "18:00-21:00",
+    "location": "屏東市公益路60號 (屏東捐血站前)",
+    "city": "屏東市",
     "district": null,
     "organizer": "屏東捐血站",
     "gift": {
-      "name": null,
-      "image": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592875608_1365341908718334_5352111198400447975_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&_nc_cat=100&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=kZnmiIPzahgQ7kNvwHGr4xD&_nc_oc=AdmS2mf7co4rMWWPz72xEhjtfXNf4aIS7ooj9KhDZxFYx36-jqvPvYLRNMB3C31ZvLM&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=jdhOUBt1Jc18mzQVe1n2OA&oh=00_AflsxVna9lQueytJaqItC_KFdKmTsu_IZEXfPnaQ2O0WIg&oe=6936D65F"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "臺東市"
-    ],
-    "posterUrl": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592875608_1365341908718334_5352111198400447975_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&_nc_cat=100&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=kZnmiIPzahgQ7kNvwHGr4xD&_nc_oc=AdmS2mf7co4rMWWPz72xEhjtfXNf4aIS7ooj9KhDZxFYx36-jqvPvYLRNMB3C31ZvLM&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=jdhOUBt1Jc18mzQVe1n2OA&oh=00_AflsxVna9lQueytJaqItC_KFdKmTsu_IZEXfPnaQ2O0WIg&oe=6936D65F",
-    "sourceUrl": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592875608_1365341908718334_5352111198400447975_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&_nc_cat=100&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=kZnmiIPzahgQ7kNvwHGr4xD&_nc_oc=AdmS2mf7co4rMWWPz72xEhjtfXNf4aIS7ooj9KhDZxFYx36-jqvPvYLRNMB3C31ZvLM&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=jdhOUBt1Jc18mzQVe1n2OA&oh=00_AflsxVna9lQueytJaqItC_KFdKmTsu_IZEXfPnaQ2O0WIg&oe=6936D65F",
-    "id": 1764817558917.624
-  },
-  {
-    "title": "捐熱血就是慈善 114年12月6日 中山捐血車",
-    "date": "2025-12-06",
-    "time": "09:00-17:00",
-    "location": "中山捐血車",
-    "city": "屏東縣",
-    "district": null,
-    "organizer": "屏東捐血站",
-    "gift": {
-      "name": "250cc全聯禮券2張+憲兵紀念小帽1雙",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9XGOaC6DA8ONIVoxWaU0x9CjLSiBIHMWoEA&s"
+      "name": "小天使造型帽",
+      "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAE0ALgMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAFBgACBAMBB//EADMQAAIBAgQFAQYEBwAAAAAAAAECAwQRAAUSIRMiMUFRgRQVMkJhoQZxkZIjRHKCweHw/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAECA//EACARAAICAQQDAQAAAAAAAAAAAAABAhESAyFBUSIxgRP/2gAMAwEAAhEDEQA/APuGJiYmACYmMGc5xRZLSe018uhCdKgC7OfAGM2RfibLM9d46KRxMg1GKVdLW8jyPyxOUbq9zVaOo4foovHvgMYmJiYoyM9TW09MdMs0SvtytIAbHvufAJ9DgePxBTF1Tk1N8IE8dzvbpfzYeoxbM8nauqeOKtoxpC8PhIw21dyL/N/2+E+GSSKcBhEalGuYmlp9aOGS6ghD81lO/e/jCaGmlwMeaSZdWT6sxpaeXgKQFqCjaL7nYnY20/rjNQxZHSVQqaWjhgqA3xRyRqbW3FgdhYHa3Y4FM7VDyVUhR9TbrxYWBU2Gq+npYIbX+a3bHaGWnWnlkqjTCRtIRGlhuwIbUQQtujN+362xGO92bKeqlik6+jUM2iDIkqiKSQDho8igtcdBvvjckqSX4bq1uuk3thCrqyKKqkqq2ZRR00YYTs8LMg1MNl09iQvXvhwyeiSjpzwahp4pNLRkqoAXSAANIG1h3xW5m48tUdKqWvWa1NTRSR7czSaT3v8A4++AGb0kxmM9RLJTzyS6Y4YatxGyAG7bJ8R1m/kqvjY5W+9vaV9haiFPpGrjhy5N97W2tb74C5tBmMiKtdwGVwxb2bijogvuOnRremKJSsGxSzw5foZiBJNr4hqZDZuXkLaNl+n+7WWqjFTI9DVSzxKLAzTOFBKi22jqBo/c3jHStkqZ6+Q0alVkayiWGo6k7kkGw5yD/SMUq2rDUxUki6uAxQFUqLFNiOYHc7p+jflgFZqrcozOuo6ujaFDDUoEaQ1FmADbgbbXAF/r6YZctWZKCBKmOOOVUCskZuotttgJktBW0bvLRvAYZlNxO8rOCGPk9N2+3jBug9t0Se8DTl9Z0cAMBo2te/frgHbOUsOYnMBJHVwrR8t4TDzdDfmv3Ont2wLXIjSIgCxS08GoxxRxEPuTcA362NvH5dmLFJVZ1sjlDfqADgBOhCOUzamk92Slg7MCKW3Nz3b497kk/wB31xqOW65A8GWtTKulVR6Msyta2q4Y7br+0nDYIaofzl9vmiH67Yghqhe9WCLbfwhe/nCa6G5X7AdF+F2oZIJqWSmSeGwDiNthYAgXY25QR637YM5bFmESv7xqopybaeHFo07b9998bAbWBIvj3DJBooHhSJVYyaJS4PQ23O+++5t64s8VbLLTuJWjRWJkW45haw2t64IYmE0OxIqc7zWjzGhgqKeUitrnp53hjkKxRqpAcXFl52Xm6ELglRVdcGy2kJWDco8d9bOgiBDXIuNzv9e5wy48sL3sL9L4nF9lZ+TbQEoVzOq9nnzanFNOs0i8Onl1qI7GxJsPA+x2vYbaPLY4ZOK2syAGMEtcFdVxtjfiYpIJTtutj//Z"
     },
     "tags": [
       "AI辨識",
       "自動更新",
       "屏東縣"
     ],
-    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9XGOaC6DA8ONIVoxWaU0x9CjLSiBIHMWoEA&s",
-    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9XGOaC6DA8ONIVoxWaU0x9CjLSiBIHMWoEA&s",
-    "id": 1764817590556.2996
+    "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAE0ALgMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAFBgACBAMBB//EADMQAAIBAgQFAQYEBwAAAAAAAAECAwQRAAUSIRMiMUFRgRQVMkJhoQZxkZIjRHKCweHw/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAECA//EACARAAICAQQDAQAAAAAAAAAAAAABAhESAyFBUSIxgRP/2gAMAwEAAhEDEQA/APuGJiYmACYmMGc5xRZLSe018uhCdKgC7OfAGM2RfibLM9d46KRxMg1GKVdLW8jyPyxOUbq9zVaOo4foovHvgMYmJiYoyM9TW09MdMs0SvtytIAbHvufAJ9DgePxBTF1Tk1N8IE8dzvbpfzYeoxbM8nauqeOKtoxpC8PhIw21dyL/N/2+E+GSSKcBhEalGuYmlp9aOGS6ghD81lO/e/jCaGmlwMeaSZdWT6sxpaeXgKQFqCjaL7nYnY20/rjNQxZHSVQqaWjhgqA3xRyRqbW3FgdhYHa3Y4FM7VDyVUhR9TbrxYWBU2Gq+npYIbX+a3bHaGWnWnlkqjTCRtIRGlhuwIbUQQtujN+362xGO92bKeqlik6+jUM2iDIkqiKSQDho8igtcdBvvjckqSX4bq1uuk3thCrqyKKqkqq2ZRR00YYTs8LMg1MNl09iQvXvhwyeiSjpzwahp4pNLRkqoAXSAANIG1h3xW5m48tUdKqWvWa1NTRSR7czSaT3v8A4++AGb0kxmM9RLJTzyS6Y4YatxGyAG7bJ8R1m/kqvjY5W+9vaV9haiFPpGrjhy5N97W2tb74C5tBmMiKtdwGVwxb2bijogvuOnRremKJSsGxSzw5foZiBJNr4hqZDZuXkLaNl+n+7WWqjFTI9DVSzxKLAzTOFBKi22jqBo/c3jHStkqZ6+Q0alVkayiWGo6k7kkGw5yD/SMUq2rDUxUki6uAxQFUqLFNiOYHc7p+jflgFZqrcozOuo6ujaFDDUoEaQ1FmADbgbbXAF/r6YZctWZKCBKmOOOVUCskZuotttgJktBW0bvLRvAYZlNxO8rOCGPk9N2+3jBug9t0Se8DTl9Z0cAMBo2te/frgHbOUsOYnMBJHVwrR8t4TDzdDfmv3Ont2wLXIjSIgCxS08GoxxRxEPuTcA362NvH5dmLFJVZ1sjlDfqADgBOhCOUzamk92Slg7MCKW3Nz3b497kk/wB31xqOW65A8GWtTKulVR6Msyta2q4Y7br+0nDYIaofzl9vmiH67Yghqhe9WCLbfwhe/nCa6G5X7AdF+F2oZIJqWSmSeGwDiNthYAgXY25QR637YM5bFmESv7xqopybaeHFo07b9998bAbWBIvj3DJBooHhSJVYyaJS4PQ23O+++5t64s8VbLLTuJWjRWJkW45haw2t64IYmE0OxIqc7zWjzGhgqKeUitrnp53hjkKxRqpAcXFl52Xm6ELglRVdcGy2kJWDco8d9bOgiBDXIuNzv9e5wy48sL3sL9L4nF9lZ+TbQEoVzOq9nnzanFNOs0i8Onl1qI7GxJsPA+x2vYbaPLY4ZOK2syAGMEtcFdVxtjfiYpIJTtutj//Z",
+    "sourceUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAE0ALgMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAFBgACBAMBB//EADMQAAIBAgQFAQYEBwAAAAAAAAECAwQRAAUSIRMiMUFRgRQVMkJhoQZxkZIjRHKCweHw/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAECA//EACARAAICAQQDAQAAAAAAAAAAAAABAhESAyFBUSIxgRP/2gAMAwEAAhEDEQA/APuGJiYmACYmMGc5xRZLSe018uhCdKgC7OfAGM2RfibLM9d46KRxMg1GKVdLW8jyPyxOUbq9zVaOo4foovHvgMYmJiYoyM9TW09MdMs0SvtytIAbHvufAJ9DgePxBTF1Tk1N8IE8dzvbpfzYeoxbM8nauqeOKtoxpC8PhIw21dyL/N/2+E+GSSKcBhEalGuYmlp9aOGS6ghD81lO/e/jCaGmlwMeaSZdWT6sxpaeXgKQFqCjaL7nYnY20/rjNQxZHSVQqaWjhgqA3xRyRqbW3FgdhYHa3Y4FM7VDyVUhR9TbrxYWBU2Gq+npYIbX+a3bHaGWnWnlkqjTCRtIRGlhuwIbUQQtujN+362xGO92bKeqlik6+jUM2iDIkqiKSQDho8igtcdBvvjckqSX4bq1uuk3thCrqyKKqkqq2ZRR00YYTs8LMg1MNl09iQvXvhwyeiSjpzwahp4pNLRkqoAXSAANIG1h3xW5m48tUdKqWvWa1NTRSR7czSaT3v8A4++AGb0kxmM9RLJTzyS6Y4YatxGyAG7bJ8R1m/kqvjY5W+9vaV9haiFPpGrjhy5N97W2tb74C5tBmMiKtdwGVwxb2bijogvuOnRremKJSsGxSzw5foZiBJNr4hqZDZuXkLaNl+n+7WWqjFTI9DVSzxKLAzTOFBKi22jqBo/c3jHStkqZ6+Q0alVkayiWGo6k7kkGw5yD/SMUq2rDUxUki6uAxQFUqLFNiOYHc7p+jflgFZqrcozOuo6ujaFDDUoEaQ1FmADbgbbXAF/r6YZctWZKCBKmOOOVUCskZuotttgJktBW0bvLRvAYZlNxO8rOCGPk9N2+3jBug9t0Se8DTl9Z0cAMBo2te/frgHbOUsOYnMBJHVwrR8t4TDzdDfmv3Ont2wLXIjSIgCxS08GoxxRxEPuTcA362NvH5dmLFJVZ1sjlDfqADgBOhCOUzamk92Slg7MCKW3Nz3b497kk/wB31xqOW65A8GWtTKulVR6Msyta2q4Y7br+0nDYIaofzl9vmiH67Yghqhe9WCLbfwhe/nCa6G5X7AdF+F2oZIJqWSmSeGwDiNthYAgXY25QR637YM5bFmESv7xqopybaeHFo07b9998bAbWBIvj3DJBooHhSJVYyaJS4PQ23O+++5t64s8VbLLTuJWjRWJkW45haw2t64IYmE0OxIqc7zWjzGhgqKeUitrnp53hjkKxRqpAcXFl52Xm6ELglRVdcGy2kJWDco8d9bOgiBDXIuNzv9e5wy48sL3sL9L4nF9lZ+TbQEoVzOq9nnzanFNOs0i8Onl1qI7GxJsPA+x2vYbaPLY4ZOK2syAGMEtcFdVxtjfiYpIJTtutj//Z",
+    "id": 1764904043251.2158
+  },
+  {
+    "title": "屏東捐血站 捐血活動 12/6-7",
+    "date": "2025-12-06",
+    "time": "09:00-17:00",
+    "location": "岡山捐血室 (岡山區壽華路56號)",
+    "city": "高雄市",
+    "district": "岡山區",
+    "organizer": "屏東捐血站",
+    "gift": {
+      "name": "全聯提貨券",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrEKKrri3705A9K-ghoWFOn2R_gMu_CeBLSw&s"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "高雄市"
+    ],
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrEKKrri3705A9K-ghoWFOn2R_gMu_CeBLSw&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrEKKrri3705A9K-ghoWFOn2R_gMu_CeBLSw&s",
+    "id": 1764904065072.0107
+  },
+  {
+    "title": "愛在屏東 熱血獻愛心 捐血一袋 你與我同在",
+    "date": "2026-01-10",
+    "time": "08:00-17:00",
+    "location": "屏東捐血站 (屏東市忠孝路295號)",
+    "city": "屏東縣",
+    "district": "屏東市",
+    "organizer": "屏東捐血站",
+    "gift": {
+      "name": "250C.C. 贈白米1包, 500C.C. 贈白米加倍贈 另有神祕小禮物隨機贈送 數量有限, 送完為止",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFUdIwizEjxomohasany5UJsGxxlCvTzdgZQ&s"
+    },
+    "tags": [
+      "AI辨識",
+      "自動更新",
+      "屏東縣"
+    ],
+    "posterUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFUdIwizEjxomohasany5UJsGxxlCvTzdgZQ&s",
+    "sourceUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFUdIwizEjxomohasany5UJsGxxlCvTzdgZQ&s",
+    "id": 1764904070666.4688
   },
   {
     "title": "聖誕老公公募集愛心！聖誕快樂捐血活動",
@@ -357,67 +1848,47 @@
     "id": 1764817675049.7888
   },
   {
-    "title": "聖誕響叮噹 捐血送溫馨",
-    "date": "2025-12-25",
-    "time": "09:00-17:00",
-    "location": "捐血站前廣場",
-    "city": "台東縣",
+    "title": "台東捐血活動 (12/6)",
+    "date": "2025-12-06",
+    "time": "08:00-16:00",
+    "location": "台東市四維路三段198號",
+    "city": "台東市",
     "district": null,
     "organizer": "台東捐血站",
     "gift": {
-      "name": "精美聖誕禮一份",
-      "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ALgMBIgACEQEDEQH/xAAbAAACAgMBAAAAAAAAAAAAAAADBQECAAQGB//EADAQAAICAQMBBgMIAwAAAAAAAAECAxEEABIhMQUTFCJBYQYyoVFxcoGRk7HhFSNi/8QAFwEBAQEBAAAAAAAAAAAAAAAAAgEDAP/EABsRAAICAwEAAAAAAAAAAAAAAAECAAMRITES/9oADAMBAAIRAxEAPwD0mSIuwO8rQrpqDisACXamHHl6/XRtClyZ0dUWFpI1XcCtXd9BfH19fXTIEKs3BD92w8pV79150OSB5V8hcbTZpdCGfkNsc4eSGPUHZa/fTawZ06g1iZHmBJ4j+2q+bXGEaORJ8NJW7vW2/h/vREUqoW7r11WDIkmjIeCSEAihJts2PYn7tXvU0IsltTGYKpY3QF8DXORQQZnin8X2j3cpBaNkkUpdt5b6cPXHQqPUafylqG0eulXafbsOLNLitHkd6F+dAtCxwRZF6jOBHTSznQzDPBJJM8i5+ciklhGqjaBxwPL/AMn9T7azuJWkLf5DNUMdwXu1oC7r5dIl7dgfMIyMSUbaKAsGLL+Z554s3VaLnfEOFj4onhwENsV2y0pJFdKu+v01kbJtbWKazY4wBHUCuMmNjlZTiq2Og2k88njW8TpJ8N9rJ20k8/g0geJgLDbibH20NO9T1mGtq7FDpwyb0j7ezJ8XIhGKv+yRaDEkKKvrWnYNaBJDJJu3SqQTa3EDt1cx+Rycrk+ChlWbtCZUkaHbKjheabrdWOT6Eemt3Kjgn7Ow+8RZAe8CtMC5rdz781p0cRuKkT9hdXMU/RcnaAKAES6LAN2A15UiLPhmKCGKeOCONKZSQvXoevvp1oarKJdxmtLPk2D+dE6nXAYirTwoWf/Z"
+      "name": null,
+      "image": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592875608_1365341908718334_5352111198400447975_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&_nc_cat=100&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=kZnmiIPzahgQ7kNvwEtv2n5&_nc_oc=AdlqUYpSqN3lKDRIFxRzZFqdoLKfPj9o7wOJsCjwqtiPrV06_lE_TjxnWjWqrpCap-c&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=PQSzjY52sNMf7NbISTbXDQ&oh=00_AfmVyn4C71HH8DIvmKsca2wUJ2DMe6SO_fv4xs7lTAWn2Q&oe=693827DF"
     },
     "tags": [
       "AI辨識",
       "自動更新",
+      "台東市",
       "台東縣"
     ],
-    "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ALgMBIgACEQEDEQH/xAAbAAACAgMBAAAAAAAAAAAAAAADBQECAAQGB//EADAQAAICAQMBBgMIAwAAAAAAAAECAxEEABIhMQUTFCJBYQYyoVFxcoGRk7HhFSNi/8QAFwEBAQEBAAAAAAAAAAAAAAAAAgEDAP/EABsRAAICAwEAAAAAAAAAAAAAAAECAAMRITES/9oADAMBAAIRAxEAPwD0mSIuwO8rQrpqDisACXamHHl6/XRtClyZ0dUWFpI1XcCtXd9BfH19fXTIEKs3BD92w8pV79150OSB5V8hcbTZpdCGfkNsc4eSGPUHZa/fTawZ06g1iZHmBJ4j+2q+bXGEaORJ8NJW7vW2/h/vREUqoW7r11WDIkmjIeCSEAihJts2PYn7tXvU0IsltTGYKpY3QF8DXORQQZnin8X2j3cpBaNkkUpdt5b6cPXHQqPUafylqG0eulXafbsOLNLitHkd6F+dAtCxwRZF6jOBHTSznQzDPBJJM8i5+ciklhGqjaBxwPL/AMn9T7azuJWkLf5DNUMdwXu1oC7r5dIl7dgfMIyMSUbaKAsGLL+Z554s3VaLnfEOFj4onhwENsV2y0pJFdKu+v01kbJtbWKazY4wBHUCuMmNjlZTiq2Og2k88njW8TpJ8N9rJ20k8/g0geJgLDbibH20NO9T1mGtq7FDpwyb0j7ezJ8XIhGKv+yRaDEkKKvrWnYNaBJDJJu3SqQTa3EDt1cx+Rycrk+ChlWbtCZUkaHbKjheabrdWOT6Eemt3Kjgn7Ow+8RZAe8CtMC5rdz781p0cRuKkT9hdXMU/RcnaAKAES6LAN2A15UiLPhmKCGKeOCONKZSQvXoevvp1oarKJdxmtLPk2D+dE6nXAYirTwoWf/Z",
-    "sourceUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ALgMBIgACEQEDEQH/xAAbAAACAgMBAAAAAAAAAAAAAAADBQECAAQGB//EADAQAAICAQMBBgMIAwAAAAAAAAECAxEEABIhMQUTFCJBYQYyoVFxcoGRk7HhFSNi/8QAFwEBAQEBAAAAAAAAAAAAAAAAAgEDAP/EABsRAAICAwEAAAAAAAAAAAAAAAECAAMRITES/9oADAMBAAIRAxEAPwD0mSIuwO8rQrpqDisACXamHHl6/XRtClyZ0dUWFpI1XcCtXd9BfH19fXTIEKs3BD92w8pV79150OSB5V8hcbTZpdCGfkNsc4eSGPUHZa/fTawZ06g1iZHmBJ4j+2q+bXGEaORJ8NJW7vW2/h/vREUqoW7r11WDIkmjIeCSEAihJts2PYn7tXvU0IsltTGYKpY3QF8DXORQQZnin8X2j3cpBaNkkUpdt5b6cPXHQqPUafylqG0eulXafbsOLNLitHkd6F+dAtCxwRZF6jOBHTSznQzDPBJJM8i5+ciklhGqjaBxwPL/AMn9T7azuJWkLf5DNUMdwXu1oC7r5dIl7dgfMIyMSUbaKAsGLL+Z554s3VaLnfEOFj4onhwENsV2y0pJFdKu+v01kbJtbWKazY4wBHUCuMmNjlZTiq2Og2k88njW8TpJ8N9rJ20k8/g0geJgLDbibH20NO9T1mGtq7FDpwyb0j7ezJ8XIhGKv+yRaDEkKKvrWnYNaBJDJJu3SqQTa3EDt1cx+Rycrk+ChlWbtCZUkaHbKjheabrdWOT6Eemt3Kjgn7Ow+8RZAe8CtMC5rdz781p0cRuKkT9hdXMU/RcnaAKAES6LAN2A15UiLPhmKCGKeOCONKZSQvXoevvp1oarKJdxmtLPk2D+dE6nXAYirTwoWf/Z",
-    "id": 1764817680453.2131
+    "posterUrl": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592875608_1365341908718334_5352111198400447975_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&_nc_cat=100&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=kZnmiIPzahgQ7kNvwEtv2n5&_nc_oc=AdlqUYpSqN3lKDRIFxRzZFqdoLKfPj9o7wOJsCjwqtiPrV06_lE_TjxnWjWqrpCap-c&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=PQSzjY52sNMf7NbISTbXDQ&oh=00_AfmVyn4C71HH8DIvmKsca2wUJ2DMe6SO_fv4xs7lTAWn2Q&oe=693827DF",
+    "sourceUrl": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592875608_1365341908718334_5352111198400447975_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&_nc_cat=100&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=kZnmiIPzahgQ7kNvwEtv2n5&_nc_oc=AdlqUYpSqN3lKDRIFxRzZFqdoLKfPj9o7wOJsCjwqtiPrV06_lE_TjxnWjWqrpCap-c&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=PQSzjY52sNMf7NbISTbXDQ&oh=00_AfmVyn4C71HH8DIvmKsca2wUJ2DMe6SO_fv4xs7lTAWn2Q&oe=693827DF",
+    "id": 1764904171517.3215
   },
   {
-    "title": "關山捐血站 捐血一袋 救人一命",
-    "date": "2025-12-25",
-    "time": null,
-    "location": "關山捐血站",
+    "title": "台東捐血活動",
+    "date": "2025-12-06",
+    "time": "08:00-16:00",
+    "location": "台東市四維路三段198號",
     "city": "台東縣",
     "district": null,
     "organizer": "台東捐血站",
     "gift": {
       "name": null,
-      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAABI1BMVEX+2WbtbW7/22fubW7/3mfvam/+2GP/4GfvbG/kYGv42WPRVmL/44PixFv/2mPhXmrsZmfOilrPh1v/3G3uZTbozF3cvlnNglu2uamLjoTNslOfikHsy197bDPIrFH224OtsKObn5PgVCv415zLaV3wd3nxf4H2ysrm15rUw4P/77Dy4aL/9rbz241DRkTNzrjd38ZydGxUWVfVyJVgZGD/7IyslEKTgDuHdjf3sGrzscC7oUthVSjyp7L0pnP1pWZHPR3yjWn3zNr8zmz3tor3uVh7gn+ypnj1rlTnSim/vJ/W07Tx7sztfj63US3UWS/umUnjaTPYcjLxwojegULorHDefFDMPhzflVXYZznCJhLXaGTNdlz539/0sbH8+vrynZ6WQYdOAAADT0lEQVRIiZWWC1vaMBSGYxoaLxRRoZa2dKWK6HQDtllwddONgVxULoLg3f//K3aSFChQHx+/tjlpeXuer2lyClr6kNCHcUlih6+l8MiCwKXI+sr6+goI4sp0F6ci8CuRiAR4ZDupJhUmkzXTrujxE95V1TWJ4RQHhBZ7487qGsu+SRBXLBaT+QGtjBbl4xsCj+0ffD48Ojw4PDzaP/gSxlNuxs9OUl/zWiFTzBcz9rfvsdDs0jQ7Sf3QMpqWslOpfDEMRwLfFrh8fBw9jkaPuaIEEYJhX8T97EhmIobueoZrGabh6oanB3jfzDYNpoCcLOvb2cePyoaWcfwORGRxGYadH9Am16fjTgxVN0tlPW2aabOkkJOfJxQLeJxdWZlmJ2XVMjwDWM9zTz168uv3GS6VXaOsuoZhWHATWVuePCoxLMtSz3XLVM6ttI4J/fP3TEEweYhiqkq4d8pmCCWUeaj8E5MFjc0HB1JeUCzmux6HQPat6KLGQ1vF869J/lTTMgVNyxfyxYJds+2MXbvwTdYbfv4g3gS1mJqXLd5tinmDK07iigbwRyrMwExZNINRIpFw6mR2ZMCMbdsam8GZolYEL1rtgmfvAp5oVMkcLpy0LpstsV0yMxhzGvIz+yEjEwsI1s9Vwse7ZPZRU1pKqxW0aHDVkbqTuAa47XD782aarfzWzGQGlOHXbcdpk+DikycGAuuh2mCpr+EOx2lU/ErgL75FkY7jJNizdruOM6yTmUoQjjv9Xrfb6zWcYYesvovf3Yz6vV5/MBhO8I23cFxv3O7c9Hd2Rgyvk5nCEYKjYeOW4yPwPrc8Qt20B4DfjEZ34OVdHJH+DccHtz0aeKtYFBXCKwdr2Hpjk5zU23e/B3fDOpu1Y+/Y8tIWq1q67uquqpegSOieyXjaGVaq9x1GT94qVhUoAKaimrDmobEwNkG8xjhDSu87BE3q+ybBnlrST1XDtFy1pKatssWrJLdflTGqoGAloJSuJsWWHHdWYafzYrj0sLv7yHZouB79Y6qHBxGXJPZdXZ4ouwfK7i1noQNnEfgtuzT9WZr9asdzT0+5p+eX11wu9/Icf8m9QHyNv/WRjz8/59j2moPOXpadQZTe/E8QD0iS/BgE/gNy44qdCFhJpAAAAABJRU5ErkJggg=="
+      "image": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592875608_1365341908718334_5352111198400447975_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&_nc_cat=100&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=kZnmiIPzahgQ7kNvwEtv2n5&_nc_oc=AdlqUYpSqN3lKDRIFxRzZFqdoLKfPj9o7wOJsCjwqtiPrV06_lE_TjxnWjWqrpCap-c&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=vBOfv5NCO9mEDk88hNKUTQ&oh=00_AfnnJvB6QaaOWOkZ6GiKKSRPnEYooUIcH865HpDXe60J7g&oe=693827DF"
     },
     "tags": [
       "AI辨識",
       "自動更新",
       "台東縣"
     ],
-    "posterUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAABI1BMVEX+2WbtbW7/22fubW7/3mfvam/+2GP/4GfvbG/kYGv42WPRVmL/44PixFv/2mPhXmrsZmfOilrPh1v/3G3uZTbozF3cvlnNglu2uamLjoTNslOfikHsy197bDPIrFH224OtsKObn5PgVCv415zLaV3wd3nxf4H2ysrm15rUw4P/77Dy4aL/9rbz241DRkTNzrjd38ZydGxUWVfVyJVgZGD/7IyslEKTgDuHdjf3sGrzscC7oUthVSjyp7L0pnP1pWZHPR3yjWn3zNr8zmz3tor3uVh7gn+ypnj1rlTnSim/vJ/W07Tx7sztfj63US3UWS/umUnjaTPYcjLxwojegULorHDefFDMPhzflVXYZznCJhLXaGTNdlz539/0sbH8+vrynZ6WQYdOAAADT0lEQVRIiZWWC1vaMBSGYxoaLxRRoZa2dKWK6HQDtllwddONgVxULoLg3f//K3aSFChQHx+/tjlpeXuer2lyClr6kNCHcUlih6+l8MiCwKXI+sr6+goI4sp0F6ci8CuRiAR4ZDupJhUmkzXTrujxE95V1TWJ4RQHhBZ7487qGsu+SRBXLBaT+QGtjBbl4xsCj+0ffD48Ojw4PDzaP/gSxlNuxs9OUl/zWiFTzBcz9rfvsdDs0jQ7Sf3QMpqWslOpfDEMRwLfFrh8fBw9jkaPuaIEEYJhX8T97EhmIobueoZrGabh6oanB3jfzDYNpoCcLOvb2cePyoaWcfwORGRxGYadH9Am16fjTgxVN0tlPW2aabOkkJOfJxQLeJxdWZlmJ2XVMjwDWM9zTz168uv3GS6VXaOsuoZhWHATWVuePCoxLMtSz3XLVM6ttI4J/fP3TEEweYhiqkq4d8pmCCWUeaj8E5MFjc0HB1JeUCzmux6HQPat6KLGQ1vF869J/lTTMgVNyxfyxYJds+2MXbvwTdYbfv4g3gS1mJqXLd5tinmDK07iigbwRyrMwExZNINRIpFw6mR2ZMCMbdsam8GZolYEL1rtgmfvAp5oVMkcLpy0LpstsV0yMxhzGvIz+yEjEwsI1s9Vwse7ZPZRU1pKqxW0aHDVkbqTuAa47XD782aarfzWzGQGlOHXbcdpk+DikycGAuuh2mCpr+EOx2lU/ErgL75FkY7jJNizdruOM6yTmUoQjjv9Xrfb6zWcYYesvovf3Yz6vV5/MBhO8I23cFxv3O7c9Hd2Rgyvk5nCEYKjYeOW4yPwPrc8Qt20B4DfjEZ34OVdHJH+DccHtz0aeKtYFBXCKwdr2Hpjk5zU23e/B3fDOpu1Y+/Y8tIWq1q67uquqpegSOieyXjaGVaq9x1GT94qVhUoAKaimrDmobEwNkG8xjhDSu87BE3q+ybBnlrST1XDtFy1pKatssWrJLdflTGqoGAloJSuJsWWHHdWYafzYrj0sLv7yHZouB79Y6qHBxGXJPZdXZ4ouwfK7i1noQNnEfgtuzT9WZr9asdzT0+5p+eX11wu9/Icf8m9QHyNv/WRjz8/59j2moPOXpadQZTe/E8QD0iS/BgE/gNy44qdCFhJpAAAAABJRU5ErkJggg==",
-    "sourceUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAABI1BMVEX+2WbtbW7/22fubW7/3mfvam/+2GP/4GfvbG/kYGv42WPRVmL/44PixFv/2mPhXmrsZmfOilrPh1v/3G3uZTbozF3cvlnNglu2uamLjoTNslOfikHsy197bDPIrFH224OtsKObn5PgVCv415zLaV3wd3nxf4H2ysrm15rUw4P/77Dy4aL/9rbz241DRkTNzrjd38ZydGxUWVfVyJVgZGD/7IyslEKTgDuHdjf3sGrzscC7oUthVSjyp7L0pnP1pWZHPR3yjWn3zNr8zmz3tor3uVh7gn+ypnj1rlTnSim/vJ/W07Tx7sztfj63US3UWS/umUnjaTPYcjLxwojegULorHDefFDMPhzflVXYZznCJhLXaGTNdlz539/0sbH8+vrynZ6WQYdOAAADT0lEQVRIiZWWC1vaMBSGYxoaLxRRoZa2dKWK6HQDtllwddONgVxULoLg3f//K3aSFChQHx+/tjlpeXuer2lyClr6kNCHcUlih6+l8MiCwKXI+sr6+goI4sp0F6ci8CuRiAR4ZDupJhUmkzXTrujxE95V1TWJ4RQHhBZ7487qGsu+SRBXLBaT+QGtjBbl4xsCj+0ffD48Ojw4PDzaP/gSxlNuxs9OUl/zWiFTzBcz9rfvsdDs0jQ7Sf3QMpqWslOpfDEMRwLfFrh8fBw9jkaPuaIEEYJhX8T97EhmIobueoZrGabh6oanB3jfzDYNpoCcLOvb2cePyoaWcfwORGRxGYadH9Am16fjTgxVN0tlPW2aabOkkJOfJxQLeJxdWZlmJ2XVMjwDWM9zTz168uv3GS6VXaOsuoZhWHATWVuePCoxLMtSz3XLVM6ttI4J/fP3TEEweYhiqkq4d8pmCCWUeaj8E5MFjc0HB1JeUCzmux6HQPat6KLGQ1vF869J/lTTMgVNyxfyxYJds+2MXbvwTdYbfv4g3gS1mJqXLd5tinmDK07iigbwRyrMwExZNINRIpFw6mR2ZMCMbdsam8GZolYEL1rtgmfvAp5oVMkcLpy0LpstsV0yMxhzGvIz+yEjEwsI1s9Vwse7ZPZRU1pKqxW0aHDVkbqTuAa47XD782aarfzWzGQGlOHXbcdpk+DikycGAuuh2mCpr+EOx2lU/ErgL75FkY7jJNizdruOM6yTmUoQjjv9Xrfb6zWcYYesvovf3Yz6vV5/MBhO8I23cFxv3O7c9Hd2Rgyvk5nCEYKjYeOW4yPwPrc8Qt20B4DfjEZ34OVdHJH+DccHtz0aeKtYFBXCKwdr2Hpjk5zU23e/B3fDOpu1Y+/Y8tIWq1q67uquqpegSOieyXjaGVaq9x1GT94qVhUoAKaimrDmobEwNkG8xjhDSu87BE3q+ybBnlrST1XDtFy1pKatssWrJLdflTGqoGAloJSuJsWWHHdWYafzYrj0sLv7yHZouB79Y6qHBxGXJPZdXZ4ouwfK7i1noQNnEfgtuzT9WZr9asdzT0+5p+eX11wu9/Icf8m9QHyNv/WRjz8/59j2moPOXpadQZTe/E8QD0iS/BgE/gNy44qdCFhJpAAAAABJRU5ErkJggg==",
-    "id": 1764817685671.5146
-  },
-  {
-    "title": "捐血送好禮",
-    "date": "2025-12-25",
-    "time": "09:00-17:00",
-    "location": "台東捐血站",
-    "city": "台東縣",
-    "district": null,
-    "organizer": "台東捐血站",
-    "gift": {
-      "name": "實用生活小物",
-      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAPFBMVEVHcEwAUf////8ASv8Haf8IZv8Iaf8IZ/8IZ/8HZ/8HZv8AXv////8AVf+Vrv8ARv92mf/a4f+5yP8nbv/DICIdAAAACnRSTlMA2dmTHvwf2KKTxrkP/wAAAH5JREFUGJVFj9EWwyAIQ92qRQSs7f7/X0eotfHFXDgBUnJlplKIc5qqbarenvAX89do1a2r6inoyVGHB2g5cYDT7RgO+E4wr5u495SChsPBYQAFQC4NXQJAL0AGIVQGhvT+awjdVwYifGwsFlPW8vQCeo6boD7n5u2r+uEd/z+1twjmS1jXagAAAABJRU5ErkJggg=="
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "台東縣"
-    ],
-    "posterUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAPFBMVEVHcEwAUf////8ASv8Haf8IZv8Iaf8IZ/8IZ/8HZ/8HZv8AXv////8AVf+Vrv8ARv92mf/a4f+5yP8nbv/DICIdAAAACnRSTlMA2dmTHvwf2KKTxrkP/wAAAH5JREFUGJVFj9EWwyAIQ92qRQSs7f7/X0eotfHFXDgBUnJlplKIc5qqbarenvAX89do1a2r6inoyVGHB2g5cYDT7RgO+E4wr5u495SChsPBYQAFQC4NXQJAL0AGIVQGhvT+awjdVwYifGwsFlPW8vQCeo6boD7n5u2r+uEd/z+1twjmS1jXagAAAABJRU5ErkJggg==",
-    "sourceUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAPFBMVEVHcEwAUf////8ASv8Haf8IZv8Iaf8IZ/8IZ/8HZ/8HZv8AXv////8AVf+Vrv8ARv92mf/a4f+5yP8nbv/DICIdAAAACnRSTlMA2dmTHvwf2KKTxrkP/wAAAH5JREFUGJVFj9EWwyAIQ92qRQSs7f7/X0eotfHFXDgBUnJlplKIc5qqbarenvAX89do1a2r6inoyVGHB2g5cYDT7RgO+E4wr5u495SChsPBYQAFQC4NXQJAL0AGIVQGhvT+awjdVwYifGwsFlPW8vQCeo6boD7n5u2r+uEd/z+1twjmS1jXagAAAABJRU5ErkJggg==",
-    "id": 1764817691011.5771
+    "posterUrl": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592875608_1365341908718334_5352111198400447975_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&_nc_cat=100&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=kZnmiIPzahgQ7kNvwEtv2n5&_nc_oc=AdlqUYpSqN3lKDRIFxRzZFqdoLKfPj9o7wOJsCjwqtiPrV06_lE_TjxnWjWqrpCap-c&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=vBOfv5NCO9mEDk88hNKUTQ&oh=00_AfnnJvB6QaaOWOkZ6GiKKSRPnEYooUIcH865HpDXe60J7g&oe=693827DF",
+    "sourceUrl": "https://scontent-lhr6-2.cdninstagram.com/v/t39.30808-6/592875608_1365341908718334_5352111198400447975_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&_nc_cat=100&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=kZnmiIPzahgQ7kNvwEtv2n5&_nc_oc=AdlqUYpSqN3lKDRIFxRzZFqdoLKfPj9o7wOJsCjwqtiPrV06_lE_TjxnWjWqrpCap-c&_nc_zt=23&_nc_ht=scontent-lhr6-2.cdninstagram.com&_nc_gid=vBOfv5NCO9mEDk88hNKUTQ&oh=00_AfnnJvB6QaaOWOkZ6GiKKSRPnEYooUIcH865HpDXe60J7g&oe=693827DF",
+    "id": 1764904177136.5632
   },
   {
     "title": "台中市捐血活動-熱血公益\"",
@@ -439,47 +1910,5 @@
     "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIADkALgMBIgACEQEDEQH/xAAaAAACAwEBAAAAAAAAAAAAAAADBAUGBwEC/8QANxAAAgECBQEEBwUJAAAAAAAAAQIDBBEABRIhMUETUXGRBgcUMmGBwSIjNEKxFTZyc3TR4fDx/8QAGAEBAQEBAQAAAAAAAAAAAAAAAwQFAgH/xAAiEQACAgICAQUBAAAAAAAAAAABAgADESESMQQiUXGh8BP/2gAMAwEAAhEDEQA/ANkl7Ts27LT2lvs6+L/HAamshpmVZiQWVmFh0Auf0wxhKqHa1SIs00dlZSEGxLDY+IwMZQCdwH7Rp9Jb2yUAIH3j6E2HT4jBEr4EmCvUyMe07LSU2LeWPT0ErAha2YXQKOtiLb89cCqKump6kQVGYFZS4bTp6MSFBNtt9v8AO+PNxcK2l/fUepahKmFZotWhuNS2PljtPG8UQSSZpWH52ABPljzSQtTwLE0zykE/bfk73wSONYkCRiyjgY9hHGTiQM2aJQwmsr5YlhpwWMs1rIOCb9MJ5Dm2V+k+ZHNMnzXtI4bCanCspBAIFwbbdQbYg/WlTQx+ipGYyNHSNUw9sychdWAegmWZXlzTS5RAVYR6PaNW8g5v8b+J4+OI6WZK8tmVNt/R7TT8RVSszTLK1DHJOj2j+8ABUE2J38CNjYnB0zFVQ9sjagPyjnAqjNqVJPcUyDgyMq9fPv8ALD/2QjOYSVuDoR3eSkU1IMTMo1hXtpPcCMLzVrMB7Pwd9RHPywo0zVEmqRrpyq9Bx54ICLYF7+Wl1O1qxtpWPTHI6r0ty0ZYKxKaETI0zvHr1AXOkC43vY4l8nyGLLVkK7X2uFttYYisiziSnbMGzZ1hh7ZXikcab3uD4AWHni0S1sOhidRi0318rb64rRAi8YeQx5RZ1s6r7wtz04xBZwMtFa/tOrtdC6gqtxvbjDdBV1jVVQZYYzBcCGQyXJS3Fre8Lb79+CVTLLKA8V9hwoP0xDcFrf5lniue4mmaUkUKpG57NFVR923dt17sSkEpkgjkU/ZdQym1rg8YRMaHmJ+BvoH9sP04AQc26XGJyQeo1nHGpQvW9nTZNR5e1AqCeonJY9CqWO48SMUlvWRWJCTTQ6J3WxJkYqnguJb14/icl/gm/VMZfjT8cB6gzTLuYo5VZv8A6tquTMPRaOsnkLyzTys9ydjqPx+fzxb44YSUm1BZVBG4uOe7wv54ofqe/cxf6qX6YvP5cZ9lhrvY9y2tc1iGQSW/FR3/AJS/7/3HZnRpBot7u9u+5wseMdTk45fyC444nQrwc5n/2Q==",
     "sourceUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIADkALgMBIgACEQEDEQH/xAAaAAACAwEBAAAAAAAAAAAAAAADBAUGBwEC/8QANxAAAgECBQEEBwUJAAAAAAAAAQIDBBEABRIhMUETUXGRBgcUMmGBwSIjNEKxFTZyc3TR4fDx/8QAGAEBAQEBAQAAAAAAAAAAAAAAAwQFAgH/xAAiEQACAgICAQUBAAAAAAAAAAABAgADESESMQQiUXGh8BP/2gAMAwEAAhEDEQA/ANkl7Ts27LT2lvs6+L/HAamshpmVZiQWVmFh0Auf0wxhKqHa1SIs00dlZSEGxLDY+IwMZQCdwH7Rp9Jb2yUAIH3j6E2HT4jBEr4EmCvUyMe07LSU2LeWPT0ErAha2YXQKOtiLb89cCqKump6kQVGYFZS4bTp6MSFBNtt9v8AO+PNxcK2l/fUepahKmFZotWhuNS2PljtPG8UQSSZpWH52ABPljzSQtTwLE0zykE/bfk73wSONYkCRiyjgY9hHGTiQM2aJQwmsr5YlhpwWMs1rIOCb9MJ5Dm2V+k+ZHNMnzXtI4bCanCspBAIFwbbdQbYg/WlTQx+ipGYyNHSNUw9sychdWAegmWZXlzTS5RAVYR6PaNW8g5v8b+J4+OI6WZK8tmVNt/R7TT8RVSszTLK1DHJOj2j+8ABUE2J38CNjYnB0zFVQ9sjagPyjnAqjNqVJPcUyDgyMq9fPv8ALD/2QjOYSVuDoR3eSkU1IMTMo1hXtpPcCMLzVrMB7Pwd9RHPywo0zVEmqRrpyq9Bx54ICLYF7+Wl1O1qxtpWPTHI6r0ty0ZYKxKaETI0zvHr1AXOkC43vY4l8nyGLLVkK7X2uFttYYisiziSnbMGzZ1hh7ZXikcab3uD4AWHni0S1sOhidRi0318rb64rRAi8YeQx5RZ1s6r7wtz04xBZwMtFa/tOrtdC6gqtxvbjDdBV1jVVQZYYzBcCGQyXJS3Fre8Lb79+CVTLLKA8V9hwoP0xDcFrf5lniue4mmaUkUKpG57NFVR923dt17sSkEpkgjkU/ZdQym1rg8YRMaHmJ+BvoH9sP04AQc26XGJyQeo1nHGpQvW9nTZNR5e1AqCeonJY9CqWO48SMUlvWRWJCTTQ6J3WxJkYqnguJb14/icl/gm/VMZfjT8cB6gzTLuYo5VZv8A6tquTMPRaOsnkLyzTys9ydjqPx+fzxb44YSUm1BZVBG4uOe7wv54ofqe/cxf6qX6YvP5cZ9lhrvY9y2tc1iGQSW/FR3/AJS/7/3HZnRpBot7u9u+5wseMdTk45fyC444nQrwc5n/2Q==",
     "id": 1764658143400.6086
-  },
-  {
-    "title": "捐血送愛心，溫暖在聖誕 - 善化捐血室",
-    "date": "2025-12-25",
-    "time": "09:00-17:00",
-    "location": "善化捐血室",
-    "city": "台南市",
-    "district": null,
-    "organizer": "台南捐血 (社群)",
-    "gift": {
-      "name": "保溫杯",
-      "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAD0ALgMBIgACEQEDEQH/xAAaAAACAwEBAAAAAAAAAAAAAAAFBgMEBwIB/8QAMhAAAgECBAMHAwIHAAAAAAAAAQIDBBEABRIhBhMxFCIyQVFxgSNhkaHxFUJiorHh8P/EABgBAQADAQAAAAAAAAAAAAAAAAIAAwQB/8QAHxEAAgMAAgIDAAAAAAAAAAAAAQIAAxESMQQhUVKx/9oADAMBAAIRAxEAPwAa0YUEgb4oZXHUVtLHLNmRVj4kShZ7fNrYM1NNLTEpUQvG1ujKRfBvhalVuGUYLIHMZ0tCgZgSeoBxkAzdmx2zPcUZ6CsW3Znmm9eZTmPEQyqudfqRT6h6fuMaPBlk6xQBGqSrRlSZYF1AgHvNvsb9PjEb5XU8pZb1TsGRuUdK323Hi+5/Hntivn76kJH2/ZmbZdLTV8XNFSFdWsJCCLi2LSwlGP8Am2HTjCjC09LLYDRI34I/1hXuPO/4w7FipbRG3jOTVHTjr3XJv8Yt8ASKnD8DSNy0EN2lPRBvv++F7iOvWri2uTFE+ojpgDk7TtlDq0ojCRrzLsbPFdilvnukeqj74tL42wpTzAXcml5XW5tUUVNUzVGXGOeTSoaMxuy7kEdRqIF7W2wYgq6SsjeSGRPpeMXtpuAQfYggjGWU3ENfR5f2SlnZV1X3Cm3sSNsFuE62okfNquoElQgp9cu/eeTWNJufPxdfTCV10CXW+Ay1s5I9dQ3xqivlUUiEMBOLEG4N1bCQUv0BHthsz6u7TltRA1M8IjeOQEsp6mxGx+4PzhWIIFwL4N3cz0aFwyOst2KqNyfosf7Ti7wzltHW5LyE7XKvJWVo442skgG5A2ve9/S+KOaOq0lVpYMnKIFvbDhwdW08eT0qnMaeIiFBZpVHl74la6Zy1yuERZXh8mJpTKd1XlxRXkuxI2JVduvTr74aaKJKKgqcvZzRUj3Vn5a61YjYyE3877jYaRe2Jq+WijJdM3o3iaQSS061KKdV/Gu/X1Hn79SFPmeSUzM38Zy27eI9oS59zfDSrO+5LPLsbPiBs4yyaHJK+onrO0XjQLaMKABIDcW64U9QA+fPDxneb5FJk1VR02Z5d3oiscUdQm58gAD+mM/aRgbgmx8scuXMkpctpM6zrkplFWQDcx2B1ffCpw5l9U4iqY0i0Bw1zNGD1v0LDDZUwpURtBMNUbjvDpf8YpJQUsI0xxFQo6BzghuMTJyMnnh5krO1PDY6Qt5qc2Avfq53uf0xWeip5OXzqdBa2rl1UCg7b9D7f8cSrTwsFuh3/rOPYKamZmBi6W/nOELchaok6TABy+ohmSR2p9KsCbVCHa/vhjuLXFgTv1xw+X0pueWdt7ajj1VCi25A++CzbOonGf/Z"
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "台南市"
-    ],
-    "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAD0ALgMBIgACEQEDEQH/xAAaAAACAwEBAAAAAAAAAAAAAAAFBgMEBwIB/8QAMhAAAgECBAMHAwIHAAAAAAAAAQIDBBEABRIhBhMxFCIyQVFxgSNhkaHxFUJiorHh8P/EABgBAQADAQAAAAAAAAAAAAAAAAIAAwQB/8QAHxEAAgMAAgIDAAAAAAAAAAAAAQIAAxESMQQhUVKx/9oADAMBAAIRAxEAPwAa0YUEgb4oZXHUVtLHLNmRVj4kShZ7fNrYM1NNLTEpUQvG1ujKRfBvhalVuGUYLIHMZ0tCgZgSeoBxkAzdmx2zPcUZ6CsW3Znmm9eZTmPEQyqudfqRT6h6fuMaPBlk6xQBGqSrRlSZYF1AgHvNvsb9PjEb5XU8pZb1TsGRuUdK323Hi+5/Hntivn76kJH2/ZmbZdLTV8XNFSFdWsJCCLi2LSwlGP8Am2HTjCjC09LLYDRI34I/1hXuPO/4w7FipbRG3jOTVHTjr3XJv8Yt8ASKnD8DSNy0EN2lPRBvv++F7iOvWri2uTFE+ojpgDk7TtlDq0ojCRrzLsbPFdilvnukeqj74tL42wpTzAXcml5XW5tUUVNUzVGXGOeTSoaMxuy7kEdRqIF7W2wYgq6SsjeSGRPpeMXtpuAQfYggjGWU3ENfR5f2SlnZV1X3Cm3sSNsFuE62okfNquoElQgp9cu/eeTWNJufPxdfTCV10CXW+Ay1s5I9dQ3xqivlUUiEMBOLEG4N1bCQUv0BHthsz6u7TltRA1M8IjeOQEsp6mxGx+4PzhWIIFwL4N3cz0aFwyOst2KqNyfosf7Ti7wzltHW5LyE7XKvJWVo442skgG5A2ve9/S+KOaOq0lVpYMnKIFvbDhwdW08eT0qnMaeIiFBZpVHl74la6Zy1yuERZXh8mJpTKd1XlxRXkuxI2JVduvTr74aaKJKKgqcvZzRUj3Vn5a61YjYyE3877jYaRe2Jq+WijJdM3o3iaQSS061KKdV/Gu/X1Hn79SFPmeSUzM38Zy27eI9oS59zfDSrO+5LPLsbPiBs4yyaHJK+onrO0XjQLaMKABIDcW64U9QA+fPDxneb5FJk1VR02Z5d3oiscUdQm58gAD+mM/aRgbgmx8scuXMkpctpM6zrkplFWQDcx2B1ffCpw5l9U4iqY0i0Bw1zNGD1v0LDDZUwpURtBMNUbjvDpf8YpJQUsI0xxFQo6BzghuMTJyMnnh5krO1PDY6Qt5qc2Avfq53uf0xWeip5OXzqdBa2rl1UCg7b9D7f8cSrTwsFuh3/rOPYKamZmBi6W/nOELchaok6TABy+ohmSR2p9KsCbVCHa/vhjuLXFgTv1xw+X0pueWdt7ajj1VCi25A++CzbOonGf/Z",
-    "sourceUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAD0ALgMBIgACEQEDEQH/xAAaAAACAwEBAAAAAAAAAAAAAAAFBgMEBwIB/8QAMhAAAgECBAMHAwIHAAAAAAAAAQIDBBEABRIhBhMxFCIyQVFxgSNhkaHxFUJiorHh8P/EABgBAQADAQAAAAAAAAAAAAAAAAIAAwQB/8QAHxEAAgMAAgIDAAAAAAAAAAAAAQIAAxESMQQhUVKx/9oADAMBAAIRAxEAPwAa0YUEgb4oZXHUVtLHLNmRVj4kShZ7fNrYM1NNLTEpUQvG1ujKRfBvhalVuGUYLIHMZ0tCgZgSeoBxkAzdmx2zPcUZ6CsW3Znmm9eZTmPEQyqudfqRT6h6fuMaPBlk6xQBGqSrRlSZYF1AgHvNvsb9PjEb5XU8pZb1TsGRuUdK323Hi+5/Hntivn76kJH2/ZmbZdLTV8XNFSFdWsJCCLi2LSwlGP8Am2HTjCjC09LLYDRI34I/1hXuPO/4w7FipbRG3jOTVHTjr3XJv8Yt8ASKnD8DSNy0EN2lPRBvv++F7iOvWri2uTFE+ojpgDk7TtlDq0ojCRrzLsbPFdilvnukeqj74tL42wpTzAXcml5XW5tUUVNUzVGXGOeTSoaMxuy7kEdRqIF7W2wYgq6SsjeSGRPpeMXtpuAQfYggjGWU3ENfR5f2SlnZV1X3Cm3sSNsFuE62okfNquoElQgp9cu/eeTWNJufPxdfTCV10CXW+Ay1s5I9dQ3xqivlUUiEMBOLEG4N1bCQUv0BHthsz6u7TltRA1M8IjeOQEsp6mxGx+4PzhWIIFwL4N3cz0aFwyOst2KqNyfosf7Ti7wzltHW5LyE7XKvJWVo442skgG5A2ve9/S+KOaOq0lVpYMnKIFvbDhwdW08eT0qnMaeIiFBZpVHl74la6Zy1yuERZXh8mJpTKd1XlxRXkuxI2JVduvTr74aaKJKKgqcvZzRUj3Vn5a61YjYyE3877jYaRe2Jq+WijJdM3o3iaQSS061KKdV/Gu/X1Hn79SFPmeSUzM38Zy27eI9oS59zfDSrO+5LPLsbPiBs4yyaHJK+onrO0XjQLaMKABIDcW64U9QA+fPDxneb5FJk1VR02Z5d3oiscUdQm58gAD+mM/aRgbgmx8scuXMkpctpM6zrkplFWQDcx2B1ffCpw5l9U4iqY0i0Bw1zNGD1v0LDDZUwpURtBMNUbjvDpf8YpJQUsI0xxFQo6BzghuMTJyMnnh5krO1PDY6Qt5qc2Avfq53uf0xWeip5OXzqdBa2rl1UCg7b9D7f8cSrTwsFuh3/rOPYKamZmBi6W/nOELchaok6TABy+ohmSR2p9KsCbVCHa/vhjuLXFgTv1xw+X0pueWdt7ajj1VCi25A++CzbOonGf/Z",
-    "id": 1764668852119.735
-  },
-  {
-    "title": "熱血公益 捐血活動",
-    "date": "2025-12-25",
-    "time": "09:00-17:00",
-    "location": "高雄市三民區大順一路119號 (家樂福寶慶店)",
-    "city": "高雄市",
-    "district": "三民區",
-    "organizer": "高雄捐血 (社群)",
-    "gift": {
-      "name": "知名品牌隨身碟",
-      "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ALgMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAEAwUBBgcCAP/EADMQAAEDAgQEBAUCBwAAAAAAAAECAxEEIQAFEjETQVFhFCIygQYjkaGxcdEVQkRSYqLB/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQMAAgX/xAAkEQABAwMDBAMAAAAAAAAAAAABAAIRAwQhQXHwEiJCkRMxMv/aAAwDAQACEQMRAD8A6bnFZXh5bdCFNqZi6tOlyRvfkJ+ojvjFfUV5fpVNOhtKkJLg1oTBvNjfaD7HD32FpTPGfcPmiyCU2Jt5e0fTBHWVF8rX4lzSFKKnEIg6Tt6Zg/g4Q+j1ky4jZFtQdIAaMIK3814GtNQj1CSXUR/leepH7YGX/iXi1LjdbSqb1ktpLrUJQHSRP6oEH35wcXRQhQWgIUUcVV20oMAJFo08z9xjKGQp5tkNONggyoIbg3PlPlvt/tgUbf4vMncyiXyPyFUVLudPZll7weSlApR4lhiqQlAdhWoJmSbi09OxxsWUPF7L2StK0OBMKQ44FqHQkzzF/fGpsZ8tbBqVMIYU24GSlFQyZMEyfLYk8/TtjcWqbRpKXViEwqyRqNrmB2+5w5ohxyk1DIECAj1bmYcZSGaFDjQ9K/EaCbHlHWBj6o8aE/JpAs2/qSB+Ow+uD1rbBqXivLqp1SoBW2TBsdr4hLbDjEuZVWkBwEI1GZmZ39zi2qMENkHntSRmdQ+FVGX8OxJ0VZifLG0d+XLvjw3S1qqkJVQFLJnz+PXIiIke3f7nEdIWASwjJ69pCypRC5ibW3gT+o2PvGuhoal4MryfMAFJWC5rIEE3BlXPliyUku0VSGi23RLUkJJE1qgSYAj8/Trh2WLq9LqKum4CUq+WeLr1A++KyspqQpheUVz8J/kURIhI/uF/2PvZ5dw5Xw2H2oQkfNBvv1xFNEOpQ45VuHjV7JN9CahsJSINwOn/AEY809Rw23Qp6pUAdSlKqGyUCSTebC8e2HPMVjq1ytot6pRpUpCgLbkG95xhqgJ1F9bkkQNFQvnvzxFYgDMojdWkKSVO1FlCyn2rib89hhqMxaWvQjSpUkAB1F+fXpfEfg6pR1rUgKJuEvORtG2K/wCJ6teRfC1dXkKcdaaFuKo3sLE7YBwER3EBJzvPBlLQWaZThsVp1RpBMAzffAst+MaStqXqUtFqpZuprVqMdbDvjVs9qGRSn+LeIqlJS2mUOFE7qTMbwQb45dnuapqczR/DUvUrS6dD+njKPrAN73MRee3IYybe+fc1iGDt5z6Wm+zp0qMvGV//2Q=="
-    },
-    "tags": [
-      "AI辨識",
-      "自動更新",
-      "高雄市"
-    ],
-    "posterUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ALgMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAEAwUBBgcCAP/EADMQAAEDAgQEBAUCBwAAAAAAAAECAxEEIQAFEjETQVFhFCIygQYjkaGxcdEVQkRSYqLB/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQMAAgX/xAAkEQABAwMDBAMAAAAAAAAAAAABAAIRAwQhQXHwEiJCkRMxMv/aAAwDAQACEQMRAD8A6bnFZXh5bdCFNqZi6tOlyRvfkJ+ojvjFfUV5fpVNOhtKkJLg1oTBvNjfaD7HD32FpTPGfcPmiyCU2Jt5e0fTBHWVF8rX4lzSFKKnEIg6Tt6Zg/g4Q+j1ky4jZFtQdIAaMIK3814GtNQj1CSXUR/leepH7YGX/iXi1LjdbSqb1ktpLrUJQHSRP6oEH35wcXRQhQWgIUUcVV20oMAJFo08z9xjKGQp5tkNONggyoIbg3PlPlvt/tgUbf4vMncyiXyPyFUVLudPZll7weSlApR4lhiqQlAdhWoJmSbi09OxxsWUPF7L2StK0OBMKQ44FqHQkzzF/fGpsZ8tbBqVMIYU24GSlFQyZMEyfLYk8/TtjcWqbRpKXViEwqyRqNrmB2+5w5ohxyk1DIECAj1bmYcZSGaFDjQ9K/EaCbHlHWBj6o8aE/JpAs2/qSB+Ow+uD1rbBqXivLqp1SoBW2TBsdr4hLbDjEuZVWkBwEI1GZmZ39zi2qMENkHntSRmdQ+FVGX8OxJ0VZifLG0d+XLvjw3S1qqkJVQFLJnz+PXIiIke3f7nEdIWASwjJ69pCypRC5ibW3gT+o2PvGuhoal4MryfMAFJWC5rIEE3BlXPliyUku0VSGi23RLUkJJE1qgSYAj8/Trh2WLq9LqKum4CUq+WeLr1A++KyspqQpheUVz8J/kURIhI/uF/2PvZ5dw5Xw2H2oQkfNBvv1xFNEOpQ45VuHjV7JN9CahsJSINwOn/AEY809Rw23Qp6pUAdSlKqGyUCSTebC8e2HPMVjq1ytot6pRpUpCgLbkG95xhqgJ1F9bkkQNFQvnvzxFYgDMojdWkKSVO1FlCyn2rib89hhqMxaWvQjSpUkAB1F+fXpfEfg6pR1rUgKJuEvORtG2K/wCJ6teRfC1dXkKcdaaFuKo3sLE7YBwER3EBJzvPBlLQWaZThsVp1RpBMAzffAst+MaStqXqUtFqpZuprVqMdbDvjVs9qGRSn+LeIqlJS2mUOFE7qTMbwQb45dnuapqczR/DUvUrS6dD+njKPrAN73MRee3IYybe+fc1iGDt5z6Wm+zp0qMvGV//2Q==",
-    "sourceUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC4ALgMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAEAwUBBgcCAP/EADMQAAEDAgQEBAUCBwAAAAAAAAECAxEEIQAFEjETQVFhFCIygQYjkaGxcdEVQkRSYqLB/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQMAAgX/xAAkEQABAwMDBAMAAAAAAAAAAAABAAIRAwQhQXHwEiJCkRMxMv/aAAwDAQACEQMRAD8A6bnFZXh5bdCFNqZi6tOlyRvfkJ+ojvjFfUV5fpVNOhtKkJLg1oTBvNjfaD7HD32FpTPGfcPmiyCU2Jt5e0fTBHWVF8rX4lzSFKKnEIg6Tt6Zg/g4Q+j1ky4jZFtQdIAaMIK3814GtNQj1CSXUR/leepH7YGX/iXi1LjdbSqb1ktpLrUJQHSRP6oEH35wcXRQhQWgIUUcVV20oMAJFo08z9xjKGQp5tkNONggyoIbg3PlPlvt/tgUbf4vMncyiXyPyFUVLudPZll7weSlApR4lhiqQlAdhWoJmSbi09OxxsWUPF7L2StK0OBMKQ44FqHQkzzF/fGpsZ8tbBqVMIYU24GSlFQyZMEyfLYk8/TtjcWqbRpKXViEwqyRqNrmB2+5w5ohxyk1DIECAj1bmYcZSGaFDjQ9K/EaCbHlHWBj6o8aE/JpAs2/qSB+Ow+uD1rbBqXivLqp1SoBW2TBsdr4hLbDjEuZVWkBwEI1GZmZ39zi2qMENkHntSRmdQ+FVGX8OxJ0VZifLG0d+XLvjw3S1qqkJVQFLJnz+PXIiIke3f7nEdIWASwjJ69pCypRC5ibW3gT+o2PvGuhoal4MryfMAFJWC5rIEE3BlXPliyUku0VSGi23RLUkJJE1qgSYAj8/Trh2WLq9LqKum4CUq+WeLr1A++KyspqQpheUVz8J/kURIhI/uF/2PvZ5dw5Xw2H2oQkfNBvv1xFNEOpQ45VuHjV7JN9CahsJSINwOn/AEY809Rw23Qp6pUAdSlKqGyUCSTebC8e2HPMVjq1ytot6pRpUpCgLbkG95xhqgJ1F9bkkQNFQvnvzxFYgDMojdWkKSVO1FlCyn2rib89hhqMxaWvQjSpUkAB1F+fXpfEfg6pR1rUgKJuEvORtG2K/wCJ6teRfC1dXkKcdaaFuKo3sLE7YBwER3EBJzvPBlLQWaZThsVp1RpBMAzffAst+MaStqXqUtFqpZuprVqMdbDvjVs9qGRSn+LeIqlJS2mUOFE7qTMbwQb45dnuapqczR/DUvUrS6dD+njKPrAN73MRee3IYybe+fc1iGDt5z6Wm+zp0qMvGV//2Q==",
-    "id": 1764817871330.3088
   }
 ]

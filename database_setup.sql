@@ -15,6 +15,7 @@ create table if not exists public.events (
   tags text[],
   source_url text,
   poster_url text, -- We will store the Supabase Storage URL here
+  original_image_url text, -- Store original (source) image URL for deduplication checks
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );

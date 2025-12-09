@@ -61,23 +61,22 @@ export async function analyzeImage(imageUrl) {
     const prompt = `請分析這張捐血活動海報。
 今天是 ${today}。
 
-嚴格區分與過濾規則：
-1. **日期精確性 (關鍵)**：
-   - **多日期處理**：若海報包含多個日期 (例如 "12/1, 12/8, 12/15" 或 "12月1、8、15日")，**務必** 為每一個日期產生一個獨立的 JSON 物件。**絕對不要** 只回傳第一個日期。
-   - 必須包含明確的「年份」或「日期」。
-   - 若海報上只有 "12/25" 且無年份，請根據今天 (${today}) 判斷：若已過期假設明年，否則假設今年。
-   - 若海報是「每週五」、「每月1號」等週期性活動，請 **回傳 null** (本系統暫不支援週期性活動)。
-   - 若海報是「113年」或「114年」請自動轉換為西元 2024 或 2025。
+【嚴格過濾規則 - 重要】
+若海報缺少以下任一關鍵資訊，請直接回傳 null (與其給錯誤資訊，不如不要)：
+1. **日期** (必須明確)
+2. **地點** (必須明確)
+**修正規則**：
+- 必須要有「日期」與「地點」。
+- 若無年份，依今日(${today})推算。
+- 若已過期，請回傳 null。
+- 若圖片尺寸極小或模糊無法辨識，回傳 null。
+- 若是「每週」或「每月」例行性文字，回傳 null。
 
-2. **地點精確性 (嚴格禁止幻覺)**：
-   - **絕對禁止** 猜測或補完地址。只提取海報上 **明確可見** 的地點資訊。
-   - 若海報只寫「愛國超市前」，就填「愛國超市前」。
-   - 若地點是 "全台各地", "各捐血室", "詳見官網" 等模糊地點，請 **回傳 null**。
-   - 若海報是多個場次的列表 (例如 "1月場次表")，請 **回傳 null** (本系統只處理單一或少數特定場次)。
-
-3. **內容相關性**：
-   - 必須是「捐血活動」。
-   - 若是「捐血榮譽榜」、「缺血公告」、「新聞稿」、「衛教資訊」，請 **回傳 null**。
+【地點解析特別指示】
+請將地點精確拆分為:
+- **city (縣市)**: 例如 "南投縣", "台中市"。若海報寫 "南投市XXX"，City 應為 "南投縣"，District 為 "南投市"。請務必辨識台灣行政區階層。
+- **district (行政區)**: 例如 "中寮鄉", "北區"。
+- **location**: 完整地點名稱。
 
 請輸出 JSON 陣列，欄位如下：
 [
@@ -86,8 +85,8 @@ export async function analyzeImage(imageUrl) {
     "date": "YYYY-MM-DD",
     "time": "HH:MM-HH:MM",
     "location": "地點名稱",
-    "city": "縣市 (請從地點判斷，如無法判斷請填 null)",
-    "district": "行政區 (請從地點判斷，如無法判斷請填 null)",
+    "city": "縣市",
+    "district": "行政區",
     "organizer": "主辦單位",
     "gift": { "name": "贈品名稱 (若無實質贈品填 null)", "image": null },
     "tags": ["AI辨識"]
@@ -118,10 +117,10 @@ export async function analyzeImage(imageUrl) {
 
             const response = await result.response;
             const text = response.text();
-            
+
             // Basic cleaning of JSON string
             const jsonStr = text.replace(/```json/gi, '').replace(/```/g, '').trim();
-            
+
             if (jsonStr === 'null' || jsonStr === '[]') return [];
 
             try {
@@ -131,14 +130,14 @@ export async function analyzeImage(imageUrl) {
                 console.error("AI Parse Error:", text);
                 // Parsing error might be model hallucination, try next model? 
                 // Mostly usually better to just fail or retry. Let's retry.
-                throw new Error("JSON Parse Error"); 
+                throw new Error("JSON Parse Error");
             }
 
         } catch (error) {
-            const isQuotaError = error.message.includes('429') || 
-                                 error.message.includes('Resource has been exhausted') ||
-                                 error.message.includes('Quota exceeded');
-            
+            const isQuotaError = error.message.includes('429') ||
+                error.message.includes('Resource has been exhausted') ||
+                error.message.includes('Quota exceeded');
+
             if (isQuotaError) {
                 console.warn(`[AI] Quota/Rate limit hit (${error.message}). Switching...`);
                 retryCount++;
@@ -147,10 +146,10 @@ export async function analyzeImage(imageUrl) {
             }
 
             // If it's a parsing error or other error, we also retry up to the limit
-             console.warn(`[AI] Error: ${error.message}. Retrying...`);
-             retryCount++;
-             await new Promise(r => setTimeout(r, 1000));
-             continue;
+            console.warn(`[AI] Error: ${error.message}. Retrying...`);
+            retryCount++;
+            await new Promise(r => setTimeout(r, 1000));
+            continue;
         }
     }
 

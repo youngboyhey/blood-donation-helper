@@ -22,9 +22,11 @@ const Home = () => {
     const fetchEvents = async () => {
         try {
             setLoading(true);
+            const today = new Date().toISOString().split('T')[0];
             const { data, error } = await supabase
                 .from('events')
                 .select('*')
+                .gte('date', today) // Only show events from today onwards
                 .order('date', { ascending: true }); // Sort by date ascending
 
             if (error) {

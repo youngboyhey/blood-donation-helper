@@ -12,6 +12,7 @@ const Admin = () => {
     const [analyzing, setAnalyzing] = useState(false);
     const [scannedEvents, setScannedEvents] = useState([]); // AI result candidates
     const [showScanner, setShowScanner] = useState(false);
+    const [expandedImage, setExpandedImage] = useState(null); // For Lightbox
 
     useEffect(() => {
         fetchEvents();
@@ -185,6 +186,7 @@ const Admin = () => {
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead style={{ background: '#f1f1f1' }}>
                         <tr>
+                            <th style={{ padding: '1rem', textAlign: 'left', width: '80px' }}>圖片</th>
                             <th style={{ padding: '1rem', textAlign: 'left' }}>日期</th>
                             <th style={{ padding: '1rem', textAlign: 'left' }}>活動名稱</th>
                             <th style={{ padding: '1rem', textAlign: 'left' }}>地點</th>
@@ -195,6 +197,16 @@ const Admin = () => {
                     <tbody>
                         {events.map(event => (
                             <tr key={event.id} style={{ borderBottom: '1px solid #eee' }}>
+                                <td style={{ padding: '1rem' }}>
+                                    {event.poster_url && (
+                                        <div
+                                            style={{ width: '60px', height: '80px', borderRadius: '4px', overflow: 'hidden', cursor: 'zoom-in', background: '#eee' }}
+                                            onClick={() => setExpandedImage(event.poster_url)}
+                                        >
+                                            <img src={event.poster_url} alt="poster" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        </div>
+                                    )}
+                                </td>
                                 <td style={{ padding: '1rem' }}>{event.date} <br /> <small style={{ color: '#666' }}>{event.time}</small></td>
                                 <td style={{ padding: '1rem', maxWidth: '300px' }}>
                                     <div style={{ fontWeight: '500' }}>{event.title}</div>
@@ -213,6 +225,15 @@ const Admin = () => {
                 </table>
                 {events.length === 0 && <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>目前沒有活動資料</div>}
             </div>
+            {/* Lightbox for Admin */}
+            {expandedImage && (
+                <div
+                    style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 9999, cursor: 'zoom-out' }}
+                    onClick={() => setExpandedImage(null)}
+                >
+                    <img src={expandedImage} alt="Expanded" style={{ maxHeight: '90vh', maxWidth: '90vw', borderRadius: '4px' }} />
+                </div>
+            )}
         </div>
     );
 };

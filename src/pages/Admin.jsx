@@ -8,7 +8,7 @@ const Admin = () => {
     const { signOut } = useAuth();
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [loading, setLoading] = useState(true);
+
     const [uploading, setUploading] = useState(false);
     const [analyzing, setAnalyzing] = useState(false);
     const [statusMessage, setStatusMessage] = useState(""); // Detailed status

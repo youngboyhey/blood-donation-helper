@@ -141,20 +141,20 @@ const Home = () => {
                 <SearchBar onSearch={setSearchTerm} />
             </div>
 
-        </div>
-            {/* Date Selection Menu */ }
-            <div style={{ 
-                display: 'flex', 
-                overflowX: 'auto', 
-                padding: '10px', 
-                background: '#fff', 
+
+            {/* Date Selection Menu */}
+            <div style={{
+                display: 'flex',
+                overflowX: 'auto',
+                padding: '10px',
+                background: '#fff',
                 gap: '10px',
                 borderBottom: '1px solid #eee',
                 marginBottom: '1rem',
                 whiteSpace: 'nowrap',
                 scrollbarWidth: 'none' // Hide scrollbar Firefox
             }}>
-                <button 
+                <button
                     onClick={() => setSelectedDate('')}
                     style={{
                         padding: '6px 16px',
@@ -171,7 +171,7 @@ const Home = () => {
                     全部日期
                 </button>
                 {uniqueDates.map(date => (
-                    <button 
+                    <button
                         key={date}
                         onClick={() => setSelectedDate(date)}
                         style={{
@@ -246,61 +246,61 @@ const Home = () => {
                 )}
             </Modal>
 
-    {/* Lightbox Overlay */ }
-    {
-        selectedImage && (
-            <div
-                style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100vw',
-                    height: '100vh',
-                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    zIndex: 2000,
-                    cursor: 'zoom-out'
-                }}
-                onClick={() => setSelectedImage(null)}
-            >
-                <img
-                    src={selectedImage}
-                    alt="Full size"
-                    style={{
-                        maxWidth: '95vw',
-                        maxHeight: '95vh',
-                        objectFit: 'contain',
-                        borderRadius: '4px'
-                    }}
-                />
-                <button
-                    style={{
-                        position: 'absolute',
-                        top: '20px',
-                        right: '20px',
-                        background: 'white',
-                        border: 'none',
-                        borderRadius: '50%',
-                        width: '40px',
-                        height: '40px',
-                        fontSize: '20px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedImage(null);
-                    }}
-                >
-                    ×
-                </button>
-            </div>
-        )
-    }
+            {/* Lightbox Overlay */}
+            {
+                selectedImage && (
+                    <div
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            width: '100vw',
+                            height: '100vh',
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            zIndex: 2000,
+                            cursor: 'zoom-out'
+                        }}
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <img
+                            src={selectedImage}
+                            alt="Full size"
+                            style={{
+                                maxWidth: '95vw',
+                                maxHeight: '95vh',
+                                objectFit: 'contain',
+                                borderRadius: '4px'
+                            }}
+                        />
+                        <button
+                            style={{
+                                position: 'absolute',
+                                top: '20px',
+                                right: '20px',
+                                background: 'white',
+                                border: 'none',
+                                borderRadius: '50%',
+                                width: '40px',
+                                height: '40px',
+                                fontSize: '20px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedImage(null);
+                            }}
+                        >
+                            ×
+                        </button>
+                    </div>
+                )
+            }
         </div >
     );
 };

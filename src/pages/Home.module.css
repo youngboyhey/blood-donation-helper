@@ -21,23 +21,23 @@
 }
 
 .filterSection {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: var(--spacing-6);
     gap: var(--spacing-4);
+    flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .filters {
-    grid-column: 2;
     display: flex;
     gap: var(--spacing-3);
+    flex-grow: 0; /* Left align */
 }
 
-/* Target the SearchBar component wrapper if possible, or assume it's the next child */
-.filterSection> :last-child {
-    grid-column: 3;
-    justify-self: end;
+/* Ensure SearchBar container doesn't shrink improperly */
+.filterSection > div:last-child {
+    flex-grow: 0;
 }
 
 .select {
@@ -67,38 +67,41 @@
 
 .listHeader {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: var(--spacing-4);
-    border-bottom: 1px solid var(--color-border);
+    justify-content: flex-end; /* Right align count */
+    align-items: center;
+    margin-bottom: var(--spacing-2);
+    /* border-bottom: 1px solid var(--color-border); */ /* Removed as per design trend */
     padding-bottom: var(--spacing-2);
-}
-
-.listHeader h2 {
-    font-size: var(--font-size-2xl);
-    color: var(--color-text-main);
 }
 
 .count {
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
+    background: #f0f0f0;
+    padding: 4px 10px;
+    border-radius: 12px;
 }
 
 @media (max-width: 768px) {
     .filterSection {
-        grid-template-columns: 1fr;
-        display: flex;
         flex-direction: column;
         align-items: stretch;
     }
 
     .filters {
-        grid-column: auto;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Side-by-side dropdowns on mobile */
+        width: 100%;
+        gap: var(--spacing-2);
+    }
+    
+    .select {
+        width: 100%;
+        min-width: 0;
     }
 
-    .filterSection> :last-child {
-        grid-column: auto;
-        justify-self: stretch;
+    .filterSection > div:last-child {
+        width: 100%; /* Full width search bar */
+        margin-top: var(--spacing-2);
     }
 }

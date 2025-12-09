@@ -239,6 +239,39 @@ async function fetchWebImages(source) {
 // --- AI Logic ---
 class QuotaExhaustedError extends Error { constructor(m) { super(m); this.name = "QuotaExhaustedError"; } }
 
+const API_KEYS_STR = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "";
+const API_KEYS = API_KEYS_STR.split(',').map(k => k.trim()).filter(k => k);
+
+// 2. 定義模型優先順序
+const MODELS = [
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+    "gemini-2.5-flash-preview-09-2025",
+    "gemini-2.5-flash-lite",
+    "gemini-2.5-flash-lite-preview-09-2025",
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-lite"
+];
+
+// 3. 輔助函式：取得指定輪替的 Key 與 Model
+const getModel = (retryCount) => {
+    if (API_KEYS.length === 0) throw new Error("Missing API Key");
+
+    // 邏輯：每把 KEY 都會嘗試過所有 MODELS 後，才切換到下一把 KEY
+    const totalModels = MODELS.length;
+    const keyIndex = Math.floor(retryCount / totalModels) % API_KEYS.length;
+    const modelIndex = retryCount % totalModels;
+
+    const key = API_KEYS[keyIndex];
+    const modelName = MODELS[modelIndex];
+
+    const genAI = new GoogleGenerativeAI(key);
+    const gen = genAI.getGenerativeModel({ model: modelName, generationConfig: { responseMimeType: "application/json" } });
+    const keyMasked = key.substring(0, 5) + '...';
+
+    return { gen, desc: `Key ${keyMasked} / ${modelName}` };
+};
+
 async function fetchImageAsBase64(url) {
     try {
         const res = await fetch(url);
@@ -251,26 +284,26 @@ async function fetchImageAsBase64(url) {
 async function analyzeContentWithAI(item, sourceContext) {
     const today = new Date().toISOString().split('T')[0];
 
-    // API Key Rotation
-    const keys = (process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "").split(',').map(k => k.trim()).filter(k => k);
-    if (!keys.length) return null;
+    // API Key Rotation - This section is now handled by global constants and getModel
+    // const keys = (process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "").split(',').map(k => k.trim()).filter(k => k);
+    // if (!keys.length) return null;
 
-    const MODELS = ["gemini-2.5-flash-lite", "gemini-2.0-flash"]; // No 1.5
+    // const MODELS = ["gemini-2.5-flash-lite", "gemini-2.0-flash"]; // No 1.5
 
-    const getModel = (retry) => {
-        const k = keys[retry % keys.length];
-        const m = MODELS[Math.floor(retry / keys.length) % MODELS.length];
+    // const getModel = (retry) => {
+    //     const k = keys[retry % keys.length];
+    //     const m = MODELS[Math.floor(retry / keys.length) % MODELS.length];
 
-        // Safety: If keys are exhausted for all models? 
-        // Logic: 2 models * N keys. 
-        return {
-            gen: new GoogleGenerativeAI(k).getGenerativeModel({ model: m, generationConfig: { responseMimeType: "application/json" } }),
-            desc: `${m} w/ Key...${k.slice(-4)}`
-        };
-    };
+    //     // Safety: If keys are exhausted for all models? 
+    //     // Logic: 2 models * N keys. 
+    //     return {
+    //         gen: new GoogleGenerativeAI(k).getGenerativeModel({ model: m, generationConfig: { responseMimeType: "application/json" } }),
+    //         desc: `${m} w/ Key...${k.slice(-4)}`
+    //     };
+    // };
 
     let retries = 0;
-    const maxRetries = keys.length * MODELS.length * 2;
+    const maxRetries = API_KEYS.length * MODELS.length * 2; // Use the new global API_KEYS and MODELS
 
     while (retries < maxRetries) {
         let desc = `Retry ${retries}`;

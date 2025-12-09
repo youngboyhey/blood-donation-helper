@@ -5,9 +5,15 @@ const API_KEYS_STR = import.meta.env.VITE_GEMINI_API_KEY || "";
 const API_KEYS = API_KEYS_STR.split(',').map(k => k.trim()).filter(k => k);
 
 // 2. 定義模型優先順序 (排除 1.5)
+// 2. 定義模型優先順序
 const MODELS = [
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+    "gemini-2.5-flash-preview-09-2025",
     "gemini-2.5-flash-lite",
-    "gemini-2.0-flash"
+    "gemini-2.5-flash-lite-preview-09-2025",
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-lite"
 ];
 
 // 3. 輔助函式：取得指定輪替的 Key 與 Model
@@ -17,10 +23,10 @@ const getModel = (retryCount) => {
     }
 
     // 計算當前應該使用的 Key 和 Model index
-    // 邏輯：先輪替完所有 Key 的第一個 Model，再輪替所有 Key 的第二個 Model...
-    const totalKeys = API_KEYS.length;
-    const modelIndex = Math.floor(retryCount / totalKeys) % MODELS.length;
-    const keyIndex = retryCount % totalKeys;
+    // 邏輯：每把 KEY 都會嘗試過所有 MODELS 後，才切換到下一把 KEY
+    const totalModels = MODELS.length;
+    const keyIndex = Math.floor(retryCount / totalModels) % API_KEYS.length;
+    const modelIndex = retryCount % totalModels;
 
     const key = API_KEYS[keyIndex];
     const modelName = MODELS[modelIndex];

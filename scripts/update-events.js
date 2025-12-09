@@ -632,9 +632,7 @@ async function analyzeContentWithAI(item, sourceContext) {
     // Model Rotation List (Ordered by preference/cost)
     const MODELS = [
         "gemini-2.5-flash-lite",
-        "gemini-2.0-flash-lite",
-        "gemini-2.0-flash",
-        "gemini-1.5-flash"
+        "gemini-2.0-flash"
     ];
 
     // Helper to get model with specific key and model index

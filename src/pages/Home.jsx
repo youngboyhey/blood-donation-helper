@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SearchBar from '../components/SearchBar';
 import EventList from '../components/EventList';
-import eventsData from '../data/events.json';
+import { supabase } from '../lib/supabase';
 import styles from './Home.module.css';
 import Modal from '../components/Modal';
 
@@ -9,9 +9,35 @@ const Home = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedDistrict, setSelectedDistrict] = useState('');
-    const [filteredEvents, setFilteredEvents] = useState(eventsData);
+    const [events, setEvents] = useState([]);
+    const [filteredEvents, setFilteredEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchEvents();
+    }, []);
+
+    const fetchEvents = async () => {
+        try {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from('events')
+                .select('*')
+                .order('date', { ascending: true }); // Sort by date ascending
+
+            if (error) {
+                console.error('Error fetching events:', error);
+            } else {
+                setEvents(data || []);
+            }
+        } catch (err) {
+            console.error('Unexpected error:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // 台灣縣市標準排序
     const CITY_ORDER = [
@@ -21,7 +47,7 @@ const Home = () => {
     ];
 
     // 提取所有有活動的縣市並排序
-    const cities = [...new Set(eventsData.map(e => e.city).filter(c => c && c !== 'null' && c !== 'undefined'))].sort((a, b) => {
+    const cities = [...new Set(events.map(e => e.city).filter(c => c && c !== 'null' && c !== 'undefined'))].sort((a, b) => {
         const indexA = CITY_ORDER.indexOf(a);
         const indexB = CITY_ORDER.indexOf(b);
         // 如果都在列表中，照順序排
@@ -36,14 +62,14 @@ const Home = () => {
 
     // 根據選擇的縣市提取有活動的區域並排序
     const districts = selectedCity
-        ? [...new Set(eventsData.filter(e => e.city === selectedCity).map(e => e.district).filter(d => d && d !== 'null' && d !== 'undefined'))].sort((a, b) => {
+        ? [...new Set(events.filter(e => e.city === selectedCity).map(e => e.district).filter(d => d && d !== 'null' && d !== 'undefined'))].sort((a, b) => {
             // 區域暫時使用筆畫/字串排序，因為各縣市區域順序繁多
             return a.localeCompare(b, 'zh-TW');
         })
         : [];
 
     useEffect(() => {
-        const results = eventsData.filter(event => {
+        const results = events.filter(event => {
             const matchesSearch = (
                 event.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 event.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -60,7 +86,7 @@ const Home = () => {
         results.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         setFilteredEvents(results);
-    }, [searchTerm, selectedCity, selectedDistrict]);
+    }, [searchTerm, selectedCity, selectedDistrict, events]);
 
     const handleCityChange = (e) => {
         setSelectedCity(e.target.value);
@@ -136,9 +162,9 @@ const Home = () => {
                                         objectFit: 'contain'
                                     }}
                                     onClick={() => {
-                                        const isHttpUrl = selectedEvent.sourceUrl && 
+                                        const isHttpUrl = selectedEvent.sourceUrl &&
                                             (selectedEvent.sourceUrl.startsWith('http://') || selectedEvent.sourceUrl.startsWith('https://'));
-                                        
+
                                         if (isHttpUrl) {
                                             window.open(selectedEvent.sourceUrl, '_blank');
                                         } else {
@@ -147,7 +173,7 @@ const Home = () => {
                                     }}
                                     title={
                                         (selectedEvent.sourceUrl && (selectedEvent.sourceUrl.startsWith('http://') || selectedEvent.sourceUrl.startsWith('https://')))
-                                            ? "點擊前往活動頁面" 
+                                            ? "點擊前往活動頁面"
                                             : "點擊放大圖片"
                                     }
                                 />

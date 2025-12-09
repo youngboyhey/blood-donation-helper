@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as cheerio from 'cheerio';
 import puppeteer from 'puppeteer';
+import { createClient } from '@supabase/supabase-js';
 import 'dotenv/config';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -190,7 +191,7 @@ async function fetchGoogleImages(source) {
         args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     const page = await browser.newPage();
-    await page.setViewport({ width: 1280, height: 800 });
+    await page.setViewport({ width: 1920, height: 1080 });
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
     try {
@@ -227,17 +228,22 @@ async function fetchGoogleImages(source) {
         // 隨機等待一下
         await new Promise(r => setTimeout(r, 1000 + Math.random() * 2000));
 
-        const MAX_RESULTS = 8; // 限制搜尋數量至 8 (RPD Optimization)
+        const MAX_RESULTS = 8; // Target unique results
+        const MAX_ATTEMPTS = 30; // Safety limit to prevent infinite loops
+        let attempts = 0;
+        let uniqueCount = 0;
+        const visitedDeepLinks = new Set(); // Track visited deep links to prevent duplicate scraping
 
-        console.log(`[Google] 準備處理前 ${MAX_RESULTS} 筆結果以獲取高畫質圖片與來源連結...`);
+        console.log(`[Google] 準備處理結果，目標獲取 ${MAX_RESULTS} 筆不重複的高畫質圖片...`);
 
-        for (let i = 0; i < MAX_RESULTS; i++) {
+        while (uniqueCount < MAX_RESULTS && attempts < MAX_ATTEMPTS) {
             try {
                 // 每次重新查詢元素以避免 stale element
                 const thumbnails = await page.$$('div[data-id] img');
-                if (i >= thumbnails.length) break;
+                if (attempts >= thumbnails.length) break;
 
-                const thumb = thumbnails[i];
+                const thumb = thumbnails[attempts];
+                attempts++; // Increment attempts counter
 
                 // 先提取縮圖 src 作為備案
                 let thumbSrc = null;
@@ -264,20 +270,20 @@ async function fetchGoogleImages(source) {
                     // 等待側邊欄載入，並嘗試等待高畫質圖片 (非 gstatic)
                     try {
                         await page.waitForFunction(() => {
-                            const images = Array.from(document.querySelectorAll('img'));
+                            const imgs = Array.from(document.querySelectorAll('img'));
                             // 尋找寬度大於 300 且網址不是 gstatic 的圖片
-                            return images.some(img => {
+                            return imgs.some(img => {
                                 const rect = img.getBoundingClientRect();
                                 return rect.width > 300 &&
                                     img.src.startsWith('http') &&
                                     !img.src.includes('gstatic.com') &&
                                     !img.src.includes('google.com');
                             });
-                        }, { timeout: 5000 }).catch(() => { });
+                        }, { timeout: 8000 }).catch(() => { });
                     } catch (e) { }
 
                     // 額外等待一下
-                    await new Promise(r => setTimeout(r, 1000));
+                    await new Promise(r => setTimeout(r, 1500));
 
                     // 提取資料 (高畫質圖 + 前往連結)
                     try {
@@ -294,53 +300,40 @@ async function fetchGoogleImages(source) {
                                 return src.includes('data:image/gif') || src.includes('R0lGODlhAQABA');
                             };
 
-                            const allImages = Array.from(document.querySelectorAll('img'));
+                            const images = Array.from(document.querySelectorAll('img'));
+                            let bestImg = null;
+                            let maxArea = 0;
 
-                            const candidates = allImages.filter(img => {
+                            images.forEach(img => {
                                 const rect = img.getBoundingClientRect();
-                                // Filter out small images (icons) and hidden images
-                                if (rect.width < 300 || rect.height < 300) return false;
-                                if (rect.width === 0 || rect.height === 0) return false;
+                                const area = rect.width * rect.height;
 
-                                // Filter out known icon patterns
-                                if (isIcon(img)) return false;
-                                if (isPlaceholder(img)) return false;
+                                if (rect.width > 300 &&
+                                    img.src.startsWith('http') &&
+                                    !img.src.includes('gstatic.com') &&
+                                    !img.src.includes('google.com') &&
+                                    !isIcon(img) &&
+                                    !isPlaceholder(img)) {
 
-                                return true;
+                                    if (area > maxArea) {
+                                        maxArea = area;
+                                        bestImg = img;
+                                    }
+                                }
                             });
 
-                            // Sort by size (largest first)
-                            candidates.sort((a, b) => {
-                                const areaA = a.getBoundingClientRect().width * a.getBoundingClientRect().height;
-                                const areaB = b.getBoundingClientRect().width * b.getBoundingClientRect().height;
-                                return areaB - areaA;
-                            });
-
-                            let highResUrl = null;
-                            // Prefer the first candidate that starts with http AND is not gstatic
-                            const httpCandidate = candidates.find(img => img.src.startsWith('http') && !img.src.includes('gstatic.com') && !img.src.includes('google.com'));
-
-                            if (httpCandidate) {
-                                highResUrl = httpCandidate.src;
-                            } else if (candidates.length > 0) {
-                                // Fallback: If no non-gstatic image found, try to find the largest one that isn't the thumbnail we clicked
-                                // But if it's gstatic, it's likely just the preview.
-                                // We'll take it if we have nothing else, but prefer httpCandidate.
-                                highResUrl = candidates[0].src;
-                            }
+                            let highResUrl = bestImg ? bestImg.src : null;
 
                             // 2. Find "Visit" link
                             const links = Array.from(document.querySelectorAll('a'));
                             let visitUrl = null;
 
                             // Strategy 1: Look for specific "Visit" button text/aria-label
-                            // Google often uses aria-label="Visit" or "Website"
                             const visitLink = links.find(a => {
                                 const text = a.innerText.trim();
                                 const ariaLabel = a.getAttribute('aria-label') || '';
                                 const rect = a.getBoundingClientRect();
 
-                                // Must be visible
                                 if (rect.width === 0 || rect.height === 0) return false;
 
                                 return (text.includes('前往') || text.includes('Visit') || text === '網站' || text === 'Website') ||
@@ -351,18 +344,16 @@ async function fetchGoogleImages(source) {
                                 visitUrl = visitLink.href;
                             } else {
                                 // Strategy 2: Look for the first external link in the right half of the screen
-                                // This is the most reliable fallback for the "Visit" button which is usually near the title/image
                                 const sidePanelLinks = links.filter(a => {
                                     const rect = a.getBoundingClientRect();
                                     return rect.left > window.innerWidth / 2 && // Right half
                                         rect.width > 0 && rect.height > 0 &&
                                         a.href.startsWith('http') &&
                                         !a.href.includes('google.com') &&
-                                        !a.href.includes('facebook.com/sharer'); // Exclude share buttons
+                                        !a.href.includes('facebook.com/sharer');
                                 });
 
                                 if (sidePanelLinks.length > 0) {
-                                    // Usually the first one is the title link or the visit button
                                     visitUrl = sidePanelLinks[0].href;
                                 }
                             }
@@ -376,18 +367,27 @@ async function fetchGoogleImages(source) {
 
                 let finalImageUrl = result.highResUrl;
 
-                // Deep scraping: If we have a visitUrl, try to get a better image from the source
+                // Deep scraping deduplication check
                 if (result.visitUrl) {
-                    const deepImage = await fetchSourcePage(result.visitUrl, browser, cookies);
-                    if (deepImage) {
-                        console.log(`[Google] 使用深入抓取的圖片取代: ${deepImage.substring(0, 50)}...`);
-                        finalImageUrl = deepImage;
+                    if (visitedDeepLinks.has(result.visitUrl)) {
+                        console.log(`[Google] 跳過重複的深入抓取連結: ${result.visitUrl}`);
+                        // Skip deep scraping, but we might still use the highResUrl if available
+                        // However, if the main value is the deep scrape, we might want to skip this result entirely?
+                        // Let's skip deep scraping but keep the image if we have one.
+                        // Actually, user wants to avoid "repeatedly parsing".
+                        // If we skip deep scraping, we just use the Google image.
+                    } else {
+                        visitedDeepLinks.add(result.visitUrl);
+                        const deepImage = await fetchSourcePage(result.visitUrl, browser, cookies);
+                        if (deepImage) {
+                            console.log(`[Google] 使用深入抓取的圖片取代: ${deepImage.substring(0, 50)}...`);
+                            finalImageUrl = deepImage;
+                        }
                     }
                 }
 
                 // Double check if highResUrl is a placeholder or too short (only for data URLs)
                 if (finalImageUrl && finalImageUrl.startsWith('data:') && (finalImageUrl.includes('data:image/gif') || finalImageUrl.length < 100)) {
-                    // console.log(`[Google] High res URL looks like a placeholder, falling back to thumbnail.`);
                     finalImageUrl = null;
                 }
 
@@ -395,31 +395,26 @@ async function fetchGoogleImages(source) {
                 const finalSourceUrl = result.visitUrl || searchUrl;
 
                 if (finalImageUrl && (finalImageUrl.startsWith('http') || finalImageUrl.length > 100)) {
-                    images.push({
-                        type: 'image',
-                        url: finalImageUrl,
-                        sourceUrl: finalSourceUrl // 儲存真實來源連結
-                    });
+                    // Check for duplicate image URLs in the current batch
+                    const isDuplicateImage = images.some(img => img.url === finalImageUrl);
+                    if (!isDuplicateImage) {
+                        images.push({
+                            type: 'image',
+                            url: finalImageUrl,
+                            sourceUrl: finalSourceUrl // 儲存真實來源連結
+                        });
+                        uniqueCount++;
+                    }
                 }
 
             } catch (err) {
-                console.error(`[Google] 處理第 ${i + 1} 筆圖片時發生錯誤:`, err.message);
+                console.error(`[Google] 處理第 ${attempts} 筆圖片時發生錯誤:`, err.message);
             }
         }
 
-        console.log(`[Google] 共收集 ${images.length} 張圖片`);
+        console.log(`[Google] 共收集 ${images.length} 張圖片 (嘗試了 ${attempts} 次)`);
 
-        // 去重
-        const uniqueImages = [];
-        const seenUrls = new Set();
-        for (const img of images) {
-            if (!seenUrls.has(img.url)) {
-                seenUrls.add(img.url);
-                uniqueImages.push(img);
-            }
-        }
-
-        return uniqueImages;
+        return images;
 
     } catch (error) {
         console.error(`[Google] 搜尋失敗 ${source.name}:`, error);
@@ -688,7 +683,8 @@ async function analyzeContentWithAI(item, sourceContext) {
 今天是 ${today}，請特別留意活動日期。
 
 嚴格區分與過濾規則：
-1. **日期精確性**：
+1. **日期精確性 (關鍵)**：
+   - **多日期處理**：若海報包含多個日期 (例如 "12/1, 12/8, 12/15" 或 "12月1、8、15日")，**務必** 為每一個日期產生一個獨立的 JSON 物件。**絕對不要** 只回傳第一個日期。
    - 必須包含明確的「年份」或「日期」。
    - 若海報上只有 "12/25" 且無年份，請根據今天 (${today}) 判斷：
      - 若 12/25 已過，假設是明年。
@@ -696,8 +692,9 @@ async function analyzeContentWithAI(item, sourceContext) {
    - 若海報是「每週五」、「每月1號」等週期性活動，請 **回傳 null** (本系統暫不支援週期性活動)。
    - 若海報是「113年」或「114年」請自動轉換為西元 2024 或 2025。
 
-2. **地點精確性**：
-   - 必須包含明確的活動地點 (如 "中正公園", "某某路123號")。
+2. **地點精確性 (嚴格禁止幻覺)**：
+   - **絕對禁止** 猜測或補完地址。只提取海報上 **明確可見** 的地點資訊。
+   - 若海報只寫「愛國超市前」，就填「愛國超市前」，**不要** 自動補上「高雄市岡山區...」除非海報上真的有寫。
    - 若地點是 "全台各地", "各捐血室", "詳見官網" 等模糊地點，請 **回傳 null**。
    - 若海報是多個場次的列表 (例如 "1月場次表")，請 **回傳 null** (本系統只處理單一或少數特定場次)。
 
@@ -709,9 +706,9 @@ async function analyzeContentWithAI(item, sourceContext) {
 [
   {
     "title": "活動標題 (請包含地點與關鍵特色)",
-    "date": "YYYY-MM-DD (若有多天請列出第一天，或拆成多個物件)",
+    "date": "YYYY-MM-DD (每個日期獨立一個物件)",
     "time": "時間 (HH:MM-HH:MM)",
-    "location": "地點 (請盡量完整)",
+    "location": "地點 (請盡量完整，但**嚴禁**無中生有地址)",
     "city": "縣市 (請務必從地點判斷，例如：桃園市、苗栗縣、新北市。若無法判斷才填 ${sourceContext.city})",
     "district": "行政區 (請仔細從地址中提取，例如：中區、北區、西屯區。若無法判斷請填 null)",
     "organizer": "主辦單位 (預設: ${sourceContext.name})",
@@ -733,7 +730,8 @@ async function analyzeContentWithAI(item, sourceContext) {
 ${item.content}
 
 嚴格區分與過濾規則：
-1. **日期精確性**：
+1. **日期精確性 (關鍵)**：
+   - **多日期處理**：若內容包含多個日期 (例如 "12/1, 12/8, 12/15")，**務必** 為每一個日期產生一個獨立的 JSON 物件。**絕對不要** 只回傳第一個日期。
    - 必須包含明確的「年份」或「日期」。
    - 若只有 "12/25" 且無年份，請根據今天 (${today}) 判斷：
      - 若 12/25 已過，假設是明年。
@@ -741,8 +739,9 @@ ${item.content}
    - 若是「每週五」、「每月1號」等週期性活動，請 **回傳 null**。
    - 若是「113年」或「114年」請自動轉換為西元 2024 或 2025。
 
-2. **地點精確性**：
-   - 必須包含明確的活動地點。
+2. **地點精確性 (嚴格禁止幻覺)**：
+   - **絕對禁止** 猜測或補完地址。只提取文字中 **明確提到** 的地點資訊。
+   - 若文字只寫「愛國超市前」，就填「愛國超市前」，**不要** 自動補上地址。
    - 若地點是 "全台各地", "各捐血室", "詳見官網" 等模糊地點，請 **回傳 null**。
    - 若是多個場次的列表 (例如 "1月場次表")，請 **回傳 null**。
 
@@ -754,12 +753,13 @@ ${item.content}
 [
   {
     "title": "活動標題 (請包含地點與關鍵特色)",
-    "date": "YYYY-MM-DD",
+    "date": "YYYY-MM-DD (每個日期獨立一個物件)",
     "time": "時間 (HH:MM-HH:MM)",
-    "location": "地點 (請盡量完整)",
+    "location": "地點 (請盡量完整，但**嚴禁**無中生有地址)",
     "city": "縣市 (請務必從地點判斷，例如：桃園市、苗栗縣、新北市。若無法判斷才填 ${sourceContext.city})",
     "district": "行政區 (請仔細從地址中提取，例如：中區、北區、西屯區。若無法判斷請填 null)",
     "organizer": "主辦單位 (預設: ${sourceContext.name})",
+    "gift": {
       "name": "贈品名稱 (請列出實質贈品，**嚴格排除**『捐血』、『捐發票』、『集點』、『健康檢查』等非物質項目。若無實質贈品請填 null)",
       "image": null
     },
@@ -813,24 +813,33 @@ async function updateEvents() {
     today.setHours(0, 0, 0, 0);
 
     // 1. 載入現有資料以建立快取
-    const outputPath = path.join(__dirname, '../src/data/events.json');
+    // 1. 從 Supabase 載入現有資料以建立快取 (取代原本的 File System)
+    const supabaseUrl = process.env.VITE_SUPABASE_URL;
+    // 使用 Service Role Key 以獲取完整權限 (繞過 RLS)
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
     let existingEvents = [];
-    const cachedEventsMap = new Map(); // Key: posterUrl, Value: eventData
+    const cachedEventsMap = new Map(); // Key: poster_url (DB) or posterUrl (Script), Value: eventData
 
-    if (fs.existsSync(outputPath)) {
-        try {
-            const rawData = fs.readFileSync(outputPath, 'utf-8');
-            existingEvents = JSON.parse(rawData);
-            console.log(`[Cache] 載入 ${existingEvents.length} 筆現有活動資料`);
+    try {
+        console.log('[Cache] 正在從 Supabase 讀取現有活動...');
+        const { data, error } = await supabase.from('events').select('*');
+        if (error) throw error;
 
-            existingEvents.forEach(event => {
-                if (event.posterUrl) {
-                    cachedEventsMap.set(event.posterUrl, event);
-                }
-            });
-        } catch (e) {
-            console.error("[Cache] 讀取現有資料失敗:", e);
-        }
+        existingEvents = data || [];
+        console.log(`[Cache] 載入 ${existingEvents.length} 筆現有活動資料`);
+
+        existingEvents.forEach(event => {
+            // DB column is poster_url, script uses posterUrl internally mostly
+            const pUrl = event.poster_url || event.posterUrl;
+            if (pUrl) {
+                // Normalize keys for consistency in script
+                cachedEventsMap.set(pUrl, { ...event, posterUrl: pUrl });
+            }
+        });
+    } catch (e) {
+        console.error("[Cache]讀取現有資料失敗:", e);
     }
 
     for (const source of SOURCES) {
@@ -948,16 +957,16 @@ async function updateEvents() {
     console.log(`[去重] 開始處理 ${allNewEvents.length} 筆活動...`);
     const uniqueEvents = [];
 
-    // 輔助函式：標準化地點字串 (移除空白、括號等)
-    const normalize = (str) => (str || '').replace(/[()\s\-\uff08\uff09]/g, '').toLowerCase();
+    // 輔助函式：簡單標準化 (僅移除空白與標點，保留文字核心)
+    const simpleNormalize = (str) => (str || '').replace(/[\s\-\_]/g, '').toLowerCase();
 
-    // 輔助函式：提取地點名稱 (移除括號後的地址部分)
-    // 例如: "中埔鄉公所(嘉義縣中埔鄉中正路120號)" -> "中埔鄉公所"
-    const getVenueName = (str) => {
-        if (!str) return '';
+    // 輔助函式：提取地點關鍵字 (利用括號分割，提取可能的場地名稱)
+    const getVenueTokens = (str) => {
+        if (!str) return [];
         // Split by full-width or half-width parenthesis
-        const parts = str.split(/[(\uff08]/);
-        return normalize(parts[0]);
+        const rawParts = str.split(/[(\uff08)\uff09]/);
+        // Normalize each part and filter out short/empty strings
+        return rawParts.map(p => simpleNormalize(p)).filter(p => p.length > 2);
     };
 
     for (const evt of allNewEvents) {
@@ -969,20 +978,20 @@ async function updateEvents() {
             // 必須是同一個縣市 (如果有資料)
             if (existing.city && evt.city && existing.city !== evt.city) return false;
 
-            const loc1 = normalize(existing.location);
-            const loc2 = normalize(evt.location);
+            const nLoc1 = simpleNormalize(existing.location);
+            const nLoc2 = simpleNormalize(evt.location);
 
-            // 判斷地點是否高度相似或包含
-            let isMatch = loc1.includes(loc2) || loc2.includes(loc1);
+            // 1. 直接包含檢查
+            let isMatch = nLoc1.includes(nLoc2) || nLoc2.includes(nLoc1);
 
-            // 如果基本包含檢查失敗，嘗試 "地點名稱" 比對
+            // 2. 關鍵字重疊檢查 (針對 "地址(地點)" vs "地點" 的情況)
             if (!isMatch) {
-                const venue1 = getVenueName(existing.location);
-                const venue2 = getVenueName(evt.location);
-                // 只有當地點名稱夠長 (>2字) 且完全相同時才視為重複
-                if (venue1.length > 2 && venue2.length > 2 && venue1 === venue2) {
-                    isMatch = true;
-                }
+                const tokens1 = getVenueTokens(existing.location);
+                const tokens2 = getVenueTokens(evt.location);
+
+                // 只要有任一關鍵字完全相同，且長度足夠，就視為重複
+                // 例如: "嘉義縣中埔鄉... (中埔鄉公所)" vs "中埔鄉公所" -> "中埔鄉公所" 匹配
+                isMatch = tokens1.some(t1 => tokens2.some(t2 => t1 === t2));
             }
 
             if (isMatch) {
@@ -1038,9 +1047,63 @@ async function updateEvents() {
     console.log(`[去重] 完成，剩餘 ${uniqueEvents.length} 筆活動 (原始 ${allNewEvents.length} 筆)`);
 
     // 最終清理資料
-    const cleanedEvents = sanitizeData(uniqueEvents);
+    // 最終清理資料
+    const cleanedEvents = sanitizeData(uniqueEvents).map(e => ({
+        ...e,
+        // Map script keys to DB keys
+        poster_url: e.posterUrl || e.poster_url,
+        source_url: e.sourceUrl || e.source_url,
+        // Ensure no undefined
+        gift: e.gift || null,
+        tags: e.tags || [],
+        updated_at: new Date().toISOString()
+    }));
 
-    fs.writeFileSync(outputPath, JSON.stringify(cleanedEvents, null, 2));
+    // fs.writeFileSync(outputPath, JSON.stringify(cleanedEvents, null, 2));
+    // console.log(`\n總共成功更新 ${cleanedEvents.length} 筆活動資料！`);
+
+    // Upsert to Supabase
+    console.log(`[DB] 準備寫入 ${cleanedEvents.length} 筆資料到 Supabase...`);
+
+    // Split into chunks to avoid request size limits
+    const CHUNK_SIZE = 50;
+    for (let i = 0; i < cleanedEvents.length; i += CHUNK_SIZE) {
+        const chunk = cleanedEvents.slice(i, i + CHUNK_SIZE);
+        // Clean keys that might not exist in DB (e.g. posterUrl duplicate) is fine, Supabase ignores extra? 
+        // No, Supabase might complain about extra columns. Let's sanitize strictly if possible.
+        // Actually, let's keep it simple. If we map poster_url, we can delete posterUrl.
+        const dbReadyChunk = chunk.map(({ posterUrl, sourceUrl, ...rest }) => rest);
+
+        const { error } = await supabase.from('events').upsert(dbReadyChunk, {
+            onConflict: 'id', // If we don't have consistent IDs, this is tricky.
+            // Script generates: eventData.id = Date.now() + Math.random(); for NEW events.
+            // But for CACHED events, they already have an ID from DB (UUID).
+            // Wait, cached events from DB have 'id' (UUID).
+            // New events from logic have 'id' (number).
+            // Supabase expects UUID for 'id'. 
+            // If I send a number as ID, Supabase will fail if column is UUID.
+            // SOLUTION: For NEW events, DO NOT send 'id'. Let Supabase generate it.
+            // For CACHED events, Keep the UUID.
+        });
+
+        // Refined Logic for IDs:
+        const finalChunk = chunk.map(e => {
+            const { posterUrl, sourceUrl, ...rest } = e;
+            // Check if ID is UUID (string and long) or generated number (number)
+            if (typeof rest.id === 'number') {
+                delete rest.id; // Let DB generate new UUID
+            }
+            return rest;
+        });
+
+        const { error: upsertError } = await supabase.from('events').upsert(finalChunk);
+
+        if (upsertError) {
+            console.error(`[DB] 寫入失敗 (Batch ${i}):`, upsertError.message);
+        } else {
+            console.log(`[DB] 成功寫入批次 ${i} - ${Math.min(i + CHUNK_SIZE, cleanedEvents.length)}`);
+        }
+    }
     console.log(`\n總共成功更新 ${cleanedEvents.length} 筆活動資料！`);
 }
 

@@ -36,43 +36,19 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
           COOKIES_JSON: ${{ secrets.COOKIES_JSON }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: node scripts/update-events.js
 
-      - name: Commit and Push changes
-        run: |
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
-          git add src/data/events.json
-          # Only commit and push if there are changes
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Auto-update: New blood donation events found"
-            
-            # Retry loop for push
-            MAX_RETRIES=3
-            count=0
-            success=false
-            
-            while [ $count -lt $MAX_RETRIES ]; do
-              if git pull --rebase -X theirs origin main && git push; then
-                success=true
-                break
-              else
-                echo "Push failed, retrying... ($((count+1))/$MAX_RETRIES)"
-                count=$((count+1))
-                sleep 5
-              fi
-            done
-
-            if [ "$success" = false ]; then
-              echo "Failed to push changes after $MAX_RETRIES attempts."
-              exit 1
-            fi
-          fi
-
       - name: Build
-        run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} # Frontend needs this
+        run: |
+          npm run build
+          cp dist/index.html dist/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -82,3 +58,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+

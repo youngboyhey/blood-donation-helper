@@ -823,6 +823,14 @@ async function updateEvents() {
     const supabaseUrl = process.env.VITE_SUPABASE_URL;
     // 使用 Service Role Key 以獲取完整權限 (繞過 RLS)
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+
+    // --- DEBUG START ---
+    console.log(`[Debug] VITE_SUPABASE_URL env exists: ${!!process.env.VITE_SUPABASE_URL}`);
+    console.log(`[Debug] SUPABASE_SERVICE_ROLE_KEY env exists: ${!!process.env.SUPABASE_SERVICE_ROLE_KEY}`);
+    console.log(`[Debug] VITE_SUPABASE_ANON_KEY env exists: ${!!process.env.VITE_SUPABASE_ANON_KEY}`);
+    console.log(`[Debug] Actual Key used starts with: ${supabaseKey?.substring(0, 10)}...`);
+    console.log(`[Debug] Is Service Role Key (contains 'service_role'): ${supabaseKey?.includes('service_role')}`);
+    // --- DEBUG END ---
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     let existingEvents = [];

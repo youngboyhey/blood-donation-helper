@@ -152,33 +152,33 @@ const Home = () => {
                         <h4>贈品資訊</h4>
                         <p>{selectedEvent.gift?.name || '以現場提供為主'}</p>
                         <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-                            {selectedEvent.gift?.image && (
+                            {(selectedEvent.poster_url || selectedEvent.gift?.image) && (
                                 <img
-                                    src={selectedEvent.gift.image}
-                                    alt={selectedEvent.gift?.name || '贈品圖片'}
+                                    src={selectedEvent.poster_url || selectedEvent.gift.image}
+                                    alt={selectedEvent.title}
                                     style={{
                                         maxWidth: '100%',
-                                        maxHeight: '300px',
+                                        maxHeight: '400px', // Increased height for better view
                                         borderRadius: '8px',
                                         cursor: 'zoom-in',
                                         objectFit: 'contain'
                                     }}
-                                    onClick={() => {
-                                        const isHttpUrl = selectedEvent.sourceUrl &&
-                                            (selectedEvent.sourceUrl.startsWith('http://') || selectedEvent.sourceUrl.startsWith('https://'));
-
-                                        if (isHttpUrl) {
-                                            window.open(selectedEvent.sourceUrl, '_blank');
-                                        } else {
-                                            setSelectedImage(selectedEvent.gift.image);
-                                        }
-                                    }}
-                                    title={
-                                        (selectedEvent.sourceUrl && (selectedEvent.sourceUrl.startsWith('http://') || selectedEvent.sourceUrl.startsWith('https://')))
-                                            ? "點擊前往活動頁面"
-                                            : "點擊放大圖片"
-                                    }
+                                    onClick={() => setSelectedImage(selectedEvent.poster_url || selectedEvent.gift.image)}
+                                    title="點擊放大圖片"
                                 />
+                            )}
+                            {/* Source Link Button if exists */}
+                            {selectedEvent.source_url && (
+                                <div style={{ marginTop: '10px' }}>
+                                    <a
+                                        href={selectedEvent.source_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ color: '#e63946', textDecoration: 'none', fontWeight: 'bold' }}
+                                    >
+                                        前往活動來源網頁 →
+                                    </a>
+                                </div>
                             )}
                         </div>
                     </div>

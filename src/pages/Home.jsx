@@ -143,57 +143,93 @@ const Home = () => {
 
 
             {/* Date Selection Menu */}
+            {/* Date Selection Menu */}
             <div style={{
                 display: 'flex',
                 overflowX: 'auto',
-                padding: '10px',
+                padding: '12px 16px',
                 background: '#fff',
-                gap: '10px',
-                borderBottom: '1px solid #eee',
-                marginBottom: '1rem',
+                gap: '12px',
+                // borderBottom: '1px solid #f0f0f0', // Clean look
+                marginBottom: '0.5rem',
                 whiteSpace: 'nowrap',
-                scrollbarWidth: 'none' // Hide scrollbar Firefox
+                scrollbarWidth: 'none', // Hide scrollbar Firefox
+                msOverflowStyle: 'none'  // Hide scrollbar IE/Edge
             }}>
+                <style>{`
+                    /* Hide scrollbar for Chrome, Safari and Opera */
+                    div::-webkit-scrollbar {
+                        display: none;
+                    }
+                `}</style>
                 <button
                     onClick={() => setSelectedDate('')}
                     style={{
-                        padding: '6px 16px',
-                        borderRadius: '20px',
-                        border: selectedDate === '' ? 'none' : '1px solid #ddd',
-                        background: selectedDate === '' ? '#e63946' : '#f8f9fa',
-                        color: selectedDate === '' ? '#fff' : '#333',
+                        padding: '8px 16px',
+                        borderRadius: '12px',
+                        border: selectedDate === '' ? 'none' : '1px solid #eee',
+                        background: selectedDate === '' ? 'linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%)' : '#fff',
+                        color: selectedDate === '' ? '#fff' : '#555',
                         cursor: 'pointer',
-                        fontWeight: '500',
-                        fontSize: '0.9rem',
-                        flexShrink: 0
+                        fontWeight: selectedDate === '' ? '600' : '500',
+                        fontSize: '0.95rem',
+                        flexShrink: 0,
+                        boxShadow: selectedDate === '' ? '0 4px 12px rgba(255, 107, 107, 0.3)' : '0 2px 6px rgba(0,0,0,0.04)',
+                        transition: 'all 0.2s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                     }}
                 >
                     全部日期
                 </button>
-                {uniqueDates.map(date => (
-                    <button
-                        key={date}
-                        onClick={() => setSelectedDate(date)}
-                        style={{
-                            padding: '6px 16px',
-                            borderRadius: '20px',
-                            border: selectedDate === date ? 'none' : '1px solid #ddd',
-                            background: selectedDate === date ? '#e63946' : '#f8f9fa',
-                            color: selectedDate === date ? '#fff' : '#333',
-                            cursor: 'pointer',
-                            fontWeight: '500',
-                            fontSize: '0.9rem',
-                            flexShrink: 0
-                        }}
-                    >
-                        {date.slice(5)} <span style={{ fontSize: '0.8em', opacity: 0.8, marginLeft: '4px' }}>({dateCounts[date]})</span>
-                    </button>
-                ))}
+                {uniqueDates.map(date => {
+                    const isSelected = selectedDate === date;
+                    const dateObj = new Date(date);
+                    const day = dateObj.getDate();
+                    const month = dateObj.getMonth() + 1;
+                    const weekDay = ['日', '一', '二', '三', '四', '五', '六'][dateObj.getDay()];
+
+                    return (
+                        <button
+                            key={date}
+                            onClick={() => setSelectedDate(date)}
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                minWidth: '60px',
+                                padding: '8px 12px',
+                                borderRadius: '12px',
+                                border: isSelected ? 'none' : '1px solid #eee',
+                                background: isSelected ? 'linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%)' : '#fff',
+                                color: isSelected ? '#fff' : '#555',
+                                cursor: 'pointer',
+                                flexShrink: 0,
+                                boxShadow: isSelected ? '0 4px 12px rgba(255, 107, 107, 0.3)' : '0 2px 6px rgba(0,0,0,0.04)',
+                                transition: 'all 0.2s ease',
+                                position: 'relative'
+                            }}
+                        >
+                            <span style={{ fontSize: '0.75rem', opacity: 0.9, marginBottom: '2px' }}>{month}/{day} ({weekDay})</span>
+                            <span style={{
+                                fontSize: '0.85rem',
+                                fontWeight: 'bold',
+                                background: isSelected ? 'rgba(255,255,255,0.2)' : '#f0f0f0',
+                                padding: '2px 8px',
+                                borderRadius: '10px',
+                                color: isSelected ? '#fff' : '#666'
+                            }}>
+                                {dateCounts[date]}場
+                            </span>
+                        </button>
+                    )
+                })}
             </div>
 
             <main className={styles.main}>
                 <div className={styles.listHeader}>
-                    <h2>捐血活動</h2>
                     <span className={styles.count}>共 {filteredEvents.length} 場活動</span>
                 </div>
                 <EventList events={filteredEvents} onEventClick={setSelectedEvent} />

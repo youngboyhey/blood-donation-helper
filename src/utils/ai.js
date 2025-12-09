@@ -30,35 +30,39 @@ const getModel = (retryCount) => {
         model: genAI.getGenerativeModel({
             model: modelName,
             generationConfig: { responseMimeType: "application/json" }
-        }),
-        keyMasked: key.substring(0, 5) + '...',
-        modelName: modelName
-    };
-};
+    const gen = genAI.getGenerativeModel({
+                model: modelName,
+                generationConfig: { responseMimeType: "application/json" }
+            });
+            const keyMasked = key.substring(0, 5) + '...';
+            const desc = `Key ${keyMasked} with Model ${modelName}`;
 
-export async function analyzeImage(imageUrl) {
-    if (API_KEYS.length === 0) {
-        console.error("No API Keys found!");
-        return [];
-    }
+            return { gen, desc };
+        };
 
-    // Fetch the image to get base64
-    let base64Data;
-    try {
-        const response = await fetch(imageUrl);
-        const blob = await response.blob();
-        base64Data = await new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onloadend = () => resolve(reader.result.split(',')[1]);
-        });
-    } catch (e) {
-        console.error("Failed to download image for analysis:", e);
-        return [];
-    }
+        export async function analyzeImage(imageUrl, onStatus = () => { }) {
+        if (!API_KEYS_STR) {
+            throw new Error("Missing VITE_GEMINI_API_KEY");
+        }
 
-    const today = new Date().toISOString().split('T')[0];
-    const prompt = `請分析這張捐血活動海報。
+        onStatus("準備下載圖片...");
+        // Fetch the image to get base64
+        let base64Data;
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            base64Data = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = () => resolve(reader.result.split(',')[1]);
+            });
+        } catch (e) {
+            console.error("Failed to download image for analysis:", e);
+            return [];
+        }
+
+        const today = new Date().toISOString().split('T')[0];
+        const prompt = `請分析這張捐血活動海報。
 今天是 ${today}。
 
 【嚴格過濾規則 - 重要】
@@ -94,53 +98,39 @@ export async function analyzeImage(imageUrl) {
 ]
 `;
 
-    // Retry Loop
-    const maxRetries = API_KEYS.length * MODELS.length * 2; // Allow 2 full cycles
-    let retryCount = 0;
+        // Retry Loop
+        const maxRetries = API_KEYS.length * MODELS.length * 2; // Allow 2 full cycles
+        let retryCount = 0;
 
-    while (retryCount < maxRetries) {
-        try {
-            const { model, keyMasked, modelName } = getModel(retryCount);
-            if (retryCount > 0) {
-                console.log(`[AI Retry] Attempt ${retryCount}: Using Key ${keyMasked} with Model ${modelName}`);
-            }
-
-            const result = await model.generateContent([
-                prompt,
-                {
-                    inlineData: {
-                        data: base64Data,
-                        mimeType: "image/jpeg"
-                    }
-                }
-            ]);
-
-            const response = await result.response;
-            const text = response.text();
-
-            // Basic cleaning of JSON string
-            const jsonStr = text.replace(/```json/gi, '').replace(/```/g, '').trim();
-
-            if (jsonStr === 'null' || jsonStr === '[]') return [];
+        while (retryCount < maxRetries) {
+            const { gen, desc } = getModel(retryCount);
+            const msg = `AI 分析中... (${desc})`;
+            console.log(msg);
+            onStatus(msg);
 
             try {
+                const result = await gen.generateContent([
+                    prompt,
+                    {
+                        inlineData: {
+                            data: base64Data,
+                            mimeType: "image/jpeg"
+                        }
+                    }
+                ]);
+
+                const response = await result.response;
+                const text = response.text();
+
+                // Basic cleanup to extract JSON array
+                const jsonStr = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+
+                if (jsonStr === 'null') return [];
+
                 const parsed = JSON.parse(jsonStr);
                 return Array.isArray(parsed) ? parsed : [parsed];
-            } catch (e) {
-                console.error("AI Parse Error:", text);
-                // Parsing error might be model hallucination, try next model? 
-                // Mostly usually better to just fail or retry. Let's retry.
-                throw new Error("JSON Parse Error");
-            }
 
-        } catch (error) {
-            const isQuotaError = error.message.includes('429') ||
-                error.message.includes('Resource has been exhausted') ||
-                error.message.includes('Quota exceeded');
-
-            if (isQuotaError) {
-                console.warn(`[AI] Quota/Rate limit hit (${error.message}). Switching...`);
-                retryCount++;
+            } catch (error) {
                 await new Promise(r => setTimeout(r, 1000)); // Brief pause
                 continue;
             }

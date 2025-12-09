@@ -8,8 +8,10 @@ const Admin = () => {
     const { signOut } = useAuth();
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const [analyzing, setAnalyzing] = useState(false);
+    const [statusMessage, setStatusMessage] = useState(""); // Detailed status
     const [scannedEvents, setScannedEvents] = useState([]); // AI result candidates
     const [showScanner, setShowScanner] = useState(false);
     const [expandedImage, setExpandedImage] = useState(null); // For Lightbox
@@ -20,7 +22,9 @@ const Admin = () => {
 
     const fetchEvents = async () => {
         setLoading(true);
-        const { data } = await supabase.from('events').select('*').order('date', { ascending: false });
+        const { data } = await supabase.from('events')
+            .select('*')
+            .order('date', { ascending: true }); // Sort by nearest date first
         setEvents(data || []);
         setLoading(false);
     };
@@ -37,6 +41,7 @@ const Admin = () => {
         if (!file) return;
 
         setUploading(true);
+        setStatusMessage("正在上傳圖片至 Supabase...");
         try {
             const fileName = `${Date.now()}_${file.name}`;
             const { data, error } = await supabase.storage.from('posters').upload(fileName, file);
@@ -48,8 +53,13 @@ const Admin = () => {
 
             // Step 2: Analyze with AI
             setAnalyzing(true);
-            const aiResults = await analyzeImage(publicUrl);
+            setUploading(false); // Upload done, analyzing starts
+            // statusMessage will be updated by analyzeImage callback
+
+            const aiResults = await analyzeImage(publicUrl, (msg) => setStatusMessage(msg));
+
             setAnalyzing(false);
+            setStatusMessage(""); // Clear status
 
             if (aiResults && aiResults.length > 0) {
                 // Attach the poster URL to each result
@@ -63,6 +73,7 @@ const Admin = () => {
         } catch (error) {
             console.error('Upload failed:', error);
             alert('上傳失敗: ' + error.message);
+            setStatusMessage("");
         } finally {
             setUploading(false);
             setAnalyzing(false);
@@ -115,22 +126,16 @@ const Admin = () => {
             </div>
 
             {/* Upload Section */}
-            <div style={{ background: '#f8f9fa', padding: '1.5rem', borderRadius: '8px', marginBottom: '2rem', border: '2px dashed #dee2e6' }}>
-                <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 0 }}>
-                    <Upload size={20} />
-                    上傳活動海報 (AI 自動辨識)
-                </h3>
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileUpload}
-                    disabled={uploading || analyzing}
-                    style={{ marginBottom: '1rem' }}
-                />
+            <div className="upload-section" style={{ marginBottom: '2rem', padding: '1rem', border: '2px dashed #ccc', borderRadius: '8px', textAlign: 'center' }}>
+                <h3>上傳活動海報</h3>
+                <p>AI 將自動辨識海報內容並填寫資訊</p>
+                <input type="file" accept="image/*" onChange={handleFileUpload} disabled={uploading || analyzing} />
+
                 {(uploading || analyzing) && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#666' }}>
-                        <Loader2 className="animate-spin" size={16} />
-                        {uploading ? '上傳中...' : 'AI 正在分析海報內容...'}
+                    <div style={{ marginTop: '1rem', color: '#007bff' }}>
+                        {uploading && <span>⏳ 上傳中...</span>}
+                        {analyzing && <span>🤖 </span>}
+                        <span>{statusMessage}</span>
                     </div>
                 )}
             </div>

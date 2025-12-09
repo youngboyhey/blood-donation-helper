@@ -9,6 +9,7 @@ const Home = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedDistrict, setSelectedDistrict] = useState('');
+    const [selectedDate, setSelectedDate] = useState(''); // Date filter
     const [events, setEvents] = useState([]);
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
@@ -70,6 +71,20 @@ const Home = () => {
         })
         : [];
 
+    const handleCityChange = (e) => {
+        setSelectedCity(e.target.value);
+        setSelectedDistrict(''); // 重置區域選擇
+    };
+
+    // Extract unique dates and their counts
+    const dateCounts = events.reduce((acc, event) => {
+        const date = event.date.split('T')[0];
+        acc[date] = (acc[date] || 0) + 1;
+        return acc;
+    }, {});
+
+    const uniqueDates = Object.keys(dateCounts).sort();
+
     useEffect(() => {
         const results = events.filter(event => {
             const matchesSearch = (
@@ -80,17 +95,15 @@ const Home = () => {
             );
             const matchesCity = selectedCity ? event.city === selectedCity : true;
             const matchesDistrict = selectedDistrict ? event.district === selectedDistrict : true;
+            const matchesDate = selectedDate ? event.date === selectedDate : true;
 
-            return matchesSearch && matchesCity && matchesDistrict;
+            return matchesSearch && matchesCity && matchesDistrict && matchesDate;
         });
 
         // 依照日期排序：由近到遠
         results.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         setFilteredEvents(results);
-    }, [searchTerm, selectedCity, selectedDistrict, events]);
-
-    const handleCityChange = (e) => {
         setSelectedCity(e.target.value);
         setSelectedDistrict(''); // 重置區域選擇
     };
@@ -128,6 +141,58 @@ const Home = () => {
                     </select>
                 </div>
                 <SearchBar onSearch={setSearchTerm} />
+            </div>
+
+            <SearchBar onSearch={setSearchTerm} />
+        </div>
+
+            {/* Date Selection Menu */ }
+            <div style={{ 
+                display: 'flex', 
+                overflowX: 'auto', 
+                padding: '10px', 
+                background: '#fff', 
+                gap: '10px',
+                borderBottom: '1px solid #eee',
+                marginBottom: '1rem',
+                whiteSpace: 'nowrap',
+                scrollbarWidth: 'none' // Hide scrollbar Firefox
+            }}>
+                <button 
+                    onClick={() => setSelectedDate('')}
+                    style={{
+                        padding: '6px 16px',
+                        borderRadius: '20px',
+                        border: selectedDate === '' ? 'none' : '1px solid #ddd',
+                        background: selectedDate === '' ? '#e63946' : '#f8f9fa',
+                        color: selectedDate === '' ? '#fff' : '#333',
+                        cursor: 'pointer',
+                        fontWeight: '500',
+                        fontSize: '0.9rem',
+                        flexShrink: 0
+                    }}
+                >
+                    全部日期
+                </button>
+                {uniqueDates.map(date => (
+                    <button 
+                        key={date}
+                        onClick={() => setSelectedDate(date)}
+                        style={{
+                            padding: '6px 16px',
+                            borderRadius: '20px',
+                            border: selectedDate === date ? 'none' : '1px solid #ddd',
+                            background: selectedDate === date ? '#e63946' : '#f8f9fa',
+                            color: selectedDate === date ? '#fff' : '#333',
+                            cursor: 'pointer',
+                            fontWeight: '500',
+                            fontSize: '0.9rem',
+                            flexShrink: 0
+                        }}
+                    >
+                        {date.slice(5)} <span style={{ fontSize: '0.8em', opacity: 0.8, marginLeft: '4px' }}>({dateCounts[date]})</span>
+                    </button>
+                ))}
             </div>
 
             <main className={styles.main}>
@@ -185,60 +250,62 @@ const Home = () => {
                 )}
             </Modal>
 
-            {/* Lightbox Overlay */}
-            {selectedImage && (
-                <div
+    {/* Lightbox Overlay */ }
+    {
+        selectedImage && (
+            <div
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 2000,
+                    cursor: 'zoom-out'
+                }}
+                onClick={() => setSelectedImage(null)}
+            >
+                <img
+                    src={selectedImage}
+                    alt="Full size"
                     style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100vw',
-                        height: '100vh',
-                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        maxWidth: '95vw',
+                        maxHeight: '95vh',
+                        objectFit: 'contain',
+                        borderRadius: '4px'
+                    }}
+                />
+                <button
+                    style={{
+                        position: 'absolute',
+                        top: '20px',
+                        right: '20px',
+                        background: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '40px',
+                        height: '40px',
+                        fontSize: '20px',
+                        cursor: 'pointer',
                         display: 'flex',
                         justifyContent: 'center',
-                        alignItems: 'center',
-                        zIndex: 2000,
-                        cursor: 'zoom-out'
+                        alignItems: 'center'
                     }}
-                    onClick={() => setSelectedImage(null)}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedImage(null);
+                    }}
                 >
-                    <img
-                        src={selectedImage}
-                        alt="Full size"
-                        style={{
-                            maxWidth: '95vw',
-                            maxHeight: '95vh',
-                            objectFit: 'contain',
-                            borderRadius: '4px'
-                        }}
-                    />
-                    <button
-                        style={{
-                            position: 'absolute',
-                            top: '20px',
-                            right: '20px',
-                            background: 'white',
-                            border: 'none',
-                            borderRadius: '50%',
-                            width: '40px',
-                            height: '40px',
-                            fontSize: '20px',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedImage(null);
-                        }}
-                    >
-                        ×
-                    </button>
-                </div>
-            )}
-        </div>
+                    ×
+                </button>
+            </div>
+        )
+    }
+        </div >
     );
 };
 

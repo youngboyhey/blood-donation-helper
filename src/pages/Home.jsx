@@ -141,9 +141,7 @@ const Home = () => {
                 <SearchBar onSearch={setSearchTerm} />
             </div>
 
-            <SearchBar onSearch={setSearchTerm} />
         </div>
-
             {/* Date Selection Menu */ }
             <div style={{ 
                 display: 'flex', 

@@ -49,26 +49,36 @@ const Home = () => {
         '高雄市', '屏東縣', '宜蘭縣', '花蓮縣', '台東縣', '澎湖縣', '金門縣', '連江縣'
     ];
 
-    // 提取所有有活動的縣市並排序
-    const cities = [...new Set(events.map(e => e.city).filter(c => c && c !== 'null' && c !== 'undefined'))].sort((a, b) => {
+    // Helper: Filter events by search term
+    const filterBySearch = (event) => {
+        if (!searchTerm) return true;
+        const term = searchTerm.toLowerCase();
+        return (
+            event.title?.toLowerCase().includes(term) ||
+            event.location?.toLowerCase().includes(term) ||
+            event.gift?.name?.toLowerCase().includes(term) ||
+            event.tags?.some(tag => tag.toLowerCase().includes(term))
+        );
+    };
+
+    // 1. Calculate Available Cities & Districts (based on Date + Search)
+    // The location dropdowns should show options available on the selected date
+    const eventsForLocationMenu = events.filter(event => {
+        const matchesDate = selectedDate ? event.date === selectedDate : true;
+        return matchesDate && filterBySearch(event);
+    });
+
+    const cities = [...new Set(eventsForLocationMenu.map(e => e.city).filter(c => c && c !== 'null' && c !== 'undefined'))].sort((a, b) => {
         const indexA = CITY_ORDER.indexOf(a);
         const indexB = CITY_ORDER.indexOf(b);
-        // 如果都在列表中，照順序排
         if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-        // 如果只有 A 在列表中，A 排前面
         if (indexA !== -1) return -1;
-        // 如果只有 B 在列表中，B 排前面
         if (indexB !== -1) return 1;
-        // 都不在列表中，照字串排序
         return a.localeCompare(b, 'zh-TW');
     });
 
-    // 根據選擇的縣市提取有活動的區域並排序
     const districts = selectedCity
-        ? [...new Set(events.filter(e => e.city === selectedCity).map(e => e.district).filter(d => d && d !== 'null' && d !== 'undefined'))].sort((a, b) => {
-            // 區域暫時使用筆畫/字串排序，因為各縣市區域順序繁多
-            return a.localeCompare(b, 'zh-TW');
-        })
+        ? [...new Set(eventsForLocationMenu.filter(e => e.city === selectedCity).map(e => e.district).filter(d => d && d !== 'null' && d !== 'undefined'))].sort((a, b) => a.localeCompare(b, 'zh-TW'))
         : [];
 
     const handleCityChange = (e) => {
@@ -76,8 +86,15 @@ const Home = () => {
         setSelectedDistrict(''); // 重置區域選擇
     };
 
-    // Extract unique dates and their counts
-    const dateCounts = events.reduce((acc, event) => {
+    // 2. Calculate Available Dates & Counts (based on City + District + Search)
+    // The date menu should show dates available in the selected location
+    const eventsForDateMenu = events.filter(event => {
+        const matchesCity = selectedCity ? event.city === selectedCity : true;
+        const matchesDistrict = selectedDistrict ? event.district === selectedDistrict : true;
+        return matchesCity && matchesDistrict && filterBySearch(event);
+    });
+
+    const dateCounts = eventsForDateMenu.reduce((acc, event) => {
         const date = event.date.split('T')[0];
         acc[date] = (acc[date] || 0) + 1;
         return acc;
@@ -85,14 +102,11 @@ const Home = () => {
 
     const uniqueDates = Object.keys(dateCounts).sort();
 
+    // 3. Final Filtered Events (for the list)
+    // This is the intersection of ALL filters
     useEffect(() => {
         const results = events.filter(event => {
-            const matchesSearch = (
-                event.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                event.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                event.gift?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                event.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-            );
+            const matchesSearch = filterBySearch(event);
             const matchesCity = selectedCity ? event.city === selectedCity : true;
             const matchesDistrict = selectedDistrict ? event.district === selectedDistrict : true;
             const matchesDate = selectedDate ? event.date === selectedDate : true;

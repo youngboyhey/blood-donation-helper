@@ -273,8 +273,12 @@ async function analyzeContentWithAI(item, sourceContext) {
     const maxRetries = keys.length * MODELS.length * 2;
 
     while (retries < maxRetries) {
+        let desc = `Retry ${retries}`;
         try {
-            const { gen, desc } = getModel(retries);
+            const modelInfo = getModel(retries);
+            const gen = modelInfo.gen;
+            desc = modelInfo.desc;
+
             if (retries > 0) console.log(`[AI Retry] ${desc}`);
 
             const base64 = await fetchImageAsBase64(item.url);
@@ -287,7 +291,6 @@ async function analyzeContentWithAI(item, sourceContext) {
 若海報缺少以下任一關鍵資訊，請直接回傳 null (與其給錯誤資訊，不如不要)：
 1. **日期** (必須明確)
 2. **地點** (必須明確)
-3. **贈品** (需有實質物品，若僅寫 "捐血好禮" 無法辨識細節，也視為不合格海報，或是回傳 null) -> 修正：若無贈品細節，gift 欄位填 null 即可，不需丟棄整個活動，除非連地點都沒有。
 **修正規則**：
 - 必須要有「日期」與「地點」。
 - 若無年份，依今日(${today})推算。
@@ -301,20 +304,21 @@ async function analyzeContentWithAI(item, sourceContext) {
 - **district (行政區)**: 例如 "中寮鄉", "北區"。
 - **location**: 完整地點名稱。
 
-回傳 JSON 陣列 (可能有多場):
+請輸出 JSON 陣列，欄位如下：
 [
   {
-    "title": "活動標題",
+    "title": "活動標題 (請包含地點與關鍵特色)",
     "date": "YYYY-MM-DD",
-    "time": "HH:MM",
-    "location": "完整地點",
+    "time": "HH:MM-HH:MM",
+    "location": "地點名稱",
     "city": "縣市",
     "district": "行政區",
-    "organizer": "單位",
-    "gift": { "name": "贈品名", "image": null },
-    "tags": ["AI"]
+    "organizer": "主辦單位",
+    "gift": { "name": "贈品名稱 (若無實質贈品填 null)", "image": null },
+    "tags": ["AI辨識"]
   }
-]`;
+]
+`;
             const result = await gen.generateContent([prompt, { inlineData: { data: base64, mimeType: "image/jpeg" } }]);
             const txt = result.response.text().replace(/```json/g, '').replace(/```/g, '').trim();
             if (txt === 'null') return null;
@@ -322,13 +326,20 @@ async function analyzeContentWithAI(item, sourceContext) {
             return JSON.parse(txt);
 
         } catch (e) {
-            if (e.message.includes('429') || e.message.includes('Quota')) {
-                console.warn(`[AI] Rate Limit (${desc}). Switching...`);
+            // Enhanced error logging
+            const isRateLimit = e.message.includes('429') || e.message.includes('Quota') || e.message.includes('Resource has been exhausted');
+
+            if (isRateLimit) {
+                console.warn(`[AI] Rate Limit hit (${desc}). Switching...`);
                 retries++;
                 await new Promise(r => setTimeout(r, 1000));
             } else {
-                console.warn(`[AI] Error: ${e.message}`);
-                return null; // Parse error or other
+                console.warn(`[AI] Analysis Error (${desc}): ${e.message}`);
+                // Try next model/key anyway for robustness? Or skip?
+                // Typically parsing errors or blocked content won't be fixed by changing keys, but maybe models.
+                // Let's retry just in case.
+                retries++;
+                await new Promise(r => setTimeout(r, 1000));
             }
         }
     }

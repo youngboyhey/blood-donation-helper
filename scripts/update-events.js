@@ -607,6 +607,13 @@ async function fetchImageAsBase64(url) {
         return null;
     }
 }
+class QuotaExhaustedError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "QuotaExhaustedError";
+    }
+}
+
 async function analyzeContentWithAI(item, sourceContext) {
     const isImage = item.type === 'image';
     const contentPreview = isImage ? item.url.substring(0, 50) : item.content.substring(0, 50);
@@ -801,6 +808,7 @@ ${item.content}
 
     if (retryCount >= maxRetries) {
         console.error(`[AI] All API keys and Models exhausted after ${maxRetries} attempts.`);
+        throw new QuotaExhaustedError("All API keys and Models exhausted.");
     }
     return null;
 }
@@ -852,101 +860,82 @@ async function updateEvents() {
 
         console.log(`[${source.name}] 準備分析 ${items.length} 筆項目...`);
 
-        for (const item of items) {
-            // 2. 檢查快取
-            if (item.type === 'image' && cachedEventsMap.has(item.url)) {
-                const cachedEvent = cachedEventsMap.get(item.url);
+        try { // Prepare to catch loop-breaking error
+            for (const item of items) {
+                // 2. 檢查快取
+                if (item.type === 'image' && cachedEventsMap.has(item.url)) {
+                    const cachedEvent = cachedEventsMap.get(item.url);
 
-                // 檢查快取活動是否過期
-                if (cachedEvent.date) {
-                    const eventDate = new Date(cachedEvent.date);
-                    if (eventDate >= today) {
-                        console.log(`[Cache] 命中快取，跳過 AI 分析: ${cachedEvent.title} (${cachedEvent.date})`);
-                        allNewEvents.push(cachedEvent);
-                        continue;
+                    // 檢查快取活動是否過期
+                    if (cachedEvent.date) {
+                        const eventDate = new Date(cachedEvent.date);
+                        if (eventDate >= today) {
+                            console.log(`[Cache] 命中快取，跳過 AI 分析: ${cachedEvent.title} (${cachedEvent.date})`);
+                            allNewEvents.push(cachedEvent);
+                            continue;
+                        } else {
+                            console.log(`[Cache] 快取資料已過期，忽略: ${cachedEvent.title}`);
+                            continue;
+                        }
+                    }
+                }
+
+                // 3. 無快取，執行 AI 分析
+                // Rate Limit Protection: 增加 4 秒延遲，確保不超過 15 RPM (60s/4s = 15)
+                // 雖然 gemini-2.0-flash-lite 支援 30 RPM，但保留緩衝更安全
+                await new Promise(resolve => setTimeout(resolve, 4000));
+
+                try {
+                    const eventDataList = await analyzeContentWithAI(item, source);
+
+                    if (eventDataList && eventDataList.length > 0) {
+                        // ... processing ...
+                        // (Keep existing processing logic, just wrapping analyzeCall)
+                        for (const eventData of eventDataList) {
+                            // ... same content as original lines 882-949 ...
+                            if (!eventData) continue;
+                            const normalizeText = (text) => { if (!text) return text; return text.replace(/臺/g, '台'); };
+                            eventData.city = normalizeText(eventData.city);
+                            eventData.location = normalizeText(eventData.location);
+                            if (eventData.date) {
+                                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                                if (!dateRegex.test(eventData.date)) { console.log(`[跳過] 日期格式錯誤: ${eventData.title} (${eventData.date})`); continue; }
+                                const eventDate = new Date(eventData.date);
+                                if (isNaN(eventDate.getTime())) { console.log(`[跳過] 無效日期: ${eventData.title} (${eventData.date})`); continue; }
+                                if (eventDate < today) { console.log(`[跳過] 過期活動: ${eventData.title} (${eventData.date})`); continue; }
+                            } else { console.log(`[跳過] 缺少日期: ${eventData.title}`); continue; }
+                            const genericKeywords = ['全台', '全國', '各校園', '各捐血點', '各地', '全省'];
+                            if (eventData.location && genericKeywords.some(kw => eventData.location.includes(kw)) && eventData.location.length < 10) { console.log(`[跳過] 通用地點: ${eventData.title} (${eventData.location})`); continue; }
+                            const listKeywords = ['一覽表', '場次表', '行程表'];
+                            if (eventData.title && listKeywords.some(kw => eventData.title.includes(kw))) { console.log(`[跳過] 彙整類標題: ${eventData.title}`); continue; }
+                            if (item.type === 'image') {
+                                eventData.posterUrl = item.url;
+                                if (eventData.gift) eventData.gift.image = item.url;
+                            } else { console.log(`[跳過] 無圖片活動: ${eventData.title}`); continue; }
+                            eventData.sourceUrl = item.postUrl || item.url || source.url || item.sourceUrl;
+                            eventData.id = Date.now() + Math.random();
+                            if (eventData.date && eventData.location) {
+                                allNewEvents.push(eventData);
+                                console.log(`[成功] 提取活動: ${eventData.title} (${eventData.location})`);
+                            }
+                        }
+                    }
+                } catch (error) {
+                    if (error instanceof QuotaExhaustedError) {
+                        console.error("\n[CRITICAL] 額度完全耗盡，停止所有爬蟲任務！！");
+                        // Break out of item loop
+                        throw error;
                     } else {
-                        console.log(`[Cache] 快取資料已過期，忽略: ${cachedEvent.title}`);
-                        continue;
+                        console.error("處理項目時發生未預期錯誤:", error);
                     }
                 }
             }
-
-            // 3. 無快取，執行 AI 分析
-            // Rate Limit Protection: 增加 4 秒延遲，確保不超過 15 RPM (60s/4s = 15)
-            // 雖然 gemini-2.0-flash-lite 支援 30 RPM，但保留緩衝更安全
-            await new Promise(resolve => setTimeout(resolve, 4000));
-
-            const eventDataList = await analyzeContentWithAI(item, source);
-
-            if (eventDataList && eventDataList.length > 0) {
-                for (const eventData of eventDataList) {
-                    if (!eventData) continue;
-
-                    // 輔助函式：正規化文字 (將 "臺" 轉為 "台")
-                    const normalizeText = (text) => {
-                        if (!text) return text;
-                        return text.replace(/臺/g, '台');
-                    };
-
-                    eventData.city = normalizeText(eventData.city);
-                    eventData.location = normalizeText(eventData.location);
-
-                    // 日期過濾：只保留今天以後的活動，且格式必須正確
-                    if (eventData.date) {
-                        // 驗證日期格式 YYYY-MM-DD
-                        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-                        if (!dateRegex.test(eventData.date)) {
-                            console.log(`[跳過] 日期格式錯誤: ${eventData.title} (${eventData.date})`);
-                            continue;
-                        }
-
-                        const eventDate = new Date(eventData.date);
-                        if (isNaN(eventDate.getTime())) {
-                            console.log(`[跳過] 無效日期: ${eventData.title} (${eventData.date})`);
-                            continue;
-                        }
-
-                        if (eventDate < today) {
-                            console.log(`[跳過] 過期活動: ${eventData.title} (${eventData.date})`);
-                            continue;
-                        }
-                    } else {
-                        console.log(`[跳過] 缺少日期: ${eventData.title}`);
-                        continue;
-                    }
-
-                    // 地點過濾：排除模糊地點
-                    const genericKeywords = ['全台', '全國', '各校園', '各捐血點', '各地', '全省'];
-                    if (eventData.location && genericKeywords.some(kw => eventData.location.includes(kw)) && eventData.location.length < 10) {
-                        console.log(`[跳過] 通用地點: ${eventData.title} (${eventData.location})`);
-                        continue;
-                    }
-
-                    // 標題過濾：排除 "一覽表"、"場次表" 等彙整類標題
-                    const listKeywords = ['一覽表', '場次表', '行程表'];
-                    if (eventData.title && listKeywords.some(kw => eventData.title.includes(kw))) {
-                        console.log(`[跳過] 彙整類標題: ${eventData.title}`);
-                        continue;
-                    }
-
-                    if (item.type === 'image') {
-                        eventData.posterUrl = item.url;
-                        if (eventData.gift) {
-                            eventData.gift.image = item.url;
-                        }
-                    } else {
-                        // 使用者要求：沒有圖片就不要顯示
-                        console.log(`[跳過] 無圖片活動: ${eventData.title}`);
-                        continue;
-                    }
-                    eventData.sourceUrl = item.postUrl || item.url || source.url || item.sourceUrl;
-                    eventData.id = Date.now() + Math.random();
-
-                    if (eventData.date && eventData.location) {
-                        allNewEvents.push(eventData);
-                        console.log(`[成功] 提取活動: ${eventData.title} (${eventData.location})`);
-                    }
-                }
+        } catch (error) {
+            if (error instanceof QuotaExhaustedError) {
+                console.log("[Core] 偵測到額度耗盡，停止處理此來源並終止程式。");
+                break; // Break out of SOURCES loop
+            } else {
+                throw error; // Rethrow other errors
             }
         }
     }

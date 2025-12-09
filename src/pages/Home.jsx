@@ -104,9 +104,7 @@ const Home = () => {
         results.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         setFilteredEvents(results);
-        setSelectedCity(e.target.value);
-        setSelectedDistrict(''); // 重置區域選擇
-    };
+    }, [searchTerm, selectedCity, selectedDistrict, selectedDate, events]);
 
     return (
         <div className={styles.container}>

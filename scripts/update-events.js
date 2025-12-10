@@ -17,17 +17,17 @@ const SOURCES = [
     { type: 'web', id: 'hsinchu', name: '新竹捐血中心', url: 'https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492', baseUrl: 'https://www.sc.blood.org.tw' },
 
     // Google 搜尋爬蟲 (針對無彙整頁的縣市，搜尋一週內圖片)
-    // 規則：前5-10張，一週內
-    { type: 'google', id: 'taichung', name: '台中', query: '台中 捐血活動' },
-    { type: 'google', id: 'changhua', name: '彰化', query: '彰化 捐血活動' },
-    { type: 'google', id: 'nantou', name: '南投', query: '南投 捐血活動' },
-    { type: 'google', id: 'yunlin', name: '雲林', query: '雲林 捐血活動' },
-    { type: 'google', id: 'tainan', name: '台南', query: '台南 捐血活動' },
-    { type: 'google', id: 'chiayi', name: '嘉義', query: '嘉義 捐血活動' },
-    { type: 'google', id: 'kaohsiung', name: '高雄', query: '高雄 捐血活動' },
-    { type: 'google', id: 'pingtung', name: '屏東', query: '屏東 捐血活動' },
-    { type: 'google', id: 'taitung', name: '台東', query: '台東 捐血活動' },
-    { type: 'google', id: 'penghu', name: '澎湖', query: '澎湖 捐血活動' },
+    // 規則：前5-10張，一週內，限定 Instagram 來源
+    { type: 'google', id: 'taichung', name: '台中', query: '台中 捐血活動 site:instagram.com' },
+    { type: 'google', id: 'changhua', name: '彰化', query: '彰化 捐血活動 site:instagram.com' },
+    { type: 'google', id: 'nantou', name: '南投', query: '南投 捐血活動 site:instagram.com' },
+    { type: 'google', id: 'yunlin', name: '雲林', query: '雲林 捐血活動 site:instagram.com' },
+    { type: 'google', id: 'tainan', name: '台南', query: '台南 捐血活動 site:instagram.com' },
+    { type: 'google', id: 'chiayi', name: '嘉義', query: '嘉義 捐血活動 site:instagram.com' },
+    { type: 'google', id: 'kaohsiung', name: '高雄', query: '高雄 捐血活動 site:instagram.com' },
+    { type: 'google', id: 'pingtung', name: '屏東', query: '屏東 捐血活動 site:instagram.com' },
+    { type: 'google', id: 'taitung', name: '台東', query: '台東 捐血活動 site:instagram.com' },
+    { type: 'google', id: 'penghu', name: '澎湖', query: '澎湖 捐血活動 site:instagram.com' },
 ];
 
 // --- Helpers ---

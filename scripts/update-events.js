@@ -128,25 +128,49 @@ async function fetchGoogleImages(source) {
     await page.setViewport({ width: 1920, height: 1080 });
 
     try {
-        await page.goto(`https://www.google.com/search?q=${encodeURIComponent(source.query)}&tbm=isch&tbs=qdr:w`, { waitUntil: 'networkidle2', timeout: 60000 });
+        // Add recent filter (qdr:m = past month for more results)
+        await page.goto(`https://www.google.com/search?q=${encodeURIComponent(source.query)}&tbm=isch&tbs=qdr:m`, { waitUntil: 'networkidle2', timeout: 60000 });
 
-        // Scroll
+        // Scroll to load more images
         await page.evaluate(async () => {
             await new Promise((resolve) => {
                 let totalHeight = 0;
                 const timer = setInterval(() => {
-                    window.scrollBy(0, 100);
-                    totalHeight += 100;
-                    if (totalHeight > 3000) { clearInterval(timer); resolve(); }
+                    window.scrollBy(0, 200);
+                    totalHeight += 200;
+                    if (totalHeight > 4000) { clearInterval(timer); resolve(); }
                 }, 100);
             });
         });
-        await new Promise(r => setTimeout(r, 2000));
+        await new Promise(r => setTimeout(r, 3000));
 
         const MAX_RESULTS = 8;
         let images = [];
-        let attempts = 0;
-        const thumbnails = await page.$$('div[data-id] img');
+
+        // Try multiple selectors (Google changes structure often)
+        const selectorPatterns = [
+            'div[data-id] img',
+            'div[jsname] img.rg_i',
+            'img.rg_i',
+            'div.isv-r img',
+            'a[jsname] img'
+        ];
+
+        let thumbnails = [];
+        for (const selector of selectorPatterns) {
+            thumbnails = await page.$$(selector);
+            if (thumbnails.length > 0) {
+                console.log(`[Google] Found ${thumbnails.length} thumbnails with selector: ${selector}`);
+                break;
+            }
+        }
+
+        if (thumbnails.length === 0) {
+            console.warn(`[Google] No thumbnails found for: ${source.query}`);
+            // Take screenshot for debugging
+            // await page.screenshot({ path: `debug_${source.id}.png` });
+            return [];
+        }
 
         for (let i = 0; i < Math.min(thumbnails.length, 30); i++) {
             if (images.length >= MAX_RESULTS) break;
@@ -154,19 +178,21 @@ async function fetchGoogleImages(source) {
             try {
                 // Click thumbnail
                 await thumbnails[i].click();
-                await new Promise(r => setTimeout(r, 1500));
+                await new Promise(r => setTimeout(r, 2000));
 
-                // Find High Res
+                // Find High Res image
                 const result = await page.evaluate(() => {
                     const imgs = Array.from(document.querySelectorAll('img'));
-                    // Strict Filter: > 300x300, no gstatic/google/icons
+                    // Strict Filter: >= 300x300, no gstatic/google/icons
                     const candidates = imgs.filter(img => {
                         const rect = img.getBoundingClientRect();
+                        const src = img.src || '';
                         return rect.width >= 300 && rect.height >= 300 &&
-                            img.src.startsWith('http') &&
-                            !img.src.includes('gstatic') &&
-                            !img.src.includes('google.com') &&
-                            !img.src.includes('favicon');
+                            src.startsWith('http') &&
+                            !src.includes('gstatic') &&
+                            !src.includes('google.com') &&
+                            !src.includes('favicon') &&
+                            !src.includes('logo');
                     });
 
                     if (candidates.length === 0) return null;
@@ -175,7 +201,7 @@ async function fetchGoogleImages(source) {
 
                     // Try to find Visit Link
                     const links = Array.from(document.querySelectorAll('a'));
-                    const visit = links.find(a => (a.innerText.includes('前往') || a.innerText.includes('Visit')));
+                    const visit = links.find(a => (a.innerText.includes('前往') || a.innerText.includes('Visit') || a.innerText.includes('造訪')));
 
                     return { src: candidates[0].src, visit: visit ? visit.href : null };
                 });
@@ -184,10 +210,13 @@ async function fetchGoogleImages(source) {
                     // Check Dupes in batch
                     if (!images.some(img => img.url === result.src)) {
                         images.push({ type: 'image', url: result.src, sourceUrl: result.visit });
+                        console.log(`[Google] ✓ Found image ${images.length}/${MAX_RESULTS}`);
                     }
                 }
             } catch (e) { }
         }
+
+        console.log(`[Google] Collected ${images.length} images for ${source.query}`);
         return images;
     } catch (e) {
         console.error(`[Google] Failed: ${e.message}`);
@@ -313,15 +342,16 @@ async function analyzeContentWithAI(item, sourceContext) {
 今天是 ${today}。
 
 【嚴格過濾規則 - 重要】
-若海報缺少以下任一關鍵資訊，請直接回傳 null (與其給錯誤資訊，不如不要)：
-1. **日期** (必須明確)
-2. **地點** (必須明確)
-**修正規則**：
-- 必須要有「日期」與「地點」。
-- 若無年份，依今日(${today})推算。
-- 若已過期，請回傳 null。
-- 若圖片尺寸極小或模糊無法辨識，回傳 null。
-- 若是「每週」或「每月」例行性文字，回傳 null。
+若海報符合以下任一情況，請直接回傳 null (與其給錯誤資訊，不如不要)：
+1. **缺少日期** (日期必須明確)
+2. **缺少地點** (地點必須明確)
+3. **已過期** - 活動日期早於今日(${today})
+4. **總表類海報** - 若海報包含「多場活動列表」、「總表」、「月行程表」等多筆活動資訊，請回傳 null（僅處理單場活動海報）
+5. **例行性文字** - 若僅有「每週」或「每月」等例行性說明，無具體日期，回傳 null
+6. **圖片品質差** - 若圖片尺寸極小或模糊無法辨識，回傳 null
+
+**日期推算規則**：
+- 若無年份，依今日(${today})推算最近的未來日期。
 
 【地點解析特別指示】
 請將地點精確拆分為:

@@ -438,11 +438,53 @@ async function updateEvents() {
     today.setHours(0, 0, 0, 0);
     const todayStr = today.toISOString().split('T')[0];
 
-    // 1. Auto-Delete Expired Events
-    console.log(`[Cleanup] Deleting events before ${todayStr}...`);
-    const { error: delErr } = await supabase.from('events').delete().lt('date', todayStr);
-    if (delErr) console.error(`[Cleanup] Failed: ${delErr.message}`);
-    else console.log(`[Cleanup] Expired events cleared.`);
+    // 1. Auto-Delete Expired Events AND their Storage files
+    console.log(`[Cleanup] Finding expired events before ${todayStr}...`);
+
+    // First, get the expired events to extract poster_url for storage cleanup
+    const { data: expiredEvents, error: fetchErr } = await supabase
+        .from('events')
+        .select('id, poster_url')
+        .lt('date', todayStr);
+
+    if (fetchErr) {
+        console.error(`[Cleanup] Failed to fetch expired events: ${fetchErr.message}`);
+    } else if (expiredEvents && expiredEvents.length > 0) {
+        console.log(`[Cleanup] Found ${expiredEvents.length} expired events to clean up.`);
+
+        // Extract file paths from poster_url for storage deletion
+        const filesToDelete = [];
+        for (const ev of expiredEvents) {
+            if (ev.poster_url && ev.poster_url.includes('/storage/v1/object/public/posters/')) {
+                // Extract filename from URL like: .../storage/v1/object/public/posters/1234_filename.jpg
+                const parts = ev.poster_url.split('/storage/v1/object/public/posters/');
+                if (parts[1]) {
+                    filesToDelete.push(parts[1]);
+                }
+            }
+        }
+
+        // Delete files from Storage bucket
+        if (filesToDelete.length > 0) {
+            console.log(`[Cleanup] Deleting ${filesToDelete.length} files from Storage...`);
+            const { error: storageErr } = await supabase.storage
+                .from('posters')
+                .remove(filesToDelete);
+
+            if (storageErr) {
+                console.error(`[Cleanup] Storage cleanup failed: ${storageErr.message}`);
+            } else {
+                console.log(`[Cleanup] ✓ Deleted ${filesToDelete.length} files from Storage.`);
+            }
+        }
+
+        // Delete expired events from database
+        const { error: delErr } = await supabase.from('events').delete().lt('date', todayStr);
+        if (delErr) console.error(`[Cleanup] DB delete failed: ${delErr.message}`);
+        else console.log(`[Cleanup] ✓ Deleted ${expiredEvents.length} expired events from DB.`);
+    } else {
+        console.log(`[Cleanup] No expired events to clean up.`);
+    }
 
     // 2. Load Existing Events (Full Data for Smart Dedupe)
     console.log(`[Dedupe] Loading future events...`);

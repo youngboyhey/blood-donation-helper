@@ -51,6 +51,26 @@ async function fetchHTMLWithPuppeteer(url) {
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     try {
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+
+        // Auto-scroll to load dynamic content
+        await page.evaluate(async () => {
+            await new Promise((resolve) => {
+                let totalHeight = 0;
+                const distance = 100;
+                const timer = setInterval(() => {
+                    const scrollHeight = document.body.scrollHeight;
+                    window.scrollBy(0, distance);
+                    totalHeight += distance;
+
+                    if (totalHeight >= scrollHeight - window.innerHeight || totalHeight > 5000) {
+                        clearInterval(timer);
+                        resolve();
+                    }
+                }, 100);
+            });
+        });
+        await new Promise(r => setTimeout(r, 2000)); // Wait for render
+
         const content = await page.content();
         await browser.close();
         return content;

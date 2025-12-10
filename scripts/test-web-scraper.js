@@ -7,6 +7,26 @@ async function fetchHTMLWithPuppeteer(url, browser) {
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     try {
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+
+        // Auto-scroll to load dynamic content
+        await page.evaluate(async () => {
+            await new Promise((resolve) => {
+                let totalHeight = 0;
+                const distance = 100;
+                const timer = setInterval(() => {
+                    const scrollHeight = document.body.scrollHeight;
+                    window.scrollBy(0, distance);
+                    totalHeight += distance;
+
+                    if (totalHeight >= scrollHeight - window.innerHeight || totalHeight > 5000) {
+                        clearInterval(timer);
+                        resolve();
+                    }
+                }, 100);
+            });
+        });
+        await new Promise(r => setTimeout(r, 2000)); // Wait for render
+
         const content = await page.content();
         await page.close();
         return content;
@@ -18,12 +38,13 @@ async function fetchHTMLWithPuppeteer(url, browser) {
 }
 
 async function testWebScraper() {
+    // 測試改為新竹捐血中心
     const source = {
         type: 'web',
-        id: 'taipei',
-        name: '台北捐血中心',
-        url: 'https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284',
-        baseUrl: 'https://www.tp.blood.org.tw'
+        id: 'hsinchu',
+        name: '新竹捐血中心',
+        url: 'https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492',
+        baseUrl: 'https://www.sc.blood.org.tw'
     };
 
     console.log(`[Test] Starting Web Scraper Test for: ${source.name}`);
@@ -57,7 +78,8 @@ async function testWebScraper() {
                 if (combinedText.includes('總表') || combinedText.includes('行事曆') ||
                     combinedText.includes('一覽') || combinedText.includes('場次表') ||
                     combinedText.includes('月行程') || combinedText.includes('新聞稿') ||
-                    combinedText.includes('活動報導') || combinedText.includes('怎麼辦')) {
+                    combinedText.includes('活動報導') || combinedText.includes('怎麼') ||
+                    combinedText.includes('捐血點異動')) {
                     console.log(`[Test] SKIP (非活動): ${combinedText.slice(0, 40)}...`);
                     return;
                 }
@@ -118,14 +140,14 @@ async function testWebScraper() {
 
                 if (hasDateInfo && !hasFutureDate) {
                     console.log(`[Test] SKIP (過期): ${title.slice(0, 40)}...`);
-                    return;
+                    // return; // 暫時註解 return 以顯示它被抓到了但過濾掉了
                 }
 
                 // 顯示找到的連結
                 const displayText = titleAttr || text;
                 console.log(`[Test] ✓ FOUND EVENT: ${displayText.slice(0, 50)}...`);
 
-                if (href) {
+                if (href && (!hasDateInfo || hasFutureDate)) {
                     const fullUrl = href.startsWith('http') ? href : source.baseUrl + href;
                     targetLinks.push(fullUrl);
                 }
@@ -133,20 +155,12 @@ async function testWebScraper() {
         });
 
         const uniqueLinks = [...new Set(targetLinks)].slice(0, 5);
-        console.log(`\n[Test] Found ${uniqueLinks.length} event links. Testing...`);
+        console.log(`\n[Test] Found ${uniqueLinks.length} valid event links. Testing...`);
 
         for (const fullUrl of uniqueLinks) {
             console.log(`\n[Test] Visiting: ${fullUrl}`);
             const detailHtml = await fetchHTMLWithPuppeteer(fullUrl, browser);
             const $d = cheerio.load(detailHtml);
-
-            // 總表頁檢測
-            const pageText = $d('body').text();
-            const dateCount = (pageText.match(/\d{4}[-/]\d{1,2}[-/]\d{1,2}/g) || []).length;
-            if (dateCount > 5) {
-                console.log(`[Test] FAIL: Summary Page (${dateCount} dates)`);
-                continue;
-            }
 
             // 尋找海報圖片
             const contentSelectors = ['div.xccont img', 'div.pt-3 img', 'article img', '.content img', 'img'];

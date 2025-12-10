@@ -122,6 +122,11 @@ async function fetchSourcePage(url, browser, cookies) {
 // Google Image Search
 async function fetchGoogleImages(source) {
     console.log(`[Google] Searching: ${source.query}`);
+    const cookies = await loadCookies();
+    if (cookies.length > 0) {
+        console.log(`[Google] Loaded ${cookies.length} cookies for authentication`);
+    }
+
     const browser = await puppeteer.launch({
         headless: "new",
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled']
@@ -129,6 +134,15 @@ async function fetchGoogleImages(source) {
     const page = await browser.newPage();
     await page.setViewport({ width: 1920, height: 1080 });
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+    // Set cookies for social media access (FB/IG)
+    if (cookies.length > 0) {
+        try {
+            await page.setCookie(...cookies);
+        } catch (e) {
+            console.warn('[Google] Could not set cookies:', e.message);
+        }
+    }
 
     try {
         // qdr:w = past week as user requested
@@ -270,9 +284,19 @@ const getModel = (retryCount) => {
     return { gen, desc: `Key ${keyMasked} / ${modelName}` };
 };
 
-async function fetchImageAsBase64(url) {
+async function fetchImageAsBase64(url, cookies = null) {
     try {
-        const res = await fetch(url);
+        const headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        };
+
+        // Add cookies for social media access
+        if (cookies && cookies.length > 0) {
+            const cookieString = cookies.map(c => `${c.name}=${c.value}`).join('; ');
+            headers['Cookie'] = cookieString;
+        }
+
+        const res = await fetch(url, { headers });
         if (!res.ok) return null;
         const buf = await res.arrayBuffer();
         return Buffer.from(buf).toString('base64');
@@ -281,6 +305,9 @@ async function fetchImageAsBase64(url) {
 
 async function analyzeContentWithAI(item, sourceContext) {
     const today = new Date().toISOString().split('T')[0];
+
+    // Load cookies for social media image access
+    const cookies = await loadCookies();
 
     // API Key Rotation - This section is now handled by global constants and getModel
     // const keys = (process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "").split(',').map(k => k.trim()).filter(k => k);
@@ -312,7 +339,7 @@ async function analyzeContentWithAI(item, sourceContext) {
 
             if (retries > 0) console.log(`[AI Retry] ${desc}`);
 
-            const base64 = await fetchImageAsBase64(item.url);
+            const base64 = await fetchImageAsBase64(item.url, cookies);
             if (!base64) return null; // Image load failed
 
             const prompt = `請分析這張捐血活動海報。

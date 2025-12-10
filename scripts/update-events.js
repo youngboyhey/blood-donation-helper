@@ -667,7 +667,7 @@ async function analyzeContentWithAI(item, sourceContext) {
             const text = result.response.text();
 
             // Clean markdown JSON
-            const jsonText = text.replace(/```json / g, '').replace(/```/g, '').trim();
+            const jsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
             let data;
             try {
                 data = JSON.parse(jsonText);

@@ -11,13 +11,22 @@ dotenv.config();
 // --- Configuration ---
 
 const SOURCES = [
-    // 官網爬蟲 - 先專注台北和新竹捐血中心
+    // 官網爬蟲 (官方源)
     { type: 'web', id: 'taipei', name: '台北捐血中心', url: 'https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284', baseUrl: 'https://www.tp.blood.org.tw' },
     { type: 'web', id: 'hsinchu', name: '新竹捐血中心', url: 'https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492', baseUrl: 'https://www.sc.blood.org.tw' },
-    // 其他中心暫時註解，待上述兩個穩定後再開啟
-    // { type: 'web', id: 'taichung', name: '台中捐血中心', url: 'https://www.tc.blood.org.tw/xmdoc?xsmsid=0P062683072836261596', baseUrl: 'https://www.tc.blood.org.tw' },
-    // { type: 'web', id: 'tainan', name: '台南捐血中心', url: 'https://www.tn.blood.org.tw/xmdoc?xsmsid=0P062709282362870347', baseUrl: 'https://www.tn.blood.org.tw' },
-    // { type: 'web', id: 'kaohsiung', name: '高雄捐血中心', url: 'https://www.ks.blood.org.tw/xmdoc?xsmsid=0P062734135544436585', baseUrl: 'https://www.ks.blood.org.tw' },
+
+    // Google 搜尋爬蟲 (針對無彙整頁的縣市，搜尋一週內圖片)
+    // 規則：前5-10張，一週內
+    { type: 'google', id: 'taichung', name: '台中', query: '台中 捐血活動' },
+    { type: 'google', id: 'changhua', name: '彰化', query: '彰化 捐血活動' },
+    { type: 'google', id: 'nantou', name: '南投', query: '南投 捐血活動' },
+    { type: 'google', id: 'yunlin', name: '雲林', query: '雲林 捐血活動' },
+    { type: 'google', id: 'tainan', name: '台南', query: '台南 捐血活動' },
+    { type: 'google', id: 'chiayi', name: '嘉義', query: '嘉義 捐血活動' },
+    { type: 'google', id: 'kaohsiung', name: '高雄', query: '高雄 捐血活動' },
+    { type: 'google', id: 'pingtung', name: '屏東', query: '屏東 捐血活動' },
+    { type: 'google', id: 'taitung', name: '台東', query: '台東 捐血活動' },
+    { type: 'google', id: 'penghu', name: '澎湖', query: '澎湖 捐血活動' },
 ];
 
 // --- Helpers ---
@@ -209,7 +218,7 @@ async function fetchGoogleImages(source) {
         console.log(`[Google] 找到 ${thumbnailCount} 個縮圖`);
 
         const results = [];
-        const MAX_INITIAL = 30;
+        const MAX_INITIAL = 15;
         const MAX_TOTAL = Math.min(thumbnailCount, 50);
         let processed = 0;
         let consecutiveErrors = 0;

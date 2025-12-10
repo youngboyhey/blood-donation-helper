@@ -443,8 +443,8 @@ async function fetchWebImages(source) {
                 });
             }
 
-            // 只取每頁的前 2 張大圖（避免太多）
-            allImages = allImages.concat(pageImages.slice(0, 2));
+            // 放寬每頁圖片限制，針對新竹這種多場次彙整頁，需要抓更多
+            allImages = allImages.concat(pageImages.slice(0, 20));
         }
 
         // 去重並限制數量

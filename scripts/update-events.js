@@ -263,55 +263,14 @@ async function fetchGoogleImages(source) {
                 let finalImageUrl = item.previewUrl;
                 let isOgImage = false;
 
-                // 3. Deep Fetch (Visit Source URL)
+                // 3. Deep Fetch (Visit Source URL) - DISABLED BY USER REQUEST
+                // Using previewUrl directly to avoid login walls and CDN issues
+                /*
                 if (item.sourceUrl) {
-                    console.log(`[DeepFetch] #${results.length + 1} 訪問: ${item.sourceUrl}`);
-                    try {
-                        const sourcePage = await browser.newPage();
-                        await sourcePage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-
-                        // Inject cookies for Instagram access
-                        if (cookies.length > 0 && item.sourceUrl.includes('instagram.com')) {
-                            try {
-                                await sourcePage.setCookie(...cookies.filter(c => c.domain && c.domain.includes('instagram')));
-                            } catch (e) { /* ignore cookie errors */ }
-                        }
-
-                        // Fast fail timeout, blocked resources
-                        await sourcePage.setRequestInterception(true);
-                        sourcePage.on('request', (req) => {
-                            if (req.resourceType() === 'image' || req.resourceType() === 'stylesheet' || req.resourceType() === 'font') {
-                                req.abort();
-                            } else {
-                                req.continue();
-                            }
-                        });
-
-                        await sourcePage.goto(item.sourceUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
-
-                        const ogImage = await sourcePage.evaluate(() => {
-                            const getMeta = (prop) => document.querySelector(`meta[property="${prop}"]`)?.content || document.querySelector(`meta[name="${prop}"]`)?.content;
-                            let img = getMeta('og:image') || getMeta('twitter:image');
-                            if (!img) {
-                                const link = document.querySelector('link[rel="image_src"]');
-                                if (link) img = link.href;
-                            }
-                            return img;
-                        });
-
-                        if (ogImage && ogImage.startsWith('http')) {
-                            console.log(`[DeepFetch] ✓ 成功抓取 og:image`);
-                            finalImageUrl = ogImage;
-                            isOgImage = true;
-                        } else {
-                            console.log(`[DeepFetch] 無 og:image，使用預覽圖`);
-                        }
-                        await sourcePage.close();
-                    } catch (err) {
-                        console.log(`[DeepFetch] 訪問失敗 (${err.message})，使用預覽圖`);
-                        try { const pages = await browser.pages(); if (pages.length > 2) pages[pages.length - 1].close(); } catch (e) { }
-                    }
+                    // ... (Deep Fetch logic removed for stability) ...
                 }
+                */
+                console.log(`[Google] 使用預覽縮圖 (Deep Fetch Disabled)`);
 
                 // 4. Save Result
                 results.push({

@@ -4,15 +4,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const API_KEYS_STR = import.meta.env.VITE_GEMINI_API_KEY || "";
 const API_KEYS = API_KEYS_STR.split(',').map(k => k.trim()).filter(k => k);
 
-// 2. 定義模型優先順序 (排除 1.5)
-// 2. 定義模型優先順序
-const MODELS = [
-    "gemini-2.5-pro",
-    "gemini-2.5-flash-lite",
-    "gemini-2.5-flash-lite-preview-09-2025",
-    "gemini-2.0-flash",
-    "gemini-2.0-flash-lite"
-];
+// 2. 定義模型 - 使用付費版 Gemini 2.0 Flash
+const MODELS = ["gemini-2.0-flash"];
 
 // 3. 輔助函式：取得指定輪替的 Key 與 Model
 const getModelWithKeys = (retryCount, keys) => {

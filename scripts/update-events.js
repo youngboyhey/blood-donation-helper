@@ -147,85 +147,67 @@ async function fetchGoogleImages(source) {
         });
         await new Promise(r => setTimeout(r, 2000));
 
-        // 找到所有縮圖
-        const thumbnails = await page.$$('div[jsname="N9Xkfe"] img, div[data-id] img, img.rg_i, g-img img');
-        console.log(`[Google] 找到 ${thumbnails.length} 個縮圖`);
+        // 找到縮圖數量
+        const thumbnailCount = await page.$$eval('div[data-id] img, img.rg_i', imgs => imgs.length);
+        console.log(`[Google] 找到 ${thumbnailCount} 個縮圖`);
 
         const results = [];
         const MAX_INITIAL = 30;
-        const MAX_TOTAL = 50;
+        const MAX_TOTAL = Math.min(thumbnailCount, 50);
         let processed = 0;
+        let consecutiveErrors = 0;
 
-        for (let i = 0; i < Math.min(thumbnails.length, MAX_TOTAL) && results.length < MAX_INITIAL; i++) {
+        for (let i = 0; i < MAX_TOTAL && results.length < MAX_INITIAL; i++) {
             try {
-                // 點擊縮圖
-                await thumbnails[i].click();
-                await new Promise(r => setTimeout(r, 3000)); // 增加等待時間
+                // 每次重新查詢縮圖（避免 stale element handle）
+                const clicked = await page.evaluate((index) => {
+                    const thumbnails = document.querySelectorAll('div[data-id] img, img.rg_i');
+                    if (thumbnails[index]) {
+                        thumbnails[index].click();
+                        return true;
+                    }
+                    return false;
+                }, i);
 
-                // 方法1: 從側欄取得高解析度圖片和來源連結
+                if (!clicked) {
+                    console.log(`[Google] #${i + 1}: 縮圖不存在`);
+                    continue;
+                }
+
+                await new Promise(r => setTimeout(r, 2000));
+
+                // 從側欄取得高解析度圖片
                 const imageInfo = await page.evaluate(() => {
-                    // 多種選擇器找側欄大圖
-                    const imageSelectors = [
-                        'img[jsname="kn3ccd"]',
-                        'img[jsname="HiaYvf"]',
-                        'img[jsname="JuXqh"]',
-                        'c-wiz img[src^="http"]',
-                        'div[jscontroller] img[src^="http"]',
-                        'img.n3VNCb',  // 常見 Google Images 大圖 class
-                        'img.iPVvYb',  // 另一個大圖 class
-                        'div[data-tbnid] img',
-                        '#Sva75c img'  // 側欄容器
-                    ];
-
+                    // 找側欄中最大的非 Google 圖片
+                    const allImgs = document.querySelectorAll('img[src^="http"]');
                     let bestImg = null;
                     let maxArea = 0;
 
-                    for (const selector of imageSelectors) {
-                        const imgs = document.querySelectorAll(selector);
-                        for (const img of imgs) {
-                            const rect = img.getBoundingClientRect();
+                    for (const img of allImgs) {
+                        const rect = img.getBoundingClientRect();
+                        const src = img.src || '';
+
+                        // 只要右半邊、大於 200px 的圖片
+                        if (rect.left > window.innerWidth * 0.4 &&
+                            rect.width > 200 && rect.height > 200) {
+                            // 排除 Google 圖片
+                            if (src.includes('gstatic.com') || src.includes('google.com') ||
+                                src.includes('encrypted-tbn')) continue;
+
                             const area = rect.width * rect.height;
-                            // 降低門檻到 150px，只要在可視區域內就考慮
-                            if (rect.width > 150 && rect.height > 150 && rect.right > 0 && area > maxArea) {
-                                const src = img.src || img.getAttribute('data-src') || '';
-                                if (src.startsWith('http') && !src.includes('encrypted-tbn') && !src.includes('gstatic.com/images')) {
-                                    maxArea = area;
-                                    bestImg = src;
-                                }
+                            if (area > maxArea) {
+                                maxArea = area;
+                                bestImg = src;
                             }
                         }
                     }
 
-                    // 備援：找頁面右半部分最大的圖片
-                    if (!bestImg) {
-                        const allImgs = document.querySelectorAll('img[src^="http"]');
-                        for (const img of allImgs) {
-                            const rect = img.getBoundingClientRect();
-                            if (rect.left > window.innerWidth / 2 && rect.width > 200) { // 右側
-                                const src = img.src;
-                                if (!src.includes('gstatic') && !src.includes('google.com')) {
-                                    if (rect.width * rect.height > maxArea) {
-                                        maxArea = rect.width * rect.height;
-                                        bestImg = src;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // 找來源連結 (多種選擇器)
+                    // 找來源連結
                     let sourceUrl = null;
-                    const linkSelectors = [
-                        'a[jsname="hSRGPd"]',  // 造訪按鈕
-                        'a[data-ved][target="_blank"]',  // 外部連結
-                        'a[href*="facebook.com"]', 'a[href*="instagram.com"]',  // 社群
-                        'a.G0iuSb',  // 另一種選擇器
-                        'div[jscontroller] a[href^="http"]:not([href*="google"])'  // 非 Google 連結
-                    ];
-
-                    for (const sel of linkSelectors) {
-                        const link = document.querySelector(sel);
-                        if (link && link.href && !link.href.includes('google.com')) {
+                    const links = document.querySelectorAll('a[href^="http"]:not([href*="google"])');
+                    for (const link of links) {
+                        const rect = link.getBoundingClientRect();
+                        if (rect.left > window.innerWidth * 0.4 && rect.width > 50) {
                             sourceUrl = link.href;
                             break;
                         }
@@ -243,6 +225,7 @@ async function fetchGoogleImages(source) {
                             (imageInfo.sourceUrl.includes('facebook.com') || imageInfo.sourceUrl.includes('instagram.com')) : false
                     });
                     console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL}: ${imageInfo.imageUrl.slice(0, 50)}...`);
+                    consecutiveErrors = 0;
                 } else {
                     console.log(`[Google] #${i + 1}: 找不到高解析度圖片`);
                 }
@@ -250,8 +233,15 @@ async function fetchGoogleImages(source) {
                 processed++;
 
             } catch (e) {
-                // 單張圖片錯誤，繼續下一張
-                console.log(`[Google] #${i + 1}: 處理錯誤 - ${e.message.slice(0, 30)}`);
+                consecutiveErrors++;
+                console.log(`[Google] #${i + 1}: 錯誤 - ${e.message.slice(0, 40)}`);
+                // 如果連續錯誤太多，重新載入頁面
+                if (consecutiveErrors > 5) {
+                    console.log(`[Google] 連續錯誤過多，重新載入頁面`);
+                    await page.reload({ waitUntil: 'networkidle2' });
+                    await new Promise(r => setTimeout(r, 2000));
+                    consecutiveErrors = 0;
+                }
             }
         }
 

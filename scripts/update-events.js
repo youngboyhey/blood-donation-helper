@@ -6,7 +6,8 @@ import crypto from 'crypto';
 import fs from 'fs';
 import * as cheerio from 'cheerio';
 
-dotenv.config();
+// Load .env from root
+dotenv.config({ path: './.env' });
 
 // --- Configuration ---
 
@@ -198,12 +199,6 @@ async function fetchGoogleImages(source) {
         console.log(`[Google] URL: ${searchUrl}`);
         await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 60000 });
 
-        // 處理同意對話框
-        try {
-            const consentBtn = await page.$('button[id*="accept"], button[aria-label*="Accept"]');
-            if (consentBtn) { await consentBtn.click(); await new Promise(r => setTimeout(r, 2000)); }
-        } catch (e) { }
-
         // 捲動載入更多圖片
         await page.evaluate(async () => {
             await new Promise(resolve => {
@@ -213,91 +208,57 @@ async function fetchGoogleImages(source) {
         });
         await new Promise(r => setTimeout(r, 2000));
 
-        // 找到縮圖數量 - 增加 div.F0uyec (Verified Selector)
-        const thumbnailCount = await page.$$eval('div[data-id] img, img.rg_i, div.F0uyec', imgs => imgs.length);
-        console.log(`[Google] 找到 ${thumbnailCount} 個縮圖`);
+        // 1. Collect Candidates directly from Grid (Zero-Click Strategy)
+        // We use 'data-docid' container which holds the 'data-lpage' (Source URL)
+        console.log(`[Google] 收集圖片來源連結 (Zero-Click Strategy)...`);
+        const candidates = await page.evaluate(() => {
+            const items = Array.from(document.querySelectorAll('div[data-docid]'));
+            return items.map(div => ({
+                id: div.getAttribute('data-docid'),
+                sourceUrl: div.getAttribute('data-lpage'), // The Key: Source URL is right here!
+                previewUrl: div.querySelector('img') ? div.querySelector('img').src : null
+            })).filter(item => item.sourceUrl && item.previewUrl);
+        });
+        console.log(`[Google] 找到 ${candidates.length} 個潛在圖片來源`);
 
         const results = [];
         const MAX_INITIAL = 15;
-        const MAX_TOTAL = Math.min(thumbnailCount, 50);
+        const MAX_TOTAL = Math.min(candidates.length, 50);
         let processed = 0;
-        let consecutiveErrors = 0;
 
-        // 0. 獲取所有縮圖 ID (Data IDs)
-        console.log(`[Google] 收集圖片 IDs...`);
-        const thumbnailIds = await page.evaluate(() => {
-            const nodes = document.querySelectorAll('div[data-id]');
-            return Array.from(nodes).map(n => n.getAttribute('data-id')).filter(id => id && id.length > 0);
-        });
-        console.log(`[Google] 找到 ${thumbnailIds.length} 個潛在圖片 ID`);
-
-        if (thumbnailIds.length === 0) {
-            console.log(`[Google] 無法找到任何 ID，退出`);
-            return [];
-        }
-
-        let loopIndex = 0;
-        let lastSourceUrl = null;
-
-        // Loop through IDs directly with Hash Navigation
-        while (processed < MAX_TOTAL && results.length < MAX_INITIAL && loopIndex < thumbnailIds.length) {
-            const currentId = thumbnailIds[loopIndex];
-            loopIndex++;
+        // 2. Process Candidates
+        for (let i = 0; i < MAX_TOTAL && results.length < MAX_INITIAL; i++) {
+            const item = candidates[i];
 
             try {
-                // 1. Navigate via Hash Change (SPA Navigation)
-                // Google Images works by updating #imgrc={id}
-                const targetHash = `imgrc=${currentId}`;
-                await page.evaluate((hash) => {
-                    window.location.hash = hash;
-                }, targetHash);
-
-                // Wait for the side panel to update (Source URL change)
-                await new Promise(r => setTimeout(r, 2500));
-
-                /* 
-                   Wait for indicator? We assume 2500ms is enough for Side Panel to react.
-                   We check if sourceUrl matches lastSourceUrl to detect failure.
-                */
-
-                // 2. Extract Data
-                const googlePreview = await page.evaluate(() => {
-                    const imgs = Array.from(document.querySelectorAll('img[src^="http"], img[src^="data:image"]'));
-                    imgs.sort((a, b) => (b.width * b.height) - (a.width * a.height));
-                    const candidates = imgs.filter(img => img.width > 150 && img.height > 150);
-                    return candidates.length > 0 ? candidates[0].src : null;
-                });
-
-                const sourceUrl = await page.evaluate(() => {
-                    const visitBtn = document.querySelector('a.EZAeBe');
-                    if (visitBtn && visitBtn.href) return visitBtn.href;
-                    return null;
-                });
-
-                // 3. Verify Freshness / Deduplication
-                // If scraping same URL as before, Hash Navigation might have failed or duplicate event
-                if (sourceUrl && sourceUrl === lastSourceUrl) {
-                    console.log(`[Google] Hash 切換無效 (Stuck on ${lastSourceUrl.slice(0, 30)}...), 跳過`);
-                    continue;
-                }
-                if (sourceUrl) lastSourceUrl = sourceUrl;
-
-                const isGlobalDuplicate = sourceUrl && results.some(r => r.sourceUrl === sourceUrl);
-                if (isGlobalDuplicate) {
-                    console.log(`[Google] 略過重複 (Global): ${sourceUrl.slice(0, 30)}...`);
+                // Deduplication Check
+                const isDuplicate = results.some(r => r.sourceUrl === item.sourceUrl);
+                if (isDuplicate) {
+                    console.log(`[Google] 略過重複來源: ${item.sourceUrl.slice(0, 40)}...`);
                     continue;
                 }
 
-                let finalImageUrl = googlePreview;
+                let finalImageUrl = item.previewUrl;
                 let isOgImage = false;
 
-                // 4. Smart Deep Fetch
-                if (sourceUrl) {
-                    console.log(`[DeepFetch] 嘗試訪問來源: ${sourceUrl}`);
+                // 3. Deep Fetch (Visit Source URL)
+                if (item.sourceUrl) {
+                    console.log(`[DeepFetch] #${results.length + 1} 訪問: ${item.sourceUrl}`);
                     try {
                         const sourcePage = await browser.newPage();
                         await sourcePage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-                        await sourcePage.goto(sourceUrl, { waitUntil: 'domcontentloaded', timeout: 10000 });
+
+                        // Fast fail timeout, blocked resources
+                        await sourcePage.setRequestInterception(true);
+                        sourcePage.on('request', (req) => {
+                            if (req.resourceType() === 'image' || req.resourceType() === 'stylesheet' || req.resourceType() === 'font') {
+                                req.abort();
+                            } else {
+                                req.continue();
+                            }
+                        });
+
+                        await sourcePage.goto(item.sourceUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
 
                         const ogImage = await sourcePage.evaluate(() => {
                             const getMeta = (prop) => document.querySelector(`meta[property="${prop}"]`)?.content || document.querySelector(`meta[name="${prop}"]`)?.content;
@@ -310,7 +271,7 @@ async function fetchGoogleImages(source) {
                         });
 
                         if (ogImage && ogImage.startsWith('http')) {
-                            console.log(`[DeepFetch] ✓ 成功抓取 og:image: ${ogImage.slice(0, 50)}...`);
+                            console.log(`[DeepFetch] ✓ 成功抓取 og:image`);
                             finalImageUrl = ogImage;
                             isOgImage = true;
                         } else {
@@ -318,33 +279,30 @@ async function fetchGoogleImages(source) {
                         }
                         await sourcePage.close();
                     } catch (err) {
-                        console.log(`[DeepFetch] 訪問失敗 (${err.message})，使用 Google 預覽圖`);
-                        // 如果 sourcePage 還開著，關掉它
+                        console.log(`[DeepFetch] 訪問失敗 (${err.message})，使用預覽圖`);
                         try { const pages = await browser.pages(); if (pages.length > 2) pages[pages.length - 1].close(); } catch (e) { }
                     }
                 }
 
-                // 5. Save Result
-                if (finalImageUrl) {
-                    results.push({
-                        type: 'image',
-                        url: finalImageUrl,
-                        sourceUrl: sourceUrl || null,
-                        isSocialMedia: sourceUrl ?
-                            (sourceUrl.includes('facebook.com') || sourceUrl.includes('instagram.com')) : false,
-                        isHighRes: isOgImage
-                    });
-                    console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL} (HighRes: ${isOgImage})`);
-                    consecutiveErrors = 0;
-                }
-                processed++;
+                // 4. Save Result
+                results.push({
+                    type: 'image',
+                    url: finalImageUrl,
+                    sourceUrl: item.sourceUrl,
+                    isSocialMedia: item.sourceUrl ? (item.sourceUrl.includes('facebook.com') || item.sourceUrl.includes('instagram.com')) : false,
+                    isHighRes: isOgImage
+                });
 
             } catch (e) {
-                console.log(`[Google] Loop Error: ${e.message}`);
+                console.log(`[Google] Item Error: ${e.message}`);
             }
+
+            processed++;
+            // Small delay to be polite
+            await new Promise(r => setTimeout(r, 500));
         }
 
-        console.log(`[Google] 完成: ${results.length} 張圖片 (處理 ${processed} 個)`);
+        console.log(`[Google] 完成: ${results.length} 張圖片`);
         return results;
 
     } catch (e) {
@@ -753,7 +711,41 @@ function calculateEventScore(evt) {
 }
 
 async function updateEvents() {
-    const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY);
+    let supabase;
+    try {
+        const sbUrl = process.env.VITE_SUPABASE_URL;
+        const sbKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+
+        if (!sbUrl || !sbKey) {
+            console.warn('[Warning] Supabase keys missing. Running in DRY RUN mode (no database writes).');
+            const mockBuilder = {
+                select: () => mockBuilder,
+                lt: () => mockBuilder,
+                gte: () => mockBuilder,
+                eq: () => mockBuilder,
+                upsert: () => mockBuilder,
+                remove: () => mockBuilder,
+                then: (resolve) => resolve({ data: [], error: null })
+            };
+
+            supabase = {
+                from: () => mockBuilder,
+                storage: {
+                    from: () => ({
+                        upload: () => ({ data: {}, error: null }),
+                        getPublicUrl: () => ({ data: { publicUrl: 'https://mock.url/image.jpg' } }),
+                        remove: () => ({ error: null })
+                    })
+                }
+            };
+        } else {
+            supabase = createClient(sbUrl, sbKey);
+        }
+    } catch (e) {
+        console.warn(`[Init] Supabase Init Failed: ${e.message}`);
+        return;
+    }
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const todayStr = today.toISOString().split('T')[0];

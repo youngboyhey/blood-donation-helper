@@ -641,14 +641,24 @@ async function updateEvents() {
     };
 
     try {
-        await supabase.from('settings').upsert({
-            key: 'crawler_status',
-            value: crawlerStatus,
-            updated_at: new Date().toISOString()
-        });
-        console.log('[Crawler] Status saved to Supabase');
+        const { error: statusError } = await supabase
+            .from('settings')
+            .upsert(
+                {
+                    key: 'crawler_status',
+                    value: crawlerStatus,
+                    updated_at: new Date().toISOString()
+                },
+                { onConflict: 'key' }
+            );
+
+        if (statusError) {
+            console.error('[Crawler] Failed to save status:', statusError.message);
+        } else {
+            console.log('[Crawler] ✓ Status saved to Supabase');
+        }
     } catch (e) {
-        console.error('[Crawler] Failed to save status:', e.message);
+        console.error('[Crawler] Exception saving status:', e.message);
     }
 }
 

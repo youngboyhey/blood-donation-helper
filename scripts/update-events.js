@@ -31,21 +31,11 @@ function sanitizeData(data) {
 }
 
 const SOURCES = [
+    // 官網爬蟲 - 維持原方法
     { type: 'web', id: 'taipei', name: '台北捐血中心', url: 'https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284', baseUrl: 'https://www.tp.blood.org.tw', city: '台北市' },
     { type: 'web', id: 'hsinchu', name: '新竹捐血中心', url: 'https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492', baseUrl: 'https://www.sc.blood.org.tw', city: '新竹市' },
-    { type: 'google', id: 'taichung', name: '台中捐血中心', query: '台中 捐血活動 贈品', city: '台中市' },
-    { type: 'google', id: 'changhua', name: '彰化捐血站', query: '彰化 捐血活動 贈品', city: '彰化縣' },
-    { type: 'google', id: 'nantou', name: '南投捐血室', query: '南投 捐血活動 贈品', city: '南投縣' },
-    { type: 'google', id: 'yunlin', name: '雲林捐血站', query: '雲林 捐血活動 贈品', city: '雲林縣' },
-    { type: 'google', id: 'tainan', name: '台南捐血中心', query: '台南 捐血活動 贈品', city: '台南市' },
-    { type: 'google', id: 'chiayi', name: '嘉義捐血站', query: '嘉義 捐血活動 贈品', city: '嘉義市' },
-    { type: 'google', id: 'kaohsiung', name: '高雄捐血中心', query: '高雄 捐血活動 贈品', city: '高雄市' },
-    { type: 'google', id: 'pingtung', name: '屏東捐血站', query: '屏東 捐血活動 贈品', city: '屏東縣' },
-    { type: 'google', id: 'taitung', name: '台東捐血站', query: '台東 捐血活動 贈品', city: '台東縣' },
-    { type: 'google', id: 'penghu', name: '馬公捐血站', query: '澎湖 捐血活動 贈品', city: '澎湖縣' },
-    { type: 'google', id: 'social_taichung', name: '台中捐血 (社群)', query: 'site:facebook.com OR site:instagram.com 台中 捐血活動 海報', city: '台中市' },
-    { type: 'google', id: 'social_tainan', name: '台南捐血 (社群)', query: 'site:facebook.com OR site:instagram.com 台南 捐血活動 海報', city: '台南市' },
-    { type: 'google', id: 'social_kaohsiung', name: '高雄捐血 (社群)', query: 'site:facebook.com OR site:instagram.com 高雄 捐血活動 海報', city: '高雄市' }
+    // Google 圖片統一搜尋 - 新方法
+    { type: 'google', id: 'unified', name: 'Google 圖片搜尋', query: '捐血活動', city: null }
 ];
 
 // Puppeteer Setup
@@ -119,98 +109,153 @@ async function fetchSourcePage(url, browser, cookies) {
     return null;
 }
 
-// Google Image Search
+// Google Image Search - 新版：點擊縮圖 → 造訪連結 → 下載圖片
 async function fetchGoogleImages(source) {
-    console.log(`[Google] Searching: ${source.query}`);
+    console.log(`[Google] 搜尋: ${source.query}`);
     const cookies = await loadCookies();
     if (cookies.length > 0) {
-        console.log(`[Google] Loaded ${cookies.length} cookies for authentication`);
+        console.log(`[Google] 載入 ${cookies.length} 個 cookies`);
     }
 
     const browser = await puppeteer.launch({
         headless: "new",
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled']
     });
-    const page = await browser.newPage();
-    await page.setViewport({ width: 1920, height: 1080 });
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-
-    // Set cookies for social media access (FB/IG)
-    if (cookies.length > 0) {
-        try {
-            await page.setCookie(...cookies);
-        } catch (e) {
-            console.warn('[Google] Could not set cookies:', e.message);
-        }
-    }
 
     try {
-        // qdr:w = past week as user requested
+        const page = await browser.newPage();
+        await page.setViewport({ width: 1920, height: 1080 });
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+        // 搜尋 Google 圖片 (qdr:w = 一週內)
         const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(source.query)}&tbm=isch&tbs=qdr:w`;
+        console.log(`[Google] URL: ${searchUrl}`);
         await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 60000 });
 
-        // Handle possible consent dialog
+        // 處理同意對話框
         try {
-            const consentButton = await page.$('button[id*="accept"], button[aria-label*="Accept"]');
-            if (consentButton) {
-                await consentButton.click();
-                await new Promise(r => setTimeout(r, 2000));
-            }
-        } catch (e) { /* No consent dialog */ }
+            const consentBtn = await page.$('button[id*="accept"], button[aria-label*="Accept"]');
+            if (consentBtn) { await consentBtn.click(); await new Promise(r => setTimeout(r, 2000)); }
+        } catch (e) { }
 
-        // Scroll to load more images
+        // 捲動載入更多圖片
         await page.evaluate(async () => {
-            await new Promise((resolve) => {
-                let totalHeight = 0;
-                const timer = setInterval(() => {
-                    window.scrollBy(0, 300);
-                    totalHeight += 300;
-                    if (totalHeight > 2000) { clearInterval(timer); resolve(); }
-                }, 100);
+            await new Promise(resolve => {
+                let h = 0;
+                const t = setInterval(() => { window.scrollBy(0, 400); h += 400; if (h > 3000) { clearInterval(t); resolve(); } }, 100);
             });
         });
         await new Promise(r => setTimeout(r, 2000));
 
-        const MAX_RESULTS = 10; // User requested 10 images
+        // 找到所有縮圖
+        const thumbnails = await page.$$('div[data-id] img, img.rg_i');
+        console.log(`[Google] 找到 ${thumbnails.length} 個縮圖`);
 
-        // Strategy: Extract image URLs directly from page HTML/scripts
-        const images = await page.evaluate((maxResults) => {
-            const results = [];
-            const seen = new Set();
+        const results = [];
+        const MAX_INITIAL = 30;
+        const MAX_TOTAL = 50;
+        let processed = 0;
+        let skippedCount = 0;
 
-            // Method 1: Get from script tags containing image data
-            const pageContent = document.body.innerHTML;
+        for (let i = 0; i < Math.min(thumbnails.length, MAX_TOTAL) && results.length < MAX_INITIAL + skippedCount; i++) {
+            try {
+                // 點擊縮圖
+                await thumbnails[i].click();
+                await new Promise(r => setTimeout(r, 2000));
 
-            // Pattern to match high-res image URLs
-            const patterns = [
-                /\["(https?:\/\/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)",\d+,\d+\]/gi,
-                /"ou":"(https?:\/\/[^"]+)"/gi,
-                /"tu":"(https?:\/\/[^"]+)"/gi
-            ];
+                // 找「造訪」連結
+                const visitLink = await page.evaluate(() => {
+                    const links = Array.from(document.querySelectorAll('a'));
+                    const visit = links.find(a => {
+                        const text = a.innerText || '';
+                        return text.includes('造訪') || text.includes('Visit') || text.includes('前往');
+                    });
+                    return visit ? visit.href : null;
+                });
 
-            for (const pattern of patterns) {
-                let match;
-                while ((match = pattern.exec(pageContent)) !== null && results.length < maxResults) {
-                    const url = match[1];
-                    if (seen.has(url)) continue;
-                    if (url.includes('gstatic.com')) continue;
-                    if (url.includes('google.com')) continue;
-                    if (url.includes('encrypted-tbn')) continue;
-                    if (url.includes('favicon')) continue;
-                    if (url.length < 30) continue; // Too short, probably invalid
-
-                    seen.add(url);
-                    results.push({ type: 'image', url: url, sourceUrl: null });
+                if (!visitLink) {
+                    console.log(`[Google] #${i + 1}: 找不到造訪連結`);
+                    continue;
                 }
+
+                console.log(`[Google] #${i + 1}: 造訪 ${visitLink.slice(0, 60)}...`);
+
+                // 開新頁面訪問來源
+                const sourcePage = await browser.newPage();
+                await sourcePage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+                // 若是社群網站，套用 cookies
+                const isSocialMedia = visitLink.includes('facebook.com') || visitLink.includes('instagram.com') || visitLink.includes('fb.com');
+                if (isSocialMedia && cookies.length > 0) {
+                    try { await sourcePage.setCookie(...cookies); } catch (e) { }
+                }
+
+                try {
+                    await sourcePage.goto(visitLink, { waitUntil: 'networkidle2', timeout: 30000 });
+                    await new Promise(r => setTimeout(r, 2000));
+
+                    // 取得頁面中最大的圖片
+                    const imageData = await sourcePage.evaluate(() => {
+                        const imgs = Array.from(document.querySelectorAll('img'));
+                        let best = null;
+                        let maxArea = 0;
+
+                        for (const img of imgs) {
+                            const rect = img.getBoundingClientRect();
+                            const area = rect.width * rect.height;
+                            const src = img.src || '';
+
+                            // 過濾太小、非圖片、logo 等
+                            if (rect.width < 200 || rect.height < 200) continue;
+                            if (!src.startsWith('http')) continue;
+                            if (src.includes('logo') || src.includes('icon') || src.includes('avatar')) continue;
+
+                            if (area > maxArea) {
+                                maxArea = area;
+                                best = src;
+                            }
+                        }
+                        return best;
+                    });
+
+                    if (imageData) {
+                        results.push({
+                            type: 'image',
+                            url: imageData,
+                            sourceUrl: visitLink,
+                            isSocialMedia
+                        });
+                        console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL}: ${imageData.slice(0, 50)}...`);
+                    } else {
+                        // 若找不到大圖，截取頁面
+                        const screenshot = await sourcePage.screenshot({ encoding: 'base64', type: 'png' });
+                        if (screenshot) {
+                            results.push({
+                                type: 'screenshot',
+                                base64: screenshot,
+                                sourceUrl: visitLink,
+                                isSocialMedia
+                            });
+                            console.log(`[Google] ✓ 截圖 ${results.length}/${MAX_INITIAL}`);
+                        }
+                    }
+                } catch (navError) {
+                    console.log(`[Google] #${i + 1}: 無法訪問來源 - ${navError.message.slice(0, 30)}`);
+                }
+
+                await sourcePage.close();
+                processed++;
+
+            } catch (e) {
+                // 單張圖片錯誤，繼續下一張
             }
+        }
 
-            return results;
-        }, MAX_RESULTS);
+        console.log(`[Google] 完成: ${results.length} 張圖片 (處理 ${processed} 個來源)`);
+        return results;
 
-        console.log(`[Google] Collected ${images.length} images for ${source.query}`);
-        return images.slice(0, MAX_RESULTS);
     } catch (e) {
-        console.error(`[Google] Failed: ${e.message}`);
+        console.error(`[Google] 失敗: ${e.message}`);
         return [];
     } finally {
         await browser.close();
@@ -378,7 +423,11 @@ async function analyzeContentWithAI(item, sourceContext) {
 
             if (retries > 0) console.log(`[AI Retry] ${desc}`);
 
-            const base64 = await fetchImageAsBase64(item.url, cookies);
+            // Use pre-fetched base64 if available (screenshot), otherwise fetch image
+            let base64 = item.base64 || null;
+            if (!base64 && item.url) {
+                base64 = await fetchImageAsBase64(item.url, cookies);
+            }
             if (!base64) return null; // Image load failed
 
             const prompt = `請分析這張捐血活動海報。

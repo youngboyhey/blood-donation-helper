@@ -564,7 +564,12 @@ async function fetchImageAsBase64(url, cookies = null) {
 }
 
 async function analyzeContentWithAI(item, sourceContext) {
-    const today = new Date().toISOString().split('T')[0];
+    // Use Taiwan Timezone (UTC+8) for AI prompt
+    const now = new Date();
+    const taiwanOffset = 8 * 60;
+    const localOffset = now.getTimezoneOffset();
+    const taiwanTime = new Date(now.getTime() + (taiwanOffset + localOffset) * 60 * 1000);
+    const today = taiwanTime.toISOString().split('T')[0];
 
     // Load cookies for social media image access
     const cookies = await loadCookies();

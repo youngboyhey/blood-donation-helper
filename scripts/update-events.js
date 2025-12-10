@@ -768,9 +768,13 @@ async function updateEvents() {
         return;
     }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayStr = today.toISOString().split('T')[0];
+    // Use Taiwan Timezone (UTC+8) for date calculation
+    const now = new Date();
+    const taiwanOffset = 8 * 60; // UTC+8 in minutes
+    const localOffset = now.getTimezoneOffset(); // System offset (negative for UTC+)
+    const taiwanTime = new Date(now.getTime() + (taiwanOffset + localOffset) * 60 * 1000);
+    taiwanTime.setHours(0, 0, 0, 0);
+    const todayStr = taiwanTime.toISOString().split('T')[0];
 
     // 1. Auto-Delete Expired Events AND their Storage files
     console.log(`[Cleanup] Finding expired events before ${todayStr}...`);

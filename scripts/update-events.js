@@ -13,7 +13,7 @@ dotenv.config();
 const SOURCES = [
     // 官網爬蟲 - 先專注台北和新竹捐血中心
     { type: 'web', id: 'taipei', name: '台北捐血中心', url: 'https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284', baseUrl: 'https://www.tp.blood.org.tw' },
-    { type: 'web', id: 'hsinchu', name: '新竹捐血中心', url: 'https://www.sc.blood.org.tw/xmdoc?xsmsid=0P062657380252119565', baseUrl: 'https://www.sc.blood.org.tw' },
+    { type: 'web', id: 'hsinchu', name: '新竹捐血中心', url: 'https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492', baseUrl: 'https://www.sc.blood.org.tw' },
     // 其他中心暫時註解，待上述兩個穩定後再開啟
     // { type: 'web', id: 'taichung', name: '台中捐血中心', url: 'https://www.tc.blood.org.tw/xmdoc?xsmsid=0P062683072836261596', baseUrl: 'https://www.tc.blood.org.tw' },
     // { type: 'web', id: 'tainan', name: '台南捐血中心', url: 'https://www.tn.blood.org.tw/xmdoc?xsmsid=0P062709282362870347', baseUrl: 'https://www.tn.blood.org.tw' },

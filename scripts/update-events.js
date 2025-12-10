@@ -18,15 +18,15 @@ const SOURCES = [
     // Google 搜尋爬蟲 (針對無彙整頁的縣市，搜尋一週內圖片)
     // 規則：前5-10張，一週內
     { type: 'google', id: 'taichung', name: '台中', query: '台中 捐血活動' },
-    { type: 'google', id: 'changhua', name: '彰化', query: '彰化 捐血活動' },
-    { type: 'google', id: 'nantou', name: '南投', query: '南投 捐血活動' },
-    { type: 'google', id: 'yunlin', name: '雲林', query: '雲林 捐血活動' },
-    { type: 'google', id: 'tainan', name: '台南', query: '台南 捐血活動' },
-    { type: 'google', id: 'chiayi', name: '嘉義', query: '嘉義 捐血活動' },
-    { type: 'google', id: 'kaohsiung', name: '高雄', query: '高雄 捐血活動' },
-    { type: 'google', id: 'pingtung', name: '屏東', query: '屏東 捐血活動' },
-    { type: 'google', id: 'taitung', name: '台東', query: '台東 捐血活動' },
-    { type: 'google', id: 'penghu', name: '澎湖', query: '澎湖 捐血活動' },
+    // { type: 'google', id: 'changhua', name: '彰化', query: '彰化 捐血活動' },
+    // { type: 'google', id: 'nantou', name: '南投', query: '南投 捐血活動' },
+    // { type: 'google', id: 'yunlin', name: '雲林', query: '雲林 捐血活動' },
+    // { type: 'google', id: 'tainan', name: '台南', query: '台南 捐血活動' },
+    // { type: 'google', id: 'chiayi', name: '嘉義', query: '嘉義 捐血活動' },
+    // { type: 'google', id: 'kaohsiung', name: '高雄', query: '高雄 捐血活動' },
+    // { type: 'google', id: 'pingtung', name: '屏東', query: '屏東 捐血活動' },
+    // { type: 'google', id: 'taitung', name: '台東', query: '台東 捐血活動' },
+    // { type: 'google', id: 'penghu', name: '澎湖', query: '澎湖 捐血活動' },
 ];
 
 // --- Helpers ---
@@ -242,71 +242,84 @@ async function fetchGoogleImages(source) {
 
                 await new Promise(r => setTimeout(r, 2000));
 
-                // 從側欄取得高解析度圖片與來源連結
+                // 從頁面中與 Imageye 類似的方式找出最大圖
                 const imageInfo = await page.evaluate(() => {
-                    // 找側欄中最大的非 Google 圖片 (預覽圖)
-                    const allImgs = document.querySelectorAll('img[src^="http"]');
+                    const allImgs = Array.from(document.querySelectorAll('img'));
                     let bestImg = null;
                     let maxArea = 0;
 
                     for (const img of allImgs) {
-                        const rect = img.getBoundingClientRect();
                         const src = img.src || '';
+                        if (!src.startsWith('http')) continue;
 
-                        // 只要右半邊、大於 200px 的圖片
-                        if (rect.left > window.innerWidth * 0.4 &&
-                            rect.width > 200 && rect.height > 200) {
-                            // 排除 Google 圖片
-                            if (src.includes('gstatic.com') || src.includes('google.com') ||
-                                src.includes('encrypted-tbn') || src.includes('favicon')) continue;
+                        // 排除 Google 的縮圖與 UI 圖
+                        if (src.includes('encrypted-tbn') || // 搜尋列表縮圖
+                            src.includes('favicon') ||
+                            src.includes('gstatic.com') ||   // UI 圖
+                            src.includes('google.com/images') ||
+                            src.includes('logo')) continue;
 
-                            const area = rect.width * rect.height;
-                            if (area > maxArea) {
-                                maxArea = area;
-                                bestImg = src;
-                            }
+                        // 檢查尺寸 (Natural Dimensions)
+                        // 必須要是「大圖」才算數，縮圖通常 < 300px
+                        const w = img.naturalWidth || img.width || 0;
+                        const h = img.naturalHeight || img.height || 0;
+
+                        if (w < 300 || h < 300) continue;
+
+                        // 找最大的那張
+                        const area = w * h;
+                        if (area > maxArea) {
+                            maxArea = area;
+                            bestImg = src;
                         }
                     }
 
-                    // 找來源連結 - 優先找 a.EZAeBe (Verified Selector)
-                    let sourceUrl = null;
-                    const visitLink = document.querySelector('a.EZAeBe');
+                    // 若找不到大圖，嘗試找雖然沒顯示但在 DOM 中的原始連結 (類似 Imageye)
+                    // 有時候 Google 側欄會把原始圖放在隱藏的 img 或 data 屬性中
+                    // 但最穩的是抓目前顯示出來最大的那張
 
-                    if (visitLink && visitLink.href) {
-                        sourceUrl = visitLink.href;
-                    } else {
-                        // Fallback
-                        const links = document.querySelectorAll('a[href^="http"]:not([href*="google"])');
-                        for (const link of links) {
-                            const rect = link.getBoundingClientRect();
-                            if (rect.left > window.innerWidth * 0.4 && rect.width > 50) {
-                                sourceUrl = link.href;
-                                break;
-                            }
-                        }
-                    }
-
-                    return { imageUrl: bestImg, sourceUrl };
+                    return { imageUrl: bestImg, sourceUrl: null }; // Source URL found later
                 });
 
-                // --- Deep Fetch Logic Disabled (User Request) ---
-                // Avoid visiting dynamic social media pages which often yield wrong images.
-                // Use the image URL directly from Google result (usually sufficient quality).
-                let finalImageUrl = imageInfo.imageUrl;
+                // 找來源連結 (保持這部分邏輯，因為要給使用者點)
+                const sourceUrlInfo = await page.evaluate(() => {
+                    let url = null;
+                    // 側欄的大按鈕 "造訪"
+                    const visitBtn = document.querySelector('a.EZAeBe');
+                    if (visitBtn && visitBtn.href) return visitBtn.href;
 
-                /* 
-                if (imageInfo.sourceUrl) {
-                    // ... (Deep fetch logic removed/commented out) ...
-                }
-                */
+                    // 備用：找任何以 http 開頭且不是 google 的連結，且位置在右側
+                    const links = document.querySelectorAll('a[href^="http"]:not([href*="google"])');
+                    for (const link of links) {
+                        const rect = link.getBoundingClientRect();
+                        if (rect.left > window.innerWidth * 0.4 && rect.width > 50) {
+                            return link.href;
+                        }
+                    }
+                    return null; // 真的找不到就算了
+                });
+
+                // 合併結果
+                const finalResult = {
+                    imageUrl: imageInfo.imageUrl,
+                    sourceUrl: sourceUrlInfo
+                };
+
+                // 為了兼容下面的程式碼結構，重新包裝
+                const finalImageUrl = finalResult.imageUrl;
+                const sourceUrl = finalResult.sourceUrl;
+
+                // (不需要 deep fetch 了)
+
+
 
                 if (finalImageUrl) {
                     results.push({
                         type: 'image',
                         url: finalImageUrl,
-                        sourceUrl: imageInfo.sourceUrl || null,
-                        isSocialMedia: imageInfo.sourceUrl ?
-                            (imageInfo.sourceUrl.includes('facebook.com') || imageInfo.sourceUrl.includes('instagram.com')) : false
+                        sourceUrl: sourceUrl || null,
+                        isSocialMedia: sourceUrl ?
+                            (sourceUrl.includes('facebook.com') || sourceUrl.includes('instagram.com')) : false
                     });
                     console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL}: ${finalImageUrl.slice(0, 50)}...`);
                     consecutiveErrors = 0;

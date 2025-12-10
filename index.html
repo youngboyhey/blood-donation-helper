@@ -21,10 +21,9 @@
         if (q.p !== undefined) {
           // Replace current history state with the correct hash route
           // This happens BEFORE React loads
+          // For HashRouter, we need: /blood-donation-helper/#/admin
           window.history.replaceState(null, null,
-            l.pathname.slice(0, -1) + decodeURIComponent(q.p) +
-            (q.q ? ('?' + q.q) : '') +
-            l.hash
+            l.pathname + '#' + decodeURIComponent(q.p)
           );
         }
       }

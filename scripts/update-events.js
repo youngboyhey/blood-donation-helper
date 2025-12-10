@@ -260,7 +260,15 @@ async function fetchGoogleImages(source) {
                         console.log(`[Google] 卡住太久，結束抓取`);
                         break;
                     }
-                    // 嘗試重按 ArrowRight
+                    // 嘗試點擊 "下一張" 按鈕 (Next Button)
+                    await page.evaluate(() => {
+                        const nextBtn = document.querySelector('a[jsname="P3zTlc"]') ||
+                            document.querySelector('div[role="button"][aria-label="Next image"]') ||
+                            document.querySelector('div[role="button"][aria-label="下一張"]');
+                        if (nextBtn) nextBtn.click();
+                    });
+
+                    // 備用：ArrowRight
                     await page.keyboard.press('ArrowRight');
                     await new Promise(r => setTimeout(r, 1500));
                     continue;
@@ -347,7 +355,15 @@ async function fetchGoogleImages(source) {
 
                 processed++;
 
-                // 5. Navigate to Next (Keyboard)
+                // 5. Navigate to Next (Next Button preferred)
+                await page.evaluate(() => {
+                    const nextBtn = document.querySelector('a[jsname="P3zTlc"]') ||
+                        document.querySelector('div[role="button"][aria-label="Next image"]') ||
+                        document.querySelector('div[role="button"][aria-label="下一張"]');
+                    if (nextBtn) nextBtn.click();
+                });
+
+                // Fallback to ArrowRight if button not found (or to support mixed nav)
                 await page.keyboard.press('ArrowRight');
                 await new Promise(r => setTimeout(r, 2000));
 

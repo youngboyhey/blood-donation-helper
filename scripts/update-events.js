@@ -314,21 +314,33 @@ async function fetchGoogleImages(source) {
                 }
 
                 if (finalImageUrl) {
-                    results.push({
-                        type: 'image',
-                        url: finalImageUrl,
-                        sourceUrl: sourceUrl || null,
-                        isSocialMedia: sourceUrl ?
-                            (sourceUrl.includes('facebook.com') || sourceUrl.includes('instagram.com')) : false,
-                        isHighRes: isOgImage
-                    });
-                    console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL} (HighRes: ${isOgImage})`);
-                    consecutiveErrors = 0;
+                    // 檢查是否與上一筆重複 (避免 Side Panel 卡住導致一直抓同一篇)
+                    // 如果 URL 相同，直接當作重複處理不存入
+                    const isDuplicate = results.some(r => r.url === finalImageUrl || (sourceUrl && r.sourceUrl === sourceUrl));
+
+                    if (!isDuplicate) {
+                        results.push({
+                            type: 'image',
+                            url: finalImageUrl,
+                            sourceUrl: sourceUrl || null,
+                            isSocialMedia: sourceUrl ?
+                                (sourceUrl.includes('facebook.com') || sourceUrl.includes('instagram.com')) : false,
+                            isHighRes: isOgImage
+                        });
+                        console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL} (HighRes: ${isOgImage})`);
+                        consecutiveErrors = 0;
+                    } else {
+                        console.log(`[Google] 略過重複圖片/來源`);
+                    }
                 } else {
                     console.log(`[Google] #${i + 1}: 找不到任何可用圖片`);
                 }
 
                 processed++;
+
+                // 關閉 Side Panel，確保下一張圖是重新開啟的
+                await page.keyboard.press('Escape');
+                await new Promise(r => setTimeout(r, 500));
 
             } catch (e) {
                 consecutiveErrors++;

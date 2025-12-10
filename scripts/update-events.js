@@ -968,65 +968,64 @@ async function updateEvents() {
                     existingUrlSet.add(item.url); // Prevent URL reprocessing
                     console.log(`[${isUpdate ? 'Update' : 'New'}] ${evt.date} ${evt.title} (${evt.city})`);
                 }
-            }
             } catch (e) {
-            if (e.name === 'QuotaExhaustedError') throw e;
-            console.error(`[Error] Processing item: ${e.message}`);
+                if (e.name === 'QuotaExhaustedError') throw e;
+                console.error(`[Error] Processing item: ${e.message}`);
+            }
         }
     }
-}
 
-// Batch Operations
-if (eventsToInsert.length > 0) {
-    console.log(`[DB] Inserting ${eventsToInsert.length} new events...`);
-    for (let i = 0; i < eventsToInsert.length; i += 50) {
-        const { error } = await supabase.from('events').insert(eventsToInsert.slice(i, i + 50));
-        if (error) console.error(`[DB] Insert failed: ${error.message}`);
-    }
-} else {
-    console.log(`[DB] No new events to insert.`);
-}
-
-if (eventsToUpdate.length > 0) {
-    console.log(`[DB] Updating ${eventsToUpdate.length} existing events...`);
-    for (const evt of eventsToUpdate) {
-        // Upsert based on ID
-        const { error } = await supabase.from('events').upsert(evt);
-        if (error) console.error(`[DB] Update failed for ${evt.id}: ${error.message}`);
-    }
-} else {
-    console.log(`[DB] No events to update.`);
-}
-
-// Save crawler status to settings table
-const crawlerStatus = {
-    last_run: new Date().toISOString(),
-    inserted: eventsToInsert.length,
-    updated: eventsToUpdate.length,
-    total_events: eventsToInsert.length + eventsToUpdate.length + (existingEventsData?.length || 0),
-    status: 'success'
-};
-
-try {
-    const { error: statusError } = await supabase
-        .from('settings')
-        .upsert(
-            {
-                key: 'crawler_status',
-                value: crawlerStatus,
-                updated_at: new Date().toISOString()
-            },
-            { onConflict: 'key' }
-        );
-
-    if (statusError) {
-        console.error('[Crawler] Failed to save status:', statusError.message);
+    // Batch Operations
+    if (eventsToInsert.length > 0) {
+        console.log(`[DB] Inserting ${eventsToInsert.length} new events...`);
+        for (let i = 0; i < eventsToInsert.length; i += 50) {
+            const { error } = await supabase.from('events').insert(eventsToInsert.slice(i, i + 50));
+            if (error) console.error(`[DB] Insert failed: ${error.message}`);
+        }
     } else {
-        console.log('[Crawler] ✓ Status saved to Supabase');
+        console.log(`[DB] No new events to insert.`);
     }
-} catch (e) {
-    console.error('[Crawler] Exception saving status:', e.message);
-}
+
+    if (eventsToUpdate.length > 0) {
+        console.log(`[DB] Updating ${eventsToUpdate.length} existing events...`);
+        for (const evt of eventsToUpdate) {
+            // Upsert based on ID
+            const { error } = await supabase.from('events').upsert(evt);
+            if (error) console.error(`[DB] Update failed for ${evt.id}: ${error.message}`);
+        }
+    } else {
+        console.log(`[DB] No events to update.`);
+    }
+
+    // Save crawler status to settings table
+    const crawlerStatus = {
+        last_run: new Date().toISOString(),
+        inserted: eventsToInsert.length,
+        updated: eventsToUpdate.length,
+        total_events: eventsToInsert.length + eventsToUpdate.length + (existingEventsData?.length || 0),
+        status: 'success'
+    };
+
+    try {
+        const { error: statusError } = await supabase
+            .from('settings')
+            .upsert(
+                {
+                    key: 'crawler_status',
+                    value: crawlerStatus,
+                    updated_at: new Date().toISOString()
+                },
+                { onConflict: 'key' }
+            );
+
+        if (statusError) {
+            console.error('[Crawler] Failed to save status:', statusError.message);
+        } else {
+            console.log('[Crawler] ✓ Status saved to Supabase');
+        }
+    } catch (e) {
+        console.error('[Crawler] Exception saving status:', e.message);
+    }
 }
 
 updateEvents().catch(console.error);

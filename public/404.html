@@ -3,38 +3,41 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Redirecting...</title>
+  <title>捐血小幫手</title>
   <script type="text/javascript">
     // Single Page Apps for GitHub Pages
-    // https://github.com/rafrex/spa-github-pages
-    // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
-    // ----------------------------------------------------------------------
+    // MIT License
+    // https://github.com/rafgraph/spa-github-pages
     // This script takes the current url and converts the path and query
     // string into just a query string, and then redirects the browser
-    // to the new url with this query string and hash fragment,
-    // e.g. http://www.foo.com/bar/baz becomes http://www.foo.com/?p=/bar/baz
-    //
-    // Note: We are adapting this to redirect directly to the hash router format
-    // needed for our specific React HashRouter setup.
-    // ----------------------------------------------------------------------
+    // to the new url with only a query string and hash fragment,
+    // e.g. https://www.foo.tld/one/two?a=b&c=d#qwe, becomes
+    // https://www.foo.tld/?/one/two&a=b~and~c=d#qwe
+    // Note: this 404.html file must be at least 512 bytes for it to work
+    // with Internet Explorer (it is currently > 512 bytes)
+
+    // If you're creating a Project Pages site and NOT using a custom domain,
+    // then set pathSegmentsToKeep to 1 (enterprise users may need to set it to > 1).
+    // This way the code will only replace the route part of the path, and not
+    // the real directory in which the app resides, for example:
+    // https://username.github.io/repo-name/one/two?a=b&c=d#qwe becomes
+    // https://username.github.io/repo-name/?/one/two&a=b~and~c=d#qwe
+    // Otherwise, leave pathSegmentsToKeep as 0.
+    var pathSegmentsToKeep = 1;
 
     var l = window.location;
-    var repoName = '/blood-donation-helper';
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+      l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+      (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+      l.hash
+    );
 
-    if (l.pathname.startsWith(repoName)) {
-      var path = l.pathname.slice(repoName.length);
-      if (path && path !== '/' && !path.startsWith('/#')) {
-        l.replace(
-          l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-          repoName + '/?redirect=' + encodeURIComponent(path) + l.search
-        );
-      }
-    }
   </script>
 </head>
 
 <body>
-  <p>Redirecting to <a href="/blood-donation-helper/">Provent Blood Donation Helper</a>...</p>
 </body>
 
 </html>

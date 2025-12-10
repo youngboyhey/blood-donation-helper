@@ -630,6 +630,26 @@ async function updateEvents() {
     } else {
         console.log(`[DB] No events to update.`);
     }
+
+    // Save crawler status to settings table
+    const crawlerStatus = {
+        last_run: new Date().toISOString(),
+        inserted: eventsToInsert.length,
+        updated: eventsToUpdate.length,
+        total_events: eventsToInsert.length + eventsToUpdate.length + (existingEventsData?.length || 0),
+        status: 'success'
+    };
+
+    try {
+        await supabase.from('settings').upsert({
+            key: 'crawler_status',
+            value: crawlerStatus,
+            updated_at: new Date().toISOString()
+        });
+        console.log('[Crawler] Status saved to Supabase');
+    } catch (e) {
+        console.error('[Crawler] Failed to save status:', e.message);
+    }
 }
 
 updateEvents().catch(console.error);

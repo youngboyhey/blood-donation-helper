@@ -40,7 +40,7 @@ const Admin = () => {
         <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
             {/* Header */}
             <div style={{ background: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h1 style={{ margin: 0, fontSize: '1.5rem' }}>活動管理後台</h1>
+                <h1 style={{ margin: 0, fontSize: '1.5rem' }}>管理後台</h1>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button
                         onClick={() => navigate('/')}

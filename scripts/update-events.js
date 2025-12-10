@@ -223,67 +223,56 @@ async function fetchGoogleImages(source) {
         let processed = 0;
         let consecutiveErrors = 0;
 
-        for (let i = 0; i < MAX_TOTAL && results.length < MAX_INITIAL; i++) {
+        // 0. 初始點擊 & Keyboard Navigation Setup
+        try {
+            console.log("[Google] 初始化: 點擊第一張圖...");
+            await page.waitForSelector('div[data-id] img', { timeout: 5000 });
+            await page.evaluate(() => { const el = document.querySelector('div[data-id] img'); if (el) el.click(); });
+            await new Promise(r => setTimeout(r, 4000)); // 等待 Side Panel 開啟
+        } catch (e) { console.log("[Google] Init click failed: " + e.message); }
+
+        let lastSourceUrl = null;
+        let consecutiveStuck = 0;
+        let loopIndex = 0;
+
+        while (results.length < MAX_INITIAL && processed < MAX_TOTAL) {
+            const i = loopIndex++;
             try {
-                let sourceUrl = null;
-                let googlePreview = null;
-                let clickSuccess = false;
+                const googlePreview = await page.evaluate(() => {
+                    const imgs = Array.from(document.querySelectorAll('img[src^="http"], img[src^="data:image"]'));
+                    imgs.sort((a, b) => (b.width * b.height) - (a.width * a.height));
+                    const candidates = imgs.filter(img => img.width > 150 && img.height > 150);
+                    return candidates.length > 0 ? candidates[0].src : null;
+                });
 
-                // Retry Loop for Clicking and getting FRESH source URL
-                for (let attempt = 0; attempt < 3; attempt++) {
+                // 2. 獲取 Source URL
+                const sourceUrl = await page.evaluate(() => {
+                    const visitBtn = document.querySelector('a.EZAeBe');
+                    if (visitBtn && visitBtn.href) return visitBtn.href;
+                    return null;
+                });
 
-                    // 1. Click Thumbnail
-                    const clicked = await page.evaluate((index) => {
-                        const thumbnails = document.querySelectorAll('div[data-id] img, img.rg_i, div.F0uyec');
-                        if (thumbnails[index]) {
-                            thumbnails[index].click();
-                            return true;
-                        }
-                        return false;
-                    }, i);
-
-                    if (!clicked) {
-                        console.log(`[Google] #${i + 1}: 縮圖不存在 (Attempt ${attempt + 1})`);
-                        continue;
+                // 3. 檢查是否卡住 (Stuck Check)
+                if (sourceUrl && sourceUrl === lastSourceUrl) {
+                    consecutiveStuck++;
+                    console.log(`[Google] 畫面未更新 (Stuck count: ${consecutiveStuck})...`);
+                    if (consecutiveStuck > 3) {
+                        console.log(`[Google] 卡住太久，結束抓取`);
+                        break;
                     }
-
-                    await new Promise(r => setTimeout(r, 2000 + (attempt * 1000))); // Wait longer on retries
-
-                    // 2. Extract Data (Preview & Source)
-                    googlePreview = await page.evaluate(() => {
-                        const imgs = Array.from(document.querySelectorAll('img[src^="http"], img[src^="data:image"]'));
-                        imgs.sort((a, b) => (b.width * b.height) - (a.width * a.height));
-                        const candidates = imgs.filter(img => img.width > 150 && img.height > 150);
-                        return candidates.length > 0 ? candidates[0].src : null;
-                    });
-
-                    sourceUrl = await page.evaluate(() => {
-                        const visitBtn = document.querySelector('a.EZAeBe');
-                        if (visitBtn && visitBtn.href) return visitBtn.href;
-                        return null;
-                    });
-
-                    // 3. Verify Freshness
-                    // If sourceUrl is found AND it is NOT a duplicate of the *immediately previous* processed result (or any recent one), we are good.
-                    // But critical check: is it the SAME as the one we just skipped?
-                    const isStale = results.some(r => r.sourceUrl === sourceUrl);
-
-                    if (sourceUrl && !isStale) {
-                        clickSuccess = true;
-                        break; // Success!
-                    }
-
-                    if (attempt < 2) {
-                        console.log(`[Google] #${i + 1} 點擊未更新/重複 (Attempt ${attempt + 1}), 重試中...`);
-                        await page.keyboard.press('Escape');
-                        await new Promise(r => setTimeout(r, 800));
-                    }
+                    // 嘗試重按 ArrowRight
+                    await page.keyboard.press('ArrowRight');
+                    await new Promise(r => setTimeout(r, 1500));
+                    continue;
                 }
+                consecutiveStuck = 0; // Reset
+                if (sourceUrl) lastSourceUrl = sourceUrl;
 
-                if (!clickSuccess && sourceUrl && results.some(r => r.sourceUrl === sourceUrl)) {
-                    console.log(`[Google] 略過重複來源 (Click Failed to Update): ${sourceUrl.slice(0, 50)}...`);
-                    processed++;
-                    await page.keyboard.press('Escape');
+                const isGlobalDuplicate = sourceUrl && results.some(r => r.sourceUrl === sourceUrl);
+                if (isGlobalDuplicate) {
+                    console.log(`[Google] 略過重複 (Global): ${sourceUrl.slice(0, 30)}...`);
+                    await page.keyboard.press('ArrowRight');
+                    await new Promise(r => setTimeout(r, 1500));
                     continue;
                 }
 
@@ -358,20 +347,14 @@ async function fetchGoogleImages(source) {
 
                 processed++;
 
-                // 關閉 Side Panel，確保下一張圖是重新開啟的
-                await page.keyboard.press('Escape');
-                await new Promise(r => setTimeout(r, 500));
+                // 5. Navigate to Next (Keyboard)
+                await page.keyboard.press('ArrowRight');
+                await new Promise(r => setTimeout(r, 2000));
 
             } catch (e) {
-                consecutiveErrors++;
-                console.log(`[Google] #${i + 1}: 錯誤 - ${e.message.slice(0, 40)}`);
-                // 如果連續錯誤太多，重新載入頁面
-                if (consecutiveErrors > 5) {
-                    console.log(`[Google] 連續錯誤過多，重新載入頁面`);
-                    await page.reload({ waitUntil: 'networkidle2' });
-                    await new Promise(r => setTimeout(r, 2000));
-                    consecutiveErrors = 0;
-                }
+                console.log(`[Google] Loop Error: ${e.message}`);
+                await page.keyboard.press('ArrowRight');
+                await new Promise(r => setTimeout(r, 1500));
             }
         }
 

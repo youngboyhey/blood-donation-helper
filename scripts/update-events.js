@@ -19,15 +19,15 @@ const SOURCES = [
     // Google 搜尋爬蟲 (針對無彙整頁的縣市，搜尋一週內圖片)
     // 規則：前5-10張，一週內
     { type: 'google', id: 'taichung', name: '台中', query: '台中 捐血活動' },
-    // { type: 'google', id: 'changhua', name: '彰化', query: '彰化 捐血活動' },
-    // { type: 'google', id: 'nantou', name: '南投', query: '南投 捐血活動' },
-    // { type: 'google', id: 'yunlin', name: '雲林', query: '雲林 捐血活動' },
-    // { type: 'google', id: 'tainan', name: '台南', query: '台南 捐血活動' },
-    // { type: 'google', id: 'chiayi', name: '嘉義', query: '嘉義 捐血活動' },
-    // { type: 'google', id: 'kaohsiung', name: '高雄', query: '高雄 捐血活動' },
-    // { type: 'google', id: 'pingtung', name: '屏東', query: '屏東 捐血活動' },
-    // { type: 'google', id: 'taitung', name: '台東', query: '台東 捐血活動' },
-    // { type: 'google', id: 'penghu', name: '澎湖', query: '澎湖 捐血活動' },
+    { type: 'google', id: 'changhua', name: '彰化', query: '彰化 捐血活動' },
+    { type: 'google', id: 'nantou', name: '南投', query: '南投 捐血活動' },
+    { type: 'google', id: 'yunlin', name: '雲林', query: '雲林 捐血活動' },
+    { type: 'google', id: 'tainan', name: '台南', query: '台南 捐血活動' },
+    { type: 'google', id: 'chiayi', name: '嘉義', query: '嘉義 捐血活動' },
+    { type: 'google', id: 'kaohsiung', name: '高雄', query: '高雄 捐血活動' },
+    { type: 'google', id: 'pingtung', name: '屏東', query: '屏東 捐血活動' },
+    { type: 'google', id: 'taitung', name: '台東', query: '台東 捐血活動' },
+    { type: 'google', id: 'penghu', name: '澎湖', query: '澎湖 捐血活動' },
 ];
 
 // --- Helpers ---
@@ -186,7 +186,15 @@ async function fetchGoogleImages(source) {
 
     const browser = await puppeteer.launch({
         headless: "new",
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled']
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-blink-features=AutomationControlled',
+            '--disable-dev-shm-usage',
+            '--no-zygote',
+            // '--single-process', // Sometimes causes issues on Windows, limiting if possible
+            '--disable-gpu'
+        ]
     });
 
     try {
@@ -197,7 +205,21 @@ async function fetchGoogleImages(source) {
         // 搜尋 Google 圖片 (qdr:w = 一週內)
         const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(source.query)}&tbm=isch&tbs=qdr:w`;
         console.log(`[Google] URL: ${searchUrl}`);
-        await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+
+        // Navigation Retry Logic
+        let navSuccess = false;
+        for (let attempt = 0; attempt < 3; attempt++) {
+            try {
+                await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+                navSuccess = true;
+                break;
+            } catch (e) {
+                console.warn(`[Google] Navigation attempt ${attempt + 1} failed: ${e.message}`);
+                await new Promise(r => setTimeout(r, 2000));
+            }
+        }
+
+        if (!navSuccess) throw new Error("Failed to navigate to Google Images after 3 attempts");
 
         // 捲動載入更多圖片
         await page.evaluate(async () => {

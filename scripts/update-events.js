@@ -409,6 +409,29 @@ async function uploadImageToStorage(supabase, imageUrl) {
     }
 }
 
+// --- Deduplication Helpers ---
+
+function normalizeText(text) {
+    if (!text) return '';
+    return text.replace(/\s+/g, '').replace(/臺/g, '台').toLowerCase();
+}
+
+function generateEventKey(evt) {
+    // Key: YYYY-MM-DD_City_Location(normalized)
+    return `${evt.date}_${normalizeText(evt.city)}_${normalizeText(evt.location)}`;
+}
+
+function calculateEventScore(evt) {
+    let score = 0;
+    if (evt.gift && evt.gift.name) score += 2;
+    if (evt.gift && evt.gift.image) score += 3; // Image URL for gift? Or just detecting it?
+    if (evt.time && evt.time.length > 3) score += 1;
+    if (evt.organizer) score += 1;
+    if (evt.tags && evt.tags.length > 0) score += 1;
+    if (evt.city && evt.district) score += 1;
+    return score;
+}
+
 async function updateEvents() {
     const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY);
     const today = new Date();
@@ -421,21 +444,50 @@ async function updateEvents() {
     if (delErr) console.error(`[Cleanup] Failed: ${delErr.message}`);
     else console.log(`[Cleanup] Expired events cleared.`);
 
-    // 2. Load Existing Hashes (Original URL) to Dedupe
-    const { data: existing } = await supabase.from('events').select('original_image_url');
-    const existingUrls = new Set((existing || []).map(e => e.original_image_url).filter(Boolean));
-    console.log(`[Dedupe] Loaded ${existingUrls.size} existing image URLs.`);
+    // 2. Load Existing Events (Full Data for Smart Dedupe)
+    console.log(`[Dedupe] Loading future events...`);
+    const { data: existingEventsData } = await supabase.from('events').select('*').gte('date', todayStr);
 
-    const allNewEvents = [];
+    // Map: Key -> { event, score }
+    const existingEventsMap = new Map();
+    const existingUrlSet = new Set();
+
+    if (existingEventsData) {
+        for (const e of existingEventsData) {
+            const key = generateEventKey(e);
+            const score = calculateEventScore(e);
+
+            // Keep the best one if DB already has dupes (unlikely but safe)
+            if (!existingEventsMap.has(key) || score > existingEventsMap.get(key).score) {
+                existingEventsMap.set(key, { ...e, _score: score });
+            }
+            if (e.original_image_url) existingUrlSet.add(e.original_image_url);
+        }
+    }
+    console.log(`[Dedupe] Loaded ${existingEventsMap.size} unique future events.`);
+
+    const eventsToInsert = [];
+    const eventsToUpdate = [];
 
     for (const source of SOURCES) {
         console.log(`\n=== Processing ${source.name} ===`);
-        let items = source.type === 'web' ? await fetchWebImages(source) : await fetchGoogleImages(source);
+        // Rate limit between sources
+        if (source !== SOURCES[0]) await new Promise(r => setTimeout(r, 2000));
+
+        let items = [];
+        try {
+            items = source.type === 'web' ? await fetchWebImages(source) : await fetchGoogleImages(source);
+        } catch (e) {
+            console.error(`[Fetch] Source failed ${source.id}: ${e.message}`);
+            continue;
+        }
 
         for (const item of items) {
-            // Dedupe check
-            if (existingUrls.has(item.url)) {
-                console.log(`[Skip] Duplicate image: ${item.url.slice(0, 30)}...`);
+            // Level 1 Dedupe: Exact URL match (skip processing entirely if we know we have it)
+            // UNLESS we want to re-check if our current version is "bad"?
+            // For now, assume if URL matches, we processed it fully before.
+            if (existingUrlSet.has(item.url)) {
+                console.log(`[Skip] Duplicate image URL: ${item.url.slice(0, 30)}...`);
                 continue;
             }
 
@@ -448,33 +500,64 @@ async function updateEvents() {
                     for (const evt of validEvents) {
                         if (!evt || !evt.date || !evt.location) continue; // Strict check
 
-                        // Valid Event Found! Now Download & Upload
+                        const newEventScore = calculateEventScore(evt);
+                        const eventKey = generateEventKey(evt);
+
+                        // Smart Dedupe Check
+                        let isUpdate = false;
+                        let shouldSkip = false;
+
+                        if (existingEventsMap.has(eventKey)) {
+                            const existing = existingEventsMap.get(eventKey);
+                            if (newEventScore > existing._score) {
+                                console.log(`[Update] Found better version for ${evt.date} ${evt.location} (Score ${newEventScore} > ${existing._score})`);
+                                isUpdate = true;
+                                evt.id = existing.id; // CRITICAL: Preserve ID to update
+                            } else {
+                                console.log(`[Skip] Existing version better/equal for ${evt.date} ${evt.location} (Score ${existing._score} >= ${newEventScore})`);
+                                shouldSkip = true;
+                            }
+                        }
+
+                        if (shouldSkip) continue;
+
+                        // New or Better Version Found - Upload Image
                         const storageUrl = await uploadImageToStorage(supabase, item.url);
                         if (!storageUrl) {
                             console.log(`[Skip] Image upload failed or too small.`);
                             continue;
                         }
 
-                        // Sanitize & Prepare
-                        const newEvent = {
+                        // Prepare Final Object
+                        const finalEvent = {
                             ...evt,
                             poster_url: storageUrl,
-                            original_image_url: item.url, // Save for future dedupe
+                            original_image_url: item.url,
                             source_url: evt.sourceUrl || item.sourceUrl,
                             tags: evt.tags || [],
-                            created_at: new Date(),
                             updated_at: new Date()
                         };
 
-                        // Fix City/District if necessary (AI usually does well with new prompt, but safety check)
-                        if (newEvent.city && newEvent.city.includes('市') && !newEvent.city.includes('縣') && !['台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市', '基隆市', '新竹市', '嘉義市'].includes(newEvent.city)) {
-                            // E.g. "南投市" -> City="南投縣", District="南投市"
-                            // A bit complex to map all, relying on AI prompt primarily.
+                        if (!isUpdate) {
+                            finalEvent.created_at = new Date(); // Only for new
                         }
 
-                        allNewEvents.push(newEvent);
-                        console.log(`[New] ${evt.date} ${evt.title} (${evt.city})`);
-                        existingUrls.add(item.url); // Add to local set to avoid re-adding in same run
+                        // Standardize City (Simple Check)
+                        if (finalEvent.city && finalEvent.city.includes('市') && !finalEvent.city.includes('縣') && !['台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市', '基隆市', '新竹市', '嘉義市'].includes(finalEvent.city)) {
+                            // Pass
+                        }
+
+                        if (isUpdate) {
+                            eventsToUpdate.push(finalEvent);
+                            // Update map to prevent other dupes in same run overwriting this best version
+                            existingEventsMap.set(eventKey, { ...finalEvent, _score: newEventScore });
+                        } else {
+                            eventsToInsert.push(finalEvent);
+                            existingEventsMap.set(eventKey, { ...finalEvent, _score: newEventScore });
+                        }
+
+                        existingUrlSet.add(item.url); // Prevent URL reprocessing
+                        console.log(`[${isUpdate ? 'Update' : 'New'}] ${evt.date} ${evt.title} (${evt.city})`);
                     }
                 }
             } catch (e) {
@@ -484,16 +567,26 @@ async function updateEvents() {
         }
     }
 
-    // Upsert to DB
-    if (allNewEvents.length > 0) {
-        console.log(`[DB] Upserting ${allNewEvents.length} new events...`);
-        // Batch
-        for (let i = 0; i < allNewEvents.length; i += 50) {
-            const { error } = await supabase.from('events').insert(allNewEvents.slice(i, i + 50));
+    // Batch Operations
+    if (eventsToInsert.length > 0) {
+        console.log(`[DB] Inserting ${eventsToInsert.length} new events...`);
+        for (let i = 0; i < eventsToInsert.length; i += 50) {
+            const { error } = await supabase.from('events').insert(eventsToInsert.slice(i, i + 50));
             if (error) console.error(`[DB] Insert failed: ${error.message}`);
         }
     } else {
-        console.log(`[DB] No new events found.`);
+        console.log(`[DB] No new events to insert.`);
+    }
+
+    if (eventsToUpdate.length > 0) {
+        console.log(`[DB] Updating ${eventsToUpdate.length} existing events...`);
+        for (const evt of eventsToUpdate) {
+            // Upsert based on ID
+            const { error } = await supabase.from('events').upsert(evt);
+            if (error) console.error(`[DB] Update failed for ${evt.id}: ${error.message}`);
+        }
+    } else {
+        console.log(`[DB] No events to update.`);
     }
 }
 

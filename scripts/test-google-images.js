@@ -17,111 +17,123 @@ async function testGoogleImages() {
         await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 60000 });
 
         try {
-            await page.waitForSelector('div[data-id] img', { timeout: 10000 });
+            await page.waitForSelector('div[data-id] img, div.F0uyec', { timeout: 10000 });
         } catch (e) {
             console.log(`[Test] Timeout waiting for results.`);
             return;
         }
 
-        // Re-query thumbnails inside the loop to avoid stale elements (simulated here by just querying once but handling errors)
-        // In the real script we re-query. Here we just want to test the logic on the first few items.
-        const thumbnails = await page.$$('div[data-id] img');
-        console.log(`[Test] Found ${thumbnails.length} thumbnails.`);
+        // Create a robust loop using indices instead of element handles
+        const thumbnailCount = await page.$$eval('div[data-id] img, div.F0uyec', imgs => imgs.length);
+        console.log(`[Test] Found ${thumbnailCount} thumbnails.`);
 
         const MAX_RESULTS = 5;
-        for (let i = 0; i < Math.min(thumbnails.length, MAX_RESULTS); i++) {
-            const thumb = thumbnails[i];
+        for (let i = 0; i < Math.min(thumbnailCount, MAX_RESULTS); i++) {
             console.log(`\n--- Processing #${i} ---`);
 
-            // 1. Get Thumb Src
-            let thumbSrc = null;
-            try {
-                thumbSrc = await page.evaluate(el => el.src, thumb);
-                console.log(`[Debug] Thumb Src: ${thumbSrc ? thumbSrc.substring(0, 50) + '...' : 'null'} (Length: ${thumbSrc ? thumbSrc.length : 0})`);
-            } catch (e) {
-                console.log(`[Debug] Failed to get thumb src: ${e.message}`);
-            }
-
-            // 2. Click
+            // 1. Get Thumb Src & Click (Combined to avoid stale handles)
             let clickSuccess = false;
+            let thumbSrc = null;
+
             try {
-                await page.evaluate(el => el.click(), thumb);
-                clickSuccess = true;
-                console.log(`[Debug] Click success`);
+                const result = await page.evaluate((index) => {
+                    const els = document.querySelectorAll('div[data-id] img, div.F0uyec');
+                    const el = els[index];
+                    if (!el) return { success: false };
+
+                    const src = el.src || el.querySelector('img')?.src;
+                    el.click();
+                    return { success: true, src };
+                }, i);
+
+                clickSuccess = result.success;
+                thumbSrc = result.src;
+                if (clickSuccess) console.log(`[Debug] Click success`);
+                else console.log(`[Debug] Click failed (element not found)`);
+
             } catch (e) {
-                console.log(`[Debug] Click failed: ${e.message}`);
+                console.log(`[Debug] Interaction failed: ${e.message}`);
             }
 
             let result = { highResUrl: null, visitUrl: null };
 
             if (clickSuccess) {
-                await new Promise(r => setTimeout(r, 1500));
+                await new Promise(r => setTimeout(r, 2000));
                 try {
-                    result = await page.evaluate(() => {
-                        const isIcon = (img) => {
-                            const src = img.src.toLowerCase();
-                            return src.includes('icon') || src.includes('logo') || src.includes('favicon');
-                        };
-                        const isPlaceholder = (img) => {
-                            const src = img.src;
-                            return src.includes('data:image/gif') || src.includes('R0lGODlhAQABA');
-                        };
+                    // Extract Google High Res URL & Visit URL
+                    const googleData = await page.evaluate(() => {
+                        // High Res Image Candidate in Preview
+                        const allImages = Array.from(document.querySelectorAll('img')).filter(img => img.src.startsWith('http') && !img.src.includes('gstatic.com') && !img.src.includes('favicon'));
+                        allImages.sort((a, b) => (b.naturalWidth * b.naturalHeight) - (a.naturalWidth * a.naturalHeight));
+                        const highResUrl = allImages.length > 0 ? allImages[0].src : null;
 
-                        const allImages = Array.from(document.querySelectorAll('img'));
-                        const candidates = allImages.filter(img => {
-                            const rect = img.getBoundingClientRect();
-                            if (rect.width < 150 || rect.height < 150) return false;
-                            if (rect.width === 0 || rect.height === 0) return false;
-                            if (isIcon(img)) return false;
-                            if (isPlaceholder(img)) return false;
-                            return true;
-                        });
-                        candidates.sort((a, b) => {
-                            const areaA = a.getBoundingClientRect().width * a.getBoundingClientRect().height;
-                            const areaB = b.getBoundingClientRect().width * b.getBoundingClientRect().height;
-                            return areaB - areaA;
-                        });
-                        let highResUrl = null;
-                        const httpCandidate = candidates.find(img => img.src.startsWith('http') && !img.src.includes('gstatic.com'));
-                        if (httpCandidate) {
-                            highResUrl = httpCandidate.src;
-                        } else if (candidates.length > 0) {
-                            highResUrl = candidates[0].src;
-                        }
+                        // Visit URL (Source Link)
+                        // Verified selector: a.EZAeBe
+                        const visitLink = document.querySelector('a.EZAeBe');
+                        const visitUrl = visitLink ? visitLink.href : null;
 
-                        // Visit URL logic (simplified for test)
-                        const links = Array.from(document.querySelectorAll('a'));
-                        let visitUrl = null;
-                        const visitLink = links.find(a => a.innerText.includes('前往') || a.innerText.includes('Visit'));
-                        if (visitLink) visitUrl = visitLink.href;
-
-                        return { highResUrl, visitUrl, candidateCount: candidates.length };
+                        return { highResUrl, visitUrl };
                     });
-                    console.log(`[Debug] Extraction result: Candidates=${result.candidateCount}, HighRes=${result.highResUrl ? 'Found' : 'Null'}`);
+
+                    result.highResUrl = googleData.highResUrl;
+                    result.visitUrl = googleData.visitUrl;
+
+                    console.log(`[Google] Preview Image: ${result.highResUrl ? result.highResUrl.slice(0, 50) + '...' : 'Null'}`);
+                    console.log(`[Google] Source URL: ${result.visitUrl}`);
+
+                    // --- DEEP FETCH START ---
+                    if (result.visitUrl) {
+                        console.log(`[DeepFetch] Visiting source: ${result.visitUrl}`);
+                        const newPage = await browser.newPage();
+                        await newPage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+                        await newPage.setViewport({ width: 1920, height: 1080 });
+
+                        try {
+                            // Fast timeout for testing
+                            await newPage.goto(result.visitUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+                            await new Promise(r => setTimeout(r, 2000)); // Wait for render
+
+                            // Extract Largest Image from Source
+                            const sourceImage = await newPage.evaluate(() => {
+                                const images = Array.from(document.querySelectorAll('img'));
+                                const validImages = images.filter(img => {
+                                    const rect = img.getBoundingClientRect();
+                                    // Must be reasonably large
+                                    return rect.width > 300 && rect.height > 300 && img.src.startsWith('http');
+                                });
+
+                                if (validImages.length === 0) return null;
+
+                                // Sort by area
+                                validImages.sort((a, b) => {
+                                    const areaA = a.getBoundingClientRect().width * a.getBoundingClientRect().height;
+                                    const areaB = b.getBoundingClientRect().width * b.getBoundingClientRect().height;
+                                    return areaB - areaA;
+                                });
+
+                                return validImages[0].src;
+                            });
+
+                            if (sourceImage) {
+                                console.log(`[DeepFetch] ✓ Found Source Image: ${sourceImage.slice(0, 50)}...`);
+                                console.log(`[DeepFetch] URL Length: ${sourceImage.length}`);
+                            } else {
+                                console.log(`[DeepFetch] No suitable image found on page.`);
+                            }
+
+                        } catch (e) {
+                            console.log(`[DeepFetch] Failed to load/scrape source: ${e.message}`);
+                        } finally {
+                            await newPage.close();
+                        }
+                    } else {
+                        console.log(`[DeepFetch] Skipped (No source URL found)`);
+                    }
+                    // --- DEEP FETCH END ---
+
                 } catch (e) {
                     console.log(`[Debug] Extraction failed: ${e.message}`);
                 }
-            }
-
-            let finalImageUrl = result.highResUrl;
-
-            // Double check if highResUrl is a placeholder or too short
-            if (finalImageUrl && (finalImageUrl.includes('data:image/gif') || finalImageUrl.length < 100)) {
-                console.log(`[Debug] High res URL looks like a placeholder, falling back to thumbnail.`);
-                finalImageUrl = null;
-            }
-
-            finalImageUrl = finalImageUrl || thumbSrc;
-
-            if (finalImageUrl) {
-                console.log(`[Debug] Final URL Length: ${finalImageUrl.length}`);
-                if (finalImageUrl.length > 100) {
-                    console.log(`[Result] ACCEPTED: ${finalImageUrl.substring(0, 50)}...`);
-                } else {
-                    console.log(`[Result] REJECTED (Too short): ${finalImageUrl.substring(0, 50)}...`);
-                }
-            } else {
-                console.log(`[Result] REJECTED (Null)`);
             }
         }
 

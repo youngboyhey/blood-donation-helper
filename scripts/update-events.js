@@ -1,47 +1,57 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import crypto from 'crypto';
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import * as cheerio from 'cheerio';
 import puppeteer from 'puppeteer';
 import { createClient } from '@supabase/supabase-js';
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import crypto from 'crypto';
+import fs from 'fs';
+import * as cheerio from 'cheerio';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config();
 
-// --- Configuration & Helpers ---
-
-function sanitizeData(data) {
-    if (Array.isArray(data)) return data.map(sanitizeData);
-    if (data && typeof data === 'object') {
-        const cleaned = {};
-        for (const [key, value] of Object.entries(data)) {
-            cleaned[key] = sanitizeData(value);
-        }
-        return cleaned;
-    }
-    if (typeof data === 'string') {
-        const trimmed = data.trim();
-        if (trimmed.toLowerCase() === 'null' || trimmed.toLowerCase() === 'undefined') return null;
-        return trimmed;
-    }
-    return data;
-}
+// --- Configuration ---
 
 const SOURCES = [
-    // 官網爬蟲 - 維持原方法
-    { type: 'web', id: 'taipei', name: '台北捐血中心', url: 'https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284', baseUrl: 'https://www.tp.blood.org.tw', city: '台北市' },
-    { type: 'web', id: 'hsinchu', name: '新竹捐血中心', url: 'https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492', baseUrl: 'https://www.sc.blood.org.tw', city: '新竹市' },
-    // Google 圖片統一搜尋 - 新方法
-    { type: 'google', id: 'unified', name: 'Google 圖片搜尋', query: '捐血活動', city: null }
+    // 1. Google 圖片搜尋關鍵字 (針對各大捐血中心與關鍵字)
+    { type: 'google', query: 'site:instagram.com "捐血活動" 海報 2024', id: 'ig_2024' },
+    { type: 'google', query: 'site:facebook.com "捐血活動" 海報 2024', id: 'fb_2024' },
+    { type: 'google', query: '"捐血活動" 海報 2024', id: 'general_2024' },
+
+    // 2. 各地捐血中心官網 (直接抓取活動頁面) - 範例：台北捐血中心
+    // 需針對不同中心寫特定Parser，這裡先示範通用架構
+    { type: 'web', id: 'taipei', name: '台北捐血中心', url: 'https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284', baseUrl: 'https://www.tp.blood.org.tw' },
+    { type: 'web', id: 'hsinchu', name: '新竹捐血中心', url: 'https://www.sc.blood.org.tw/xmdoc?xsmsid=0P062657380252119565', baseUrl: 'https://www.sc.blood.org.tw' },
+    { type: 'web', id: 'taichung', name: '台中捐血中心', url: 'https://www.tc.blood.org.tw/xmdoc?xsmsid=0P062683072836261596', baseUrl: 'https://www.tc.blood.org.tw' },
+    { type: 'web', id: 'tainan', name: '台南捐血中心', url: 'https://www.tn.blood.org.tw/xmdoc?xsmsid=0P062709282362870347', baseUrl: 'https://www.tn.blood.org.tw' },
+    { type: 'web', id: 'kaohsiung', name: '高雄捐血中心', url: 'https://www.ks.blood.org.tw/xmdoc?xsmsid=0P062734135544436585', baseUrl: 'https://www.ks.blood.org.tw' },
 ];
 
-// Puppeteer Setup
+// --- Helpers ---
+
+// Load Cookies from ENV or File
+async function loadCookies() {
+    // 1. Try ENV
+    if (process.env.COOKIES_JSON) {
+        try {
+            return JSON.parse(process.env.COOKIES_JSON);
+        } catch (e) {
+            console.error("Error parsing COOKIES_JSON env var:", e);
+        }
+    }
+    // 2. Try File
+    if (fs.existsSync('cookies.json')) {
+        try {
+            const data = fs.readFileSync('cookies.json', 'utf8');
+            return JSON.parse(data);
+        } catch (e) { }
+    }
+    return [];
+}
+
 async function fetchHTMLWithPuppeteer(url) {
-    console.log(`[Puppeteer] Fetching: ${url}`);
-    const browser = await puppeteer.launch({ headless: "new", args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    const browser = await puppeteer.launch({
+        headless: "new",
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     try {
@@ -50,66 +60,13 @@ async function fetchHTMLWithPuppeteer(url) {
         await browser.close();
         return content;
     } catch (e) {
-        console.error(`[Puppeteer] Failed ${url}:`, e.message);
         await browser.close();
         throw e;
     }
 }
 
-async function loadCookies() {
-    if (process.env.COOKIES_JSON) {
-        try {
-            return JSON.parse(process.env.COOKIES_JSON);
-        } catch (e) { console.error('[Cookies] Env parse failed'); }
-    }
-    const cookiePath = path.join(__dirname, '../cookies.json');
-    if (fs.existsSync(cookiePath)) {
-        try {
-            return JSON.parse(fs.readFileSync(cookiePath, 'utf8'));
-        } catch (e) { console.error('[Cookies] File read failed'); }
-    }
-    return [];
-}
+// --- Scrapers ---
 
-// Deep Scraping & Validation
-async function fetchSourcePage(url, browser, cookies) {
-    if (!url || !url.startsWith('http')) return null;
-    const page = await browser.newPage();
-    try {
-        if (cookies && cookies.length) await page.setCookie(...cookies);
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64)');
-
-        // Block minimal requests to speed up
-        await page.setRequestInterception(true);
-        page.on('request', (req) => {
-            if (['font', 'stylesheet'].includes(req.resourceType())) req.abort();
-            else req.continue();
-        });
-
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
-
-        const largestImage = await page.evaluate(() => {
-            const images = Array.from(document.querySelectorAll('img'));
-            // Strict Size Filter: > 300x300
-            const candidates = images.filter(img => {
-                const rect = img.getBoundingClientRect();
-                return rect.width >= 300 && rect.height >= 300 && img.src.startsWith('http');
-            });
-            if (!candidates.length) return null;
-            candidates.sort((a, b) => (b.getBoundingClientRect().width * b.getBoundingClientRect().height) - (a.getBoundingClientRect().width * a.getBoundingClientRect().height));
-            return candidates[0].src;
-        });
-
-        return largestImage;
-    } catch (e) {
-        // console.error(`[Source] Error ${url}: ${e.message}`);
-    } finally {
-        await page.close();
-    }
-    return null;
-}
-
-// Google Image Search - 新版：點擊縮圖 → 造訪連結 → 下載圖片
 async function fetchGoogleImages(source) {
     console.log(`[Google] 搜尋: ${source.query}`);
     const cookies = await loadCookies();
@@ -147,8 +104,8 @@ async function fetchGoogleImages(source) {
         });
         await new Promise(r => setTimeout(r, 2000));
 
-        // 找到縮圖數量
-        const thumbnailCount = await page.$$eval('div[data-id] img, img.rg_i', imgs => imgs.length);
+        // 找到縮圖數量 - 增加 div.F0uyec (Verified Selector)
+        const thumbnailCount = await page.$$eval('div[data-id] img, img.rg_i, div.F0uyec', imgs => imgs.length);
         console.log(`[Google] 找到 ${thumbnailCount} 個縮圖`);
 
         const results = [];
@@ -161,7 +118,7 @@ async function fetchGoogleImages(source) {
             try {
                 // 每次重新查詢縮圖（避免 stale element handle）
                 const clicked = await page.evaluate((index) => {
-                    const thumbnails = document.querySelectorAll('div[data-id] img, img.rg_i');
+                    const thumbnails = document.querySelectorAll('div[data-id] img, img.rg_i, div.F0uyec');
                     if (thumbnails[index]) {
                         thumbnails[index].click();
                         return true;
@@ -176,9 +133,9 @@ async function fetchGoogleImages(source) {
 
                 await new Promise(r => setTimeout(r, 2000));
 
-                // 從側欄取得高解析度圖片
+                // 從側欄取得高解析度圖片與來源連結
                 const imageInfo = await page.evaluate(() => {
-                    // 找側欄中最大的非 Google 圖片
+                    // 找側欄中最大的非 Google 圖片 (預覽圖)
                     const allImgs = document.querySelectorAll('img[src^="http"]');
                     let bestImg = null;
                     let maxArea = 0;
@@ -192,7 +149,7 @@ async function fetchGoogleImages(source) {
                             rect.width > 200 && rect.height > 200) {
                             // 排除 Google 圖片
                             if (src.includes('gstatic.com') || src.includes('google.com') ||
-                                src.includes('encrypted-tbn')) continue;
+                                src.includes('encrypted-tbn') || src.includes('favicon')) continue;
 
                             const area = rect.width * rect.height;
                             if (area > maxArea) {
@@ -202,24 +159,74 @@ async function fetchGoogleImages(source) {
                         }
                     }
 
-                    // 找來源連結
+                    // 找來源連結 - 優先找 a.EZAeBe (Verified Selector)
                     let sourceUrl = null;
-                    const links = document.querySelectorAll('a[href^="http"]:not([href*="google"])');
-                    for (const link of links) {
-                        const rect = link.getBoundingClientRect();
-                        if (rect.left > window.innerWidth * 0.4 && rect.width > 50) {
-                            sourceUrl = link.href;
-                            break;
+                    const visitLink = document.querySelector('a.EZAeBe');
+
+                    if (visitLink && visitLink.href) {
+                        sourceUrl = visitLink.href;
+                    } else {
+                        // Fallback
+                        const links = document.querySelectorAll('a[href^="http"]:not([href*="google"])');
+                        for (const link of links) {
+                            const rect = link.getBoundingClientRect();
+                            if (rect.left > window.innerWidth * 0.4 && rect.width > 50) {
+                                sourceUrl = link.href;
+                                break;
+                            }
                         }
                     }
 
                     return { imageUrl: bestImg, sourceUrl };
                 });
 
-                if (imageInfo.imageUrl) {
+                // --- Deep Fetch Logic ---
+                let finalImageUrl = imageInfo.imageUrl;
+                if (imageInfo.sourceUrl) {
+                    console.log(`[Google] Visiting source for Deep Fetch: ${imageInfo.sourceUrl}`);
+                    try {
+                        const sourcePage = await browser.newPage();
+                        // Inject Cookies for Deep Fetch
+                        if (cookies && cookies.length > 0) {
+                            try { await sourcePage.setCookie(...cookies); } catch (e) { }
+                        }
+
+                        // Basic privacy/handling
+                        await sourcePage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+                        // Fast timeout, don't get stuck
+                        await sourcePage.goto(imageInfo.sourceUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
+                        await new Promise(r => setTimeout(r, 1500));
+
+                        const deepImg = await sourcePage.evaluate(() => {
+                            const images = Array.from(document.querySelectorAll('img'));
+                            const candidates = images.filter(img => {
+                                const rect = img.getBoundingClientRect();
+                                return rect.width >= 300 && rect.height >= 300 && img.src.startsWith('http');
+                            });
+                            if (!candidates.length) return null;
+                            candidates.sort((a, b) => (b.getBoundingClientRect().width * b.getBoundingClientRect().height) - (a.getBoundingClientRect().width * a.getBoundingClientRect().height));
+                            return candidates[0].src;
+                        });
+
+                        if (deepImg) {
+                            console.log(`[Google] Deep Fetch Success: ${deepImg.slice(0, 50)}...`);
+                            finalImageUrl = deepImg;
+                        } else {
+                            console.log(`[Google] Deep Fetch: No better image found.`);
+                        }
+                        await sourcePage.close();
+
+                    } catch (e) {
+                        console.log(`[Google] Deep Fetch Failed: ${e.message}`);
+                        // Don't throw, just use preview image
+                    }
+                }
+
+                if (finalImageUrl) {
                     results.push({
                         type: 'image',
-                        url: imageInfo.imageUrl,
+                        url: finalImageUrl,
                         sourceUrl: imageInfo.sourceUrl || null,
                         isSocialMedia: imageInfo.sourceUrl ?
                             (imageInfo.sourceUrl.includes('facebook.com') || imageInfo.sourceUrl.includes('instagram.com')) : false
@@ -256,7 +263,7 @@ async function fetchGoogleImages(source) {
     }
 }
 
-// Web Scraper - 改進版：過濾總表、專注單場活動海報
+// Web Scraper - 改進版：過濾總表、專注單場活動海報、日期標題過濾
 async function fetchWebImages(source) {
     console.log(`[Web] Scraping: ${source.url}`);
     try {
@@ -264,19 +271,97 @@ async function fetchWebImages(source) {
         const $ = cheerio.load(html);
         const targetLinks = [];
 
-        $('a').each((i, el) => {
-            const text = $(el).text().trim();
-            const href = $(el).attr('href');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-            // 過濾條件：只要「捐血活動」相關連結
-            if (text.includes('捐血活動') && !text.includes('暫停')) {
-                // 排除總表/行事曆類連結
+        $('a').each((i, el) => {
+            const $el = $(el);
+            const text = $el.text().trim();
+            const href = $el.attr('href');
+
+            // 1. Check Link & Text Criteria
+            if ((text.includes('捐血活動') || href?.includes('xmdoc/cont')) && !text.includes('暫停')) {
+                // Exclude Summary/Calendar Links
                 if (text.includes('總表') || text.includes('行事曆') ||
                     text.includes('一覽') || text.includes('場次表') ||
                     text.includes('月行程')) {
-                    console.log(`[Web] 跳過總表連結: ${text.slice(0, 30)}`);
+                    // console.log(`[Web] 跳過總表連結: ${text.slice(0, 30)}`);
                     return;
                 }
+
+                // 2. Date Filtering (Title Based - Enhanced)
+                const title = text; // Usually the link text contains the info
+
+                // Matches: 114年12月29日, 114/12/29, 12/29, 11-23~12-20
+                const dateMatches = title.match(/(\d{2,4})[年\/-](\d{1,2})[月\/-](\d{1,2})/g);
+                const shortDateMatches = title.match(/(\d{1,2})[月\/](\d{1,2})/g);
+
+                let hasFutureDate = false;
+                let hasDateInfo = false;
+
+                // Function to parse date string to Date object
+                const parseDate = (dStr) => {
+                    let y, m, d;
+                    // Handle 114年...
+                    if (dStr.includes('年')) {
+                        const parts = dStr.split(/[年月日]/);
+                        y = parseInt(parts[0]);
+                        m = parseInt(parts[1]);
+                        d = parseInt(parts[2]);
+                        if (y < 1911) y += 1911; // ROC Year
+                    }
+                    // Handle YYYY/MM/DD or YY/MM/DD
+                    else if (dStr.includes('/') || dStr.includes('-')) {
+                        const parts = dStr.split(/[\/-]/);
+                        y = parseInt(parts[0]);
+                        if (y < 1911 && y > 100) y += 1911;
+
+                        m = parseInt(parts[1]);
+                        d = parseInt(parts[2]);
+                    }
+                    return new Date(y, m - 1, d);
+                };
+
+                if (dateMatches) {
+                    hasDateInfo = true;
+                    for (const match of dateMatches) {
+                        try {
+                            const evtDate = parseDate(match);
+                            if (evtDate >= today) {
+                                hasFutureDate = true;
+                                break;
+                            }
+                        } catch (e) { }
+                    }
+                } else if (shortDateMatches) {
+                    hasDateInfo = true;
+                    const currentYear = today.getFullYear();
+                    for (const match of shortDateMatches) {
+                        const parts = match.split(/[\/月]/);
+                        const m = parseInt(parts[0]);
+                        const d = parseInt(parts[1]);
+
+                        // Try current year
+                        let evtDate = new Date(currentYear, m - 1, d);
+                        // Heuristic: If date is very far in past (e.g. today is Dec, event is Jan), assume next year.
+                        if (evtDate < today && m < today.getMonth()) {
+                            evtDate.setFullYear(currentYear + 1);
+                        }
+
+                        if (evtDate >= today) {
+                            hasFutureDate = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Decision Logic
+                // Only skip if we found dates AND none were in the future
+                if (hasDateInfo && !hasFutureDate) {
+                    console.log(`[Web] 跳過過期活動 (Title檢測): ${title.slice(0, 30)}...`);
+                    return;
+                }
+
                 if (href) targetLinks.push(href.startsWith('http') ? href : source.baseUrl + href);
             }
         });

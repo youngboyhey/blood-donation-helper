@@ -289,48 +289,16 @@ async function fetchGoogleImages(source) {
                     return { imageUrl: bestImg, sourceUrl };
                 });
 
-                // --- Deep Fetch Logic ---
+                // --- Deep Fetch Logic Disabled (User Request) ---
+                // Avoid visiting dynamic social media pages which often yield wrong images.
+                // Use the image URL directly from Google result (usually sufficient quality).
                 let finalImageUrl = imageInfo.imageUrl;
+
+                /* 
                 if (imageInfo.sourceUrl) {
-                    console.log(`[Google] Visiting source for Deep Fetch: ${imageInfo.sourceUrl}`);
-                    try {
-                        const sourcePage = await browser.newPage();
-                        // Inject Cookies for Deep Fetch
-                        if (cookies && cookies.length > 0) {
-                            try { await sourcePage.setCookie(...cookies); } catch (e) { }
-                        }
-
-                        // Basic privacy/handling
-                        await sourcePage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-
-                        // Fast timeout, don't get stuck
-                        await sourcePage.goto(imageInfo.sourceUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
-                        await new Promise(r => setTimeout(r, 1500));
-
-                        const deepImg = await sourcePage.evaluate(() => {
-                            const images = Array.from(document.querySelectorAll('img'));
-                            const candidates = images.filter(img => {
-                                const rect = img.getBoundingClientRect();
-                                return rect.width >= 300 && rect.height >= 300 && img.src.startsWith('http');
-                            });
-                            if (!candidates.length) return null;
-                            candidates.sort((a, b) => (b.getBoundingClientRect().width * b.getBoundingClientRect().height) - (a.getBoundingClientRect().width * a.getBoundingClientRect().height));
-                            return candidates[0].src;
-                        });
-
-                        if (deepImg) {
-                            console.log(`[Google] Deep Fetch Success: ${deepImg.slice(0, 50)}...`);
-                            finalImageUrl = deepImg;
-                        } else {
-                            console.log(`[Google] Deep Fetch: No better image found.`);
-                        }
-                        await sourcePage.close();
-
-                    } catch (e) {
-                        console.log(`[Google] Deep Fetch Failed: ${e.message}`);
-                        // Don't throw, just use preview image
-                    }
+                    // ... (Deep fetch logic removed/commented out) ...
                 }
+                */
 
                 if (finalImageUrl) {
                     results.push({

@@ -80,6 +80,91 @@ async function fetchHTMLWithPuppeteer(url) {
     }
 }
 
+
+async function fetchPageImagesWithPuppeteer(url) {
+    console.log(`[Puppeteer] Fetching Images: ${url}`);
+    const browser = await puppeteer.launch({
+        headless: "new",
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+
+    try {
+        const page = await browser.newPage();
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+
+        // Auto-scroll logic to load lazy images
+        await page.evaluate(async () => {
+            await new Promise((resolve) => {
+                let totalHeight = 0;
+                const distance = 100;
+                const timer = setInterval(() => {
+                    const scrollHeight = document.body.scrollHeight;
+                    window.scrollBy(0, distance);
+                    totalHeight += distance;
+
+                    if (totalHeight >= scrollHeight - window.innerHeight || totalHeight > 5000) {
+                        clearInterval(timer);
+                        resolve();
+                    }
+                }, 100);
+            });
+        });
+        await new Promise(r => setTimeout(r, 2000));
+
+        // Extract images with dimensions
+        const images = await page.evaluate(() => {
+            const results = [];
+            const seen = new Set();
+            // Prioritize content areas
+            const selectors = ['div.xccont img', 'div.pt-3 img', 'article img', '.content img', 'img'];
+
+            for (const selector of selectors) {
+                const imgs = document.querySelectorAll(selector);
+                for (const img of imgs) {
+                    const src = img.src || img.dataset.src;
+                    if (!src || seen.has(src)) continue;
+
+                    // Filter conditions running in browser context
+                    if (!src.startsWith('http')) continue;
+
+                    // Paths check
+                    if (!src.includes('file_pool') && !src.includes('upload') &&
+                        !src.includes('xmimg') && !src.includes('storage')) continue;
+
+                    // File type check
+                    if (src.toLowerCase().endsWith('.svg') || src.toLowerCase().includes('qr') ||
+                        src.toLowerCase().includes('logo') || src.toLowerCase().includes('icon')) continue;
+
+                    // Dimension check (Natural size)
+                    const w = img.naturalWidth || img.width;
+                    const h = img.naturalHeight || img.height;
+
+                    if (w < 100 || h < 100) continue;
+
+                    // Aspect Ratio Check (The key fix!)
+                    // Filter out very tall images (lists/tables)
+                    // If Height > 2.2 * Width, it's likely a summary list
+                    if (h > w * 2.2) continue;
+
+                    seen.add(src);
+                    results.push(src);
+                }
+            }
+            return results;
+        });
+
+        await browser.close();
+        return images;
+
+    } catch (e) {
+        console.error(`[Puppeteer] Failed to extract images ${url}:`, e.message);
+        await browser.close();
+        return [];
+    }
+}
+
 // --- Scrapers ---
 
 async function fetchGoogleImages(source) {
@@ -396,60 +481,22 @@ async function fetchWebImages(source) {
 
         for (const fullUrl of uniqueLinks) {
             console.log(`[Web] Visiting: ${fullUrl}`);
-            const detailHtml = await fetchHTMLWithPuppeteer(fullUrl);
-            const $d = cheerio.load(detailHtml);
 
-            // 檢查頁面是否為總表類（包含多個日期表格）
-            const pageText = $d('body').text();
-            const dateMatches = pageText.match(/\d{4}[-/]\d{1,2}[-/]\d{1,2}/g) || [];
-            if (dateMatches.length > 5) {
-                console.log(`[Web] 跳過總表頁 (${dateMatches.length} 個日期): ${fullUrl.slice(-30)}`);
+            // 使用新函式：能過濾長條圖、支援滾動
+            const validImageUrls = await fetchPageImagesWithPuppeteer(fullUrl);
+
+            if (validImageUrls.length === 0) {
+                console.log(`[Web] 未找到有效海報: ${fullUrl.slice(-30)}`);
                 continue;
             }
 
-            // 尋找海報圖片 - 優先找 div.xccont 內的大圖
-            const pageImages = [];
-
-            // 優先在主內容區尋找
-            const contentSelectors = ['div.xccont img', 'div.pt-3 img', 'article img', '.content img', 'img'];
-            let foundInContent = false;
-
-            for (const selector of contentSelectors) {
-                if (foundInContent) break;
-
-                $d(selector).each((i, el) => {
-                    const src = $d(el).attr('src') || $d(el).attr('data-src');
-                    if (!src) return;
-
-                    // 過濾條件
-                    const url = src.startsWith('http') ? src : source.baseUrl + src;
-
-                    // 必須包含這些路徑之一（確保是上傳的圖片）
-                    if (!url.includes('file_pool') && !url.includes('upload') &&
-                        !url.includes('xmimg') && !url.includes('storage')) return;
-
-                    // 排除 SVG 和 QR Code
-                    if (url.toLowerCase().endsWith('.svg')) return;
-                    if (url.toLowerCase().includes('qr')) return;
-
-                    // 排除太小的圖（如 icon）
-                    const width = $d(el).attr('width');
-                    const height = $d(el).attr('height');
-                    if ((width && parseInt(width) < 100) || (height && parseInt(height) < 100)) return;
-
-                    // 排除 logo、icon
-                    if (url.toLowerCase().includes('logo') || url.toLowerCase().includes('icon')) return;
-
-                    pageImages.push({ type: 'image', url, sourceUrl: fullUrl });
-                    foundInContent = true;
-                });
-            }
+            const pageImages = validImageUrls.map(url => ({ type: 'image', url, sourceUrl: fullUrl }));
 
             // 不限制每頁圖片數量，確保抓取所有海報
             allImages = allImages.concat(pageImages);
         }
 
-        // 去重並限制數量
+        // 去重
         const dedupedImages = [...new Map(allImages.map(item => [item.url, item])).values()];
         console.log(`[Web] 收集 ${dedupedImages.length} 張圖片`);
         return dedupedImages;

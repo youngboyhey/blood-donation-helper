@@ -867,148 +867,166 @@ async function updateEvents() {
             continue;
         }
 
+        let imageIndex = 0;
         for (const item of items) {
+            imageIndex++;
+            const imgLabel = `[Image ${imageIndex}/${items.length}]`;
+
             // Level 1 Dedupe: Exact URL match (skip processing entirely if we know we have it)
             // UNLESS we want to re-check if our current version is "bad"?
             // For now, assume if URL matches, we processed it fully before.
             if (existingUrlSet.has(item.url)) {
-                console.log(`[Skip] Duplicate image URL: ${item.url.slice(0, 30)}...`);
+                console.log(`${imgLabel} Skip: 重複圖片URL`);
                 continue;
             }
+
+            console.log(`${imgLabel} 分析中: ${item.sourceUrl?.slice(0, 50) || item.url.slice(0, 50)}...`);
 
             // AI Analyze
             await new Promise(r => setTimeout(r, 2000)); // Rate limit buffer
             try {
                 const results = await analyzeContentWithAI(item, source);
-                if (results) {
-                    const validEvents = Array.isArray(results) ? results : [results];
-                    for (const evt of validEvents) {
-                        if (!evt || !evt.date || !evt.location) continue; // Strict check
 
-                        // CRITICAL: Skip expired events (double check AI response)
-                        if (evt.date < todayStr) {
-                            console.log(`[Skip] Expired event: ${evt.date} ${evt.location}`);
-                            continue;
-                        }
-
-                        const newEventScore = calculateEventScore(evt);
-                        const eventKey = generateEventKey(evt);
-
-                        // Smart Dedupe Check
-                        let isUpdate = false;
-                        let shouldSkip = false;
-
-                        if (existingEventsMap.has(eventKey)) {
-                            const existing = existingEventsMap.get(eventKey);
-                            if (newEventScore > existing._score) {
-                                console.log(`[Update] Found better version for ${evt.date} ${evt.location} (Score ${newEventScore} > ${existing._score})`);
-                                isUpdate = true;
-                                evt.id = existing.id; // CRITICAL: Preserve ID to update
-                            } else {
-                                console.log(`[Skip] Existing version better/equal for ${evt.date} ${evt.location} (Score ${existing._score} >= ${newEventScore})`);
-                                shouldSkip = true;
-                            }
-                        }
-
-                        if (shouldSkip) continue;
-
-                        // New or Better Version Found - Upload Image
-                        const storageUrl = await uploadImageToStorage(supabase, item.url);
-                        if (!storageUrl) {
-                            console.log(`[Skip] Image upload failed or too small.`);
-                            continue;
-                        }
-
-                        // Prepare Final Object
-                        const finalEvent = {
-                            ...evt,
-                            poster_url: storageUrl,
-                            original_image_url: item.url,
-                            source_url: evt.sourceUrl || item.sourceUrl,
-                            tags: evt.tags || [],
-                            updated_at: new Date()
-                        };
-
-                        if (!isUpdate) {
-                            finalEvent.created_at = new Date(); // Only for new
-                        }
-
-                        // Standardize City (Simple Check)
-                        if (finalEvent.city && finalEvent.city.includes('市') && !finalEvent.city.includes('縣') && !['台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市', '基隆市', '新竹市', '嘉義市'].includes(finalEvent.city)) {
-                            // Pass
-                        }
-
-                        if (isUpdate) {
-                            eventsToUpdate.push(finalEvent);
-                            // Update map to prevent other dupes in same run overwriting this best version
-                            existingEventsMap.set(eventKey, { ...finalEvent, _score: newEventScore });
-                        } else {
-                            eventsToInsert.push(finalEvent);
-                            existingEventsMap.set(eventKey, { ...finalEvent, _score: newEventScore });
-                        }
-
-                        existingUrlSet.add(item.url); // Prevent URL reprocessing
-                        console.log(`[${isUpdate ? 'Update' : 'New'}] ${evt.date} ${evt.title} (${evt.city})`);
-                    }
+                if (!results) {
+                    console.log(`${imgLabel} 結果: AI 回傳 null (不符合條件)`);
+                    continue;
                 }
-            } catch (e) {
-                if (e.name === 'QuotaExhaustedError') throw e;
-                console.error(`[Error] Processing item: ${e.message}`);
+
+                const validEvents = Array.isArray(results) ? results : [results];
+                console.log(`${imgLabel} 結果: AI 識別出 ${validEvents.length} 個活動`);
+
+                for (const evt of validEvents) {
+                    if (!evt || !evt.date || !evt.location) {
+                        console.log(`${imgLabel} Skip: 缺少日期或地點`);
+                        continue;
+                    }
+
+                    // CRITICAL: Skip expired events (double check AI response)
+                    if (evt.date < todayStr) {
+                        console.log(`${imgLabel} Skip: 已過期 (${evt.date} < ${todayStr}) - ${evt.location}`);
+                        continue;
+                    }
+
+                    const newEventScore = calculateEventScore(evt);
+                    const eventKey = generateEventKey(evt);
+
+                    // Smart Dedupe Check
+                    let isUpdate = false;
+                    let shouldSkip = false;
+
+                    if (existingEventsMap.has(eventKey)) {
+                        const existing = existingEventsMap.get(eventKey);
+                        if (newEventScore > existing._score) {
+                            console.log(`${imgLabel} Action: 更新現有活動 (Score ${newEventScore} > ${existing._score}) - ${evt.date} ${evt.location}`);
+                            isUpdate = true;
+                            evt.id = existing.id; // CRITICAL: Preserve ID to update
+                        } else {
+                            console.log(`${imgLabel} Skip: 現有版本更好 (Score ${existing._score} >= ${newEventScore}) - ${evt.date} ${evt.location}`);
+                            shouldSkip = true;
+                        }
+                    } else {
+                        console.log(`${imgLabel} Action: 新增活動 - ${evt.date} ${evt.location} (Score: ${newEventScore})`);
+                    }
+
+                    if (shouldSkip) continue;
+
+                    // New or Better Version Found - Upload Image
+                    const storageUrl = await uploadImageToStorage(supabase, item.url);
+                    if (!storageUrl) {
+                        console.log(`${imgLabel} Skip: 圖片上傳失敗或太小`);
+                        continue;
+                    }
+
+                    // Prepare Final Object
+                    const finalEvent = {
+                        ...evt,
+                        poster_url: storageUrl,
+                        original_image_url: item.url,
+                        source_url: evt.sourceUrl || item.sourceUrl,
+                        tags: evt.tags || [],
+                        updated_at: new Date()
+                    };
+
+                    if (!isUpdate) {
+                        finalEvent.created_at = new Date(); // Only for new
+                    }
+
+                    // Standardize City (Simple Check)
+                    if (finalEvent.city && finalEvent.city.includes('市') && !finalEvent.city.includes('縣') && !['台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市', '基隆市', '新竹市', '嘉義市'].includes(finalEvent.city)) {
+                        // Pass
+                    }
+
+                    if (isUpdate) {
+                        eventsToUpdate.push(finalEvent);
+                        // Update map to prevent other dupes in same run overwriting this best version
+                        existingEventsMap.set(eventKey, { ...finalEvent, _score: newEventScore });
+                    } else {
+                        eventsToInsert.push(finalEvent);
+                        existingEventsMap.set(eventKey, { ...finalEvent, _score: newEventScore });
+                    }
+
+                    existingUrlSet.add(item.url); // Prevent URL reprocessing
+                    console.log(`[${isUpdate ? 'Update' : 'New'}] ${evt.date} ${evt.title} (${evt.city})`);
+                }
             }
+            } catch (e) {
+            if (e.name === 'QuotaExhaustedError') throw e;
+            console.error(`[Error] Processing item: ${e.message}`);
         }
     }
+}
 
-    // Batch Operations
-    if (eventsToInsert.length > 0) {
-        console.log(`[DB] Inserting ${eventsToInsert.length} new events...`);
-        for (let i = 0; i < eventsToInsert.length; i += 50) {
-            const { error } = await supabase.from('events').insert(eventsToInsert.slice(i, i + 50));
-            if (error) console.error(`[DB] Insert failed: ${error.message}`);
-        }
+// Batch Operations
+if (eventsToInsert.length > 0) {
+    console.log(`[DB] Inserting ${eventsToInsert.length} new events...`);
+    for (let i = 0; i < eventsToInsert.length; i += 50) {
+        const { error } = await supabase.from('events').insert(eventsToInsert.slice(i, i + 50));
+        if (error) console.error(`[DB] Insert failed: ${error.message}`);
+    }
+} else {
+    console.log(`[DB] No new events to insert.`);
+}
+
+if (eventsToUpdate.length > 0) {
+    console.log(`[DB] Updating ${eventsToUpdate.length} existing events...`);
+    for (const evt of eventsToUpdate) {
+        // Upsert based on ID
+        const { error } = await supabase.from('events').upsert(evt);
+        if (error) console.error(`[DB] Update failed for ${evt.id}: ${error.message}`);
+    }
+} else {
+    console.log(`[DB] No events to update.`);
+}
+
+// Save crawler status to settings table
+const crawlerStatus = {
+    last_run: new Date().toISOString(),
+    inserted: eventsToInsert.length,
+    updated: eventsToUpdate.length,
+    total_events: eventsToInsert.length + eventsToUpdate.length + (existingEventsData?.length || 0),
+    status: 'success'
+};
+
+try {
+    const { error: statusError } = await supabase
+        .from('settings')
+        .upsert(
+            {
+                key: 'crawler_status',
+                value: crawlerStatus,
+                updated_at: new Date().toISOString()
+            },
+            { onConflict: 'key' }
+        );
+
+    if (statusError) {
+        console.error('[Crawler] Failed to save status:', statusError.message);
     } else {
-        console.log(`[DB] No new events to insert.`);
+        console.log('[Crawler] ✓ Status saved to Supabase');
     }
-
-    if (eventsToUpdate.length > 0) {
-        console.log(`[DB] Updating ${eventsToUpdate.length} existing events...`);
-        for (const evt of eventsToUpdate) {
-            // Upsert based on ID
-            const { error } = await supabase.from('events').upsert(evt);
-            if (error) console.error(`[DB] Update failed for ${evt.id}: ${error.message}`);
-        }
-    } else {
-        console.log(`[DB] No events to update.`);
-    }
-
-    // Save crawler status to settings table
-    const crawlerStatus = {
-        last_run: new Date().toISOString(),
-        inserted: eventsToInsert.length,
-        updated: eventsToUpdate.length,
-        total_events: eventsToInsert.length + eventsToUpdate.length + (existingEventsData?.length || 0),
-        status: 'success'
-    };
-
-    try {
-        const { error: statusError } = await supabase
-            .from('settings')
-            .upsert(
-                {
-                    key: 'crawler_status',
-                    value: crawlerStatus,
-                    updated_at: new Date().toISOString()
-                },
-                { onConflict: 'key' }
-            );
-
-        if (statusError) {
-            console.error('[Crawler] Failed to save status:', statusError.message);
-        } else {
-            console.log('[Crawler] ✓ Status saved to Supabase');
-        }
-    } catch (e) {
-        console.error('[Crawler] Exception saving status:', e.message);
-    }
+} catch (e) {
+    console.error('[Crawler] Exception saving status:', e.message);
+}
 }
 
 updateEvents().catch(console.error);

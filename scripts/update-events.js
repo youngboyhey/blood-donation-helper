@@ -172,48 +172,68 @@ async function fetchGoogleImages(source) {
             return [];
         }
 
-        for (let i = 0; i < Math.min(thumbnails.length, 30); i++) {
+        for (let i = 0; i < Math.min(thumbnails.length, 50); i++) {
             if (images.length >= MAX_RESULTS) break;
 
             try {
                 // Click thumbnail
                 await thumbnails[i].click();
-                await new Promise(r => setTimeout(r, 2000));
+                await new Promise(r => setTimeout(r, 2500)); // Wait for side panel to load
 
-                // Find High Res image
+                // Find High Res image with multiple strategies
                 const result = await page.evaluate(() => {
-                    const imgs = Array.from(document.querySelectorAll('img'));
-                    // Strict Filter: >= 300x300, no gstatic/google/icons
-                    const candidates = imgs.filter(img => {
+                    // Strategy 1: Look for large images in the side panel
+                    const allImgs = Array.from(document.querySelectorAll('img'));
+
+                    // Build candidates from various sources
+                    const candidates = [];
+                    for (const img of allImgs) {
                         const rect = img.getBoundingClientRect();
-                        const src = img.src || '';
-                        return rect.width >= 300 && rect.height >= 300 &&
-                            src.startsWith('http') &&
-                            !src.includes('gstatic') &&
-                            !src.includes('google.com') &&
-                            !src.includes('favicon') &&
-                            !src.includes('logo');
-                    });
+                        // Check both src and data-src (lazy loading)
+                        let src = img.src || img.getAttribute('data-src') || '';
+
+                        // Skip small images, Google assets
+                        if (rect.width < 200 || rect.height < 200) continue;
+                        if (!src.startsWith('http')) continue;
+                        if (src.includes('gstatic.com')) continue;
+                        if (src.includes('google.com/')) continue;
+                        if (src.includes('googleusercontent.com/favicon')) continue;
+                        if (src.includes('encrypted-tbn')) continue; // thumbnails
+
+                        candidates.push({
+                            src: src,
+                            area: rect.width * rect.height
+                        });
+                    }
 
                     if (candidates.length === 0) return null;
-                    // Sort by area
-                    candidates.sort((a, b) => (b.getBoundingClientRect().width * b.getBoundingClientRect().height) - (a.getBoundingClientRect().width * a.getBoundingClientRect().height));
 
-                    // Try to find Visit Link
-                    const links = Array.from(document.querySelectorAll('a'));
-                    const visit = links.find(a => (a.innerText.includes('前往') || a.innerText.includes('Visit') || a.innerText.includes('造訪')));
+                    // Sort by area and get largest
+                    candidates.sort((a, b) => b.area - a.area);
 
-                    return { src: candidates[0].src, visit: visit ? visit.href : null };
+                    // Try to find source link
+                    const links = Array.from(document.querySelectorAll('a[href]'));
+                    const visitLink = links.find(a => {
+                        const text = a.innerText || '';
+                        return text.includes('前往') || text.includes('Visit') || text.includes('造訪');
+                    });
+
+                    return {
+                        src: candidates[0].src,
+                        visit: visitLink ? visitLink.href : null
+                    };
                 });
 
                 if (result && result.src) {
                     // Check Dupes in batch
                     if (!images.some(img => img.url === result.src)) {
                         images.push({ type: 'image', url: result.src, sourceUrl: result.visit });
-                        console.log(`[Google] ✓ Found image ${images.length}/${MAX_RESULTS}`);
+                        console.log(`[Google] ✓ Found image ${images.length}/${MAX_RESULTS}: ${result.src.slice(0, 50)}...`);
                     }
                 }
-            } catch (e) { }
+            } catch (e) {
+                // Silently continue on errors
+            }
         }
 
         console.log(`[Google] Collected ${images.length} images for ${source.query}`);
@@ -567,6 +587,12 @@ async function updateEvents() {
                     const validEvents = Array.isArray(results) ? results : [results];
                     for (const evt of validEvents) {
                         if (!evt || !evt.date || !evt.location) continue; // Strict check
+
+                        // CRITICAL: Skip expired events (double check AI response)
+                        if (evt.date < todayStr) {
+                            console.log(`[Skip] Expired event: ${evt.date} ${evt.location}`);
+                            continue;
+                        }
 
                         const newEventScore = calculateEventScore(evt);
                         const eventKey = generateEventKey(evt);

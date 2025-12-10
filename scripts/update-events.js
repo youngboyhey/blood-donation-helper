@@ -225,59 +225,70 @@ async function fetchGoogleImages(source) {
 
         for (let i = 0; i < MAX_TOTAL && results.length < MAX_INITIAL; i++) {
             try {
-                // 每次重新查詢縮圖（避免 stale element handle）
-                const clicked = await page.evaluate((index) => {
-                    const thumbnails = document.querySelectorAll('div[data-id] img, img.rg_i, div.F0uyec');
-                    if (thumbnails[index]) {
-                        thumbnails[index].click();
-                        return true;
-                    }
-                    return false;
-                }, i);
+                let sourceUrl = null;
+                let googlePreview = null;
+                let clickSuccess = false;
 
-                if (!clicked) {
-                    console.log(`[Google] #${i + 1}: 縮圖不存在`);
-                    continue;
+                // Retry Loop for Clicking and getting FRESH source URL
+                for (let attempt = 0; attempt < 3; attempt++) {
+
+                    // 1. Click Thumbnail
+                    const clicked = await page.evaluate((index) => {
+                        const thumbnails = document.querySelectorAll('div[data-id] img, img.rg_i, div.F0uyec');
+                        if (thumbnails[index]) {
+                            thumbnails[index].click();
+                            return true;
+                        }
+                        return false;
+                    }, i);
+
+                    if (!clicked) {
+                        console.log(`[Google] #${i + 1}: 縮圖不存在 (Attempt ${attempt + 1})`);
+                        continue;
+                    }
+
+                    await new Promise(r => setTimeout(r, 2000 + (attempt * 1000))); // Wait longer on retries
+
+                    // 2. Extract Data (Preview & Source)
+                    googlePreview = await page.evaluate(() => {
+                        const imgs = Array.from(document.querySelectorAll('img[src^="http"], img[src^="data:image"]'));
+                        imgs.sort((a, b) => (b.width * b.height) - (a.width * a.height));
+                        const candidates = imgs.filter(img => img.width > 150 && img.height > 150);
+                        return candidates.length > 0 ? candidates[0].src : null;
+                    });
+
+                    sourceUrl = await page.evaluate(() => {
+                        const visitBtn = document.querySelector('a.EZAeBe');
+                        if (visitBtn && visitBtn.href) return visitBtn.href;
+                        return null;
+                    });
+
+                    // 3. Verify Freshness
+                    // If sourceUrl is found AND it is NOT a duplicate of the *immediately previous* processed result (or any recent one), we are good.
+                    // But critical check: is it the SAME as the one we just skipped?
+                    const isStale = results.some(r => r.sourceUrl === sourceUrl);
+
+                    if (sourceUrl && !isStale) {
+                        clickSuccess = true;
+                        break; // Success!
+                    }
+
+                    if (attempt < 2) {
+                        console.log(`[Google] #${i + 1} 點擊未更新/重複 (Attempt ${attempt + 1}), 重試中...`);
+                        await page.keyboard.press('Escape');
+                        await new Promise(r => setTimeout(r, 800));
+                    }
                 }
 
-                await new Promise(r => setTimeout(r, 2000));
-
-                // 1. 先抓取 Google 顯示的預覽圖作為備案 (Thumbnail/Preview)
-                // 這通常是 Base64 或 encrypted-tbn，畫質普通但穩定
-                const googlePreview = await page.evaluate(() => {
-                    const imgs = Array.from(document.querySelectorAll('img[src^="http"], img[src^="data:image"]'));
-                    // 找出畫面中最大的圖 (通常是側欄預覽圖，如果側欄有開的話)
-                    imgs.sort((a, b) => (b.width * b.height) - (a.width * a.height));
-                    // 過濾掉太小的 icon
-                    const candidates = imgs.filter(img => img.width > 150 && img.height > 150);
-                    return candidates.length > 0 ? candidates[0].src : null;
-                });
-
-                // 2. 嘗試找出來源連結 (Source URL)
-                const sourceUrl = await page.evaluate(() => {
-                    // 標準側欄 "造訪" 按鈕
-                    const visitBtn = document.querySelector('a.EZAeBe');
-                    if (visitBtn && visitBtn.href) return visitBtn.href;
-
-                    // 備用：尋找剛點擊的區塊內的外部連結
-                    // 這需要一點啟發式搜索，因為 side panel 可能沒開
-                    // 嘗試找 class="isv-r" 內部的第二連結 (通常是標題連結)
-                    // 但這裡沒有 index access，所以只能依賴 DOM 狀態
-                    // 簡單策略：找頁面上可見的、最大的 "Visit" 相關連結
-                    return null;
-                });
+                if (!clickSuccess && sourceUrl && results.some(r => r.sourceUrl === sourceUrl)) {
+                    console.log(`[Google] 略過重複來源 (Click Failed to Update): ${sourceUrl.slice(0, 50)}...`);
+                    processed++;
+                    await page.keyboard.press('Escape');
+                    continue;
+                }
 
                 let finalImageUrl = googlePreview;
                 let isOgImage = false;
-
-                // 檢查是否與上一筆重複 (提早檢查)
-                if (sourceUrl && results.some(r => r.sourceUrl === sourceUrl)) {
-                    console.log(`[Google] 略過重複來源 (Early Skip): ${sourceUrl.slice(0, 50)}...`);
-                    processed++;
-                    await page.keyboard.press('Escape'); // 重置狀態
-                    await new Promise(r => setTimeout(r, 500));
-                    continue;
-                }
 
                 // 3. Smart Deep Fetch (智慧型來源抓取)
                 // 如果有來源連結，就去該網頁抓 meta og:image，這比 Google 預覽圖清晰非常多

@@ -663,10 +663,9 @@ async function analyzeContentWithAI(item, sourceContext) {
 若無效，請回傳:
 { "invalid_reason": "原本應回傳 null 的具體原因" }
 `;
-            `;
             const result = await gen.generateContent([prompt, { inlineData: { data: base64, mimeType: "image/jpeg" } }]);
             const text = result.response.text();
-            
+
             // Clean markdown JSON
             const jsonText = text.replace(/```json / g, '').replace(/```/g, '').trim();
             let data;

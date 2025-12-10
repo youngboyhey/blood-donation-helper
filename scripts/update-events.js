@@ -148,110 +148,82 @@ async function fetchGoogleImages(source) {
         await new Promise(r => setTimeout(r, 2000));
 
         // 找到所有縮圖
-        const thumbnails = await page.$$('div[data-id] img, img.rg_i');
+        const thumbnails = await page.$$('div[jsname="N9Xkfe"] img, div[data-id] img, img.rg_i, g-img img');
         console.log(`[Google] 找到 ${thumbnails.length} 個縮圖`);
 
         const results = [];
         const MAX_INITIAL = 30;
         const MAX_TOTAL = 50;
         let processed = 0;
-        let skippedCount = 0;
 
-        for (let i = 0; i < Math.min(thumbnails.length, MAX_TOTAL) && results.length < MAX_INITIAL + skippedCount; i++) {
+        for (let i = 0; i < Math.min(thumbnails.length, MAX_TOTAL) && results.length < MAX_INITIAL; i++) {
             try {
                 // 點擊縮圖
                 await thumbnails[i].click();
-                await new Promise(r => setTimeout(r, 2000));
+                await new Promise(r => setTimeout(r, 2500));
 
-                // 找「造訪」連結
-                const visitLink = await page.evaluate(() => {
-                    const links = Array.from(document.querySelectorAll('a'));
-                    const visit = links.find(a => {
-                        const text = a.innerText || '';
-                        return text.includes('造訪') || text.includes('Visit') || text.includes('前往');
-                    });
-                    return visit ? visit.href : null;
-                });
+                // 方法1: 從側欄取得高解析度圖片和來源連結
+                const imageInfo = await page.evaluate(() => {
+                    // 找側欄中的大圖
+                    const sidePanelImgs = Array.from(document.querySelectorAll('img[jsname="kn3ccd"], img[jsname="HiaYvf"], c-wiz img, div[jscontroller] img'));
+                    let bestImg = null;
+                    let maxArea = 0;
 
-                if (!visitLink) {
-                    console.log(`[Google] #${i + 1}: 找不到造訪連結`);
-                    continue;
-                }
-
-                console.log(`[Google] #${i + 1}: 造訪 ${visitLink.slice(0, 60)}...`);
-
-                // 開新頁面訪問來源
-                const sourcePage = await browser.newPage();
-                await sourcePage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-
-                // 若是社群網站，套用 cookies
-                const isSocialMedia = visitLink.includes('facebook.com') || visitLink.includes('instagram.com') || visitLink.includes('fb.com');
-                if (isSocialMedia && cookies.length > 0) {
-                    try { await sourcePage.setCookie(...cookies); } catch (e) { }
-                }
-
-                try {
-                    await sourcePage.goto(visitLink, { waitUntil: 'networkidle2', timeout: 30000 });
-                    await new Promise(r => setTimeout(r, 2000));
-
-                    // 取得頁面中最大的圖片
-                    const imageData = await sourcePage.evaluate(() => {
-                        const imgs = Array.from(document.querySelectorAll('img'));
-                        let best = null;
-                        let maxArea = 0;
-
-                        for (const img of imgs) {
-                            const rect = img.getBoundingClientRect();
-                            const area = rect.width * rect.height;
-                            const src = img.src || '';
-
-                            // 過濾太小、非圖片、logo 等
-                            if (rect.width < 200 || rect.height < 200) continue;
-                            if (!src.startsWith('http')) continue;
-                            if (src.includes('logo') || src.includes('icon') || src.includes('avatar')) continue;
-
-                            if (area > maxArea) {
+                    for (const img of sidePanelImgs) {
+                        const rect = img.getBoundingClientRect();
+                        const area = rect.width * rect.height;
+                        if (rect.width > 200 && rect.height > 200 && area > maxArea) {
+                            const src = img.src || img.getAttribute('data-src') || '';
+                            if (src.startsWith('http') && !src.includes('encrypted-tbn') && !src.includes('gstatic')) {
                                 maxArea = area;
-                                best = src;
+                                bestImg = src;
                             }
                         }
-                        return best;
-                    });
+                    }
 
-                    if (imageData) {
-                        results.push({
-                            type: 'image',
-                            url: imageData,
-                            sourceUrl: visitLink,
-                            isSocialMedia
-                        });
-                        console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL}: ${imageData.slice(0, 50)}...`);
-                    } else {
-                        // 若找不到大圖，截取頁面
-                        const screenshot = await sourcePage.screenshot({ encoding: 'base64', type: 'png' });
-                        if (screenshot) {
-                            results.push({
-                                type: 'screenshot',
-                                base64: screenshot,
-                                sourceUrl: visitLink,
-                                isSocialMedia
-                            });
-                            console.log(`[Google] ✓ 截圖 ${results.length}/${MAX_INITIAL}`);
+                    // 找來源連結 (多種選擇器)
+                    let sourceUrl = null;
+                    const linkSelectors = [
+                        'a[jsname="hSRGPd"]',  // 造訪按鈕
+                        'a[data-ved][target="_blank"]',  // 外部連結
+                        'a[href*="facebook.com"]', 'a[href*="instagram.com"]',  // 社群
+                        'a.G0iuSb',  // 另一種選擇器
+                        'div[jscontroller] a[href^="http"]:not([href*="google"])'  // 非 Google 連結
+                    ];
+
+                    for (const sel of linkSelectors) {
+                        const link = document.querySelector(sel);
+                        if (link && link.href && !link.href.includes('google.com')) {
+                            sourceUrl = link.href;
+                            break;
                         }
                     }
-                } catch (navError) {
-                    console.log(`[Google] #${i + 1}: 無法訪問來源 - ${navError.message.slice(0, 30)}`);
+
+                    return { imageUrl: bestImg, sourceUrl };
+                });
+
+                if (imageInfo.imageUrl) {
+                    results.push({
+                        type: 'image',
+                        url: imageInfo.imageUrl,
+                        sourceUrl: imageInfo.sourceUrl || null,
+                        isSocialMedia: imageInfo.sourceUrl ?
+                            (imageInfo.sourceUrl.includes('facebook.com') || imageInfo.sourceUrl.includes('instagram.com')) : false
+                    });
+                    console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL}: ${imageInfo.imageUrl.slice(0, 50)}...`);
+                } else {
+                    console.log(`[Google] #${i + 1}: 找不到高解析度圖片`);
                 }
 
-                await sourcePage.close();
                 processed++;
 
             } catch (e) {
                 // 單張圖片錯誤，繼續下一張
+                console.log(`[Google] #${i + 1}: 處理錯誤 - ${e.message.slice(0, 30)}`);
             }
         }
 
-        console.log(`[Google] 完成: ${results.length} 張圖片 (處理 ${processed} 個來源)`);
+        console.log(`[Google] 完成: ${results.length} 張圖片 (處理 ${processed} 個)`);
         return results;
 
     } catch (e) {
@@ -262,22 +234,33 @@ async function fetchGoogleImages(source) {
     }
 }
 
-// Web Scraper
+// Web Scraper - 改進版：過濾總表、專注單場活動海報
 async function fetchWebImages(source) {
     console.log(`[Web] Scraping: ${source.url}`);
     try {
         const html = await fetchHTMLWithPuppeteer(source.url);
         const $ = cheerio.load(html);
         const targetLinks = [];
+
         $('a').each((i, el) => {
-            const text = $(el).text();
+            const text = $(el).text().trim();
+            const href = $(el).attr('href');
+
+            // 過濾條件：只要「捐血活動」相關連結
             if (text.includes('捐血活動') && !text.includes('暫停')) {
-                let href = $(el).attr('href');
+                // 排除總表/行事曆類連結
+                if (text.includes('總表') || text.includes('行事曆') ||
+                    text.includes('一覽') || text.includes('場次表') ||
+                    text.includes('月行程')) {
+                    console.log(`[Web] 跳過總表連結: ${text.slice(0, 30)}`);
+                    return;
+                }
                 if (href) targetLinks.push(href.startsWith('http') ? href : source.baseUrl + href);
             }
         });
 
-        const uniqueLinks = [...new Set(targetLinks)].slice(0, 5); // Limit 5 pages
+        const uniqueLinks = [...new Set(targetLinks)].slice(0, 8); // 增加到 8 頁
+        console.log(`[Web] 找到 ${uniqueLinks.length} 個活動連結`);
         let allImages = [];
 
         for (const fullUrl of uniqueLinks) {
@@ -285,17 +268,46 @@ async function fetchWebImages(source) {
             const detailHtml = await fetchHTMLWithPuppeteer(fullUrl);
             const $d = cheerio.load(detailHtml);
 
+            // 檢查頁面是否為總表類（包含多個日期表格）
+            const pageText = $d('body').text();
+            const dateMatches = pageText.match(/\d{4}[-/]\d{1,2}[-/]\d{1,2}/g) || [];
+            if (dateMatches.length > 5) {
+                console.log(`[Web] 跳過總表頁 (${dateMatches.length} 個日期): ${fullUrl.slice(-30)}`);
+                continue;
+            }
+
+            // 尋找海報圖片 - 優先找大圖
+            const pageImages = [];
             $d('img').each((i, el) => {
-                const src = $d(el).attr('src');
-                if (src && (src.includes('file_pool') || src.includes('upload'))) {
-                    // Check extension
-                    if (!src.match(/\.(svg|gif|png|jpg|jpeg)$/i)) return;
-                    const url = src.startsWith('http') ? src : source.baseUrl + src;
-                    allImages.push({ type: 'image', url, sourceUrl: fullUrl });
-                }
+                const src = $d(el).attr('src') || $d(el).attr('data-src');
+                if (!src) return;
+
+                // 過濾條件
+                const url = src.startsWith('http') ? src : source.baseUrl + src;
+
+                // 必須包含這些路徑之一（確保是上傳的圖片）
+                if (!url.includes('file_pool') && !url.includes('upload') &&
+                    !url.includes('xmimg') && !url.includes('storage')) return;
+
+                // 排除太小的圖（如 icon）
+                const width = $d(el).attr('width');
+                const height = $d(el).attr('height');
+                if ((width && parseInt(width) < 100) || (height && parseInt(height) < 100)) return;
+
+                // 排除 logo、icon
+                if (url.toLowerCase().includes('logo') || url.toLowerCase().includes('icon')) return;
+
+                pageImages.push({ type: 'image', url, sourceUrl: fullUrl });
             });
+
+            // 只取每頁的前 3 張大圖（避免太多）
+            allImages = allImages.concat(pageImages.slice(0, 3));
         }
-        return [...new Map(allImages.map(item => [item.url, item])).values()].slice(0, 10);
+
+        // 去重並限制數量
+        const dedupedImages = [...new Map(allImages.map(item => [item.url, item])).values()];
+        console.log(`[Web] 收集 ${dedupedImages.length} 張圖片`);
+        return dedupedImages.slice(0, 15);
     } catch (e) {
         return [];
     }

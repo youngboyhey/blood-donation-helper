@@ -242,76 +242,76 @@ async function fetchGoogleImages(source) {
 
                 await new Promise(r => setTimeout(r, 2000));
 
-                // 從頁面中與 Imageye 類似的方式找出最大圖
-                const imageInfo = await page.evaluate(() => {
-                    const allImgs = Array.from(document.querySelectorAll('img'));
-                    let bestImg = null;
-                    let maxArea = 0;
-
-                    for (const img of allImgs) {
-                        const src = img.src || '';
-                        if (!src.startsWith('http')) continue;
-
-                        // 排除 Google 的縮圖與 UI 圖
-                        if (src.includes('encrypted-tbn') || // 搜尋列表縮圖
-                            src.includes('favicon') ||
-                            src.includes('gstatic.com') ||   // UI 圖
-                            src.includes('google.com/images') ||
-                            src.includes('logo')) continue;
-
-                        // 檢查尺寸 (Natural Dimensions)
-                        // 必須要是「大圖」才算數，縮圖通常 < 300px
-                        const w = img.naturalWidth || img.width || 0;
-                        const h = img.naturalHeight || img.height || 0;
-
-                        if (w < 300 || h < 300) continue;
-
-                        // 找最大的那張
-                        const area = w * h;
-                        if (area > maxArea) {
-                            maxArea = area;
-                            bestImg = src;
-                        }
-                    }
-
-                    // 若找不到大圖，嘗試找雖然沒顯示但在 DOM 中的原始連結 (類似 Imageye)
-                    // 有時候 Google 側欄會把原始圖放在隱藏的 img 或 data 屬性中
-                    // 但最穩的是抓目前顯示出來最大的那張
-
-                    return { imageUrl: bestImg, sourceUrl: null }; // Source URL found later
+                // 1. 先抓取 Google 顯示的預覽圖作為備案 (Thumbnail/Preview)
+                // 這通常是 Base64 或 encrypted-tbn，畫質普通但穩定
+                const googlePreview = await page.evaluate(() => {
+                    const imgs = Array.from(document.querySelectorAll('img[src^="http"], img[src^="data:image"]'));
+                    // 找出畫面中最大的圖 (通常是側欄預覽圖，如果側欄有開的話)
+                    imgs.sort((a, b) => (b.width * b.height) - (a.width * a.height));
+                    // 過濾掉太小的 icon
+                    const candidates = imgs.filter(img => img.width > 150 && img.height > 150);
+                    return candidates.length > 0 ? candidates[0].src : null;
                 });
 
-                // 找來源連結 (保持這部分邏輯，因為要給使用者點)
-                const sourceUrlInfo = await page.evaluate(() => {
-                    let url = null;
-                    // 側欄的大按鈕 "造訪"
+                // 2. 嘗試找出來源連結 (Source URL)
+                const sourceUrl = await page.evaluate(() => {
+                    // 標準側欄 "造訪" 按鈕
                     const visitBtn = document.querySelector('a.EZAeBe');
                     if (visitBtn && visitBtn.href) return visitBtn.href;
 
-                    // 備用：找任何以 http 開頭且不是 google 的連結，且位置在右側
-                    const links = document.querySelectorAll('a[href^="http"]:not([href*="google"])');
-                    for (const link of links) {
-                        const rect = link.getBoundingClientRect();
-                        if (rect.left > window.innerWidth * 0.4 && rect.width > 50) {
-                            return link.href;
-                        }
-                    }
-                    return null; // 真的找不到就算了
+                    // 備用：尋找剛點擊的區塊內的外部連結
+                    // 這需要一點啟發式搜索，因為 side panel 可能沒開
+                    // 嘗試找 class="isv-r" 內部的第二連結 (通常是標題連結)
+                    // 但這裡沒有 index access，所以只能依賴 DOM 狀態
+                    // 簡單策略：找頁面上可見的、最大的 "Visit" 相關連結
+                    return null;
                 });
 
-                // 合併結果
-                const finalResult = {
-                    imageUrl: imageInfo.imageUrl,
-                    sourceUrl: sourceUrlInfo
-                };
+                let finalImageUrl = googlePreview;
+                let isOgImage = false;
 
-                // 為了兼容下面的程式碼結構，重新包裝
-                const finalImageUrl = finalResult.imageUrl;
-                const sourceUrl = finalResult.sourceUrl;
+                // 3. Smart Deep Fetch (智慧型來源抓取)
+                // 如果有來源連結，就去該網頁抓 meta og:image，這比 Google 預覽圖清晰非常多
+                if (sourceUrl) {
+                    console.log(`[DeepFetch] 嘗試訪問來源: ${sourceUrl}`);
+                    try {
+                        const sourcePage = await browser.newPage();
+                        await sourcePage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
-                // (不需要 deep fetch 了)
+                        // 快速訪問，超時設定短一點 (10秒)，避免卡住
+                        // 只需要 HTML (domcontentloaded) 即可讀取 meta tags
+                        await sourcePage.goto(sourceUrl, { waitUntil: 'domcontentloaded', timeout: 10000 });
 
+                        const ogImage = await sourcePage.evaluate(() => {
+                            // 優先順序：og:image > twitter:image > link[rel=image_src]
+                            const getMeta = (prop) => document.querySelector(`meta[property="${prop}"]`)?.content || document.querySelector(`meta[name="${prop}"]`)?.content;
 
+                            let img = getMeta('og:image') || getMeta('twitter:image');
+                            if (!img) {
+                                const link = document.querySelector('link[rel="image_src"]');
+                                if (link) img = link.href;
+                            }
+                            return img;
+                        });
+
+                        if (ogImage && ogImage.startsWith('http')) {
+                            console.log(`[DeepFetch] ✓ 成功抓取 og:image: ${ogImage.slice(0, 50)}...`);
+                            finalImageUrl = ogImage;
+                            isOgImage = true;
+                        } else {
+                            console.log(`[DeepFetch] 該頁面無 og:image，使用 Google 預覽圖`);
+                        }
+
+                        await sourcePage.close();
+
+                    } catch (err) {
+                        console.log(`[DeepFetch] 訪問失敗 (${err.message})，使用 Google 預覽圖`);
+                        // 如果 sourcePage 還開著，關掉它
+                        try { const pages = await browser.pages(); if (pages.length > 2) pages[pages.length - 1].close(); } catch (e) { }
+                    }
+                } else {
+                    console.log(`[DeepFetch] 無法取得來源連結，跳過`);
+                }
 
                 if (finalImageUrl) {
                     results.push({
@@ -319,12 +319,13 @@ async function fetchGoogleImages(source) {
                         url: finalImageUrl,
                         sourceUrl: sourceUrl || null,
                         isSocialMedia: sourceUrl ?
-                            (sourceUrl.includes('facebook.com') || sourceUrl.includes('instagram.com')) : false
+                            (sourceUrl.includes('facebook.com') || sourceUrl.includes('instagram.com')) : false,
+                        isHighRes: isOgImage
                     });
-                    console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL}: ${finalImageUrl.slice(0, 50)}...`);
+                    console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL} (HighRes: ${isOgImage})`);
                     consecutiveErrors = 0;
                 } else {
-                    console.log(`[Google] #${i + 1}: 找不到高解析度圖片`);
+                    console.log(`[Google] #${i + 1}: 找不到任何可用圖片`);
                 }
 
                 processed++;

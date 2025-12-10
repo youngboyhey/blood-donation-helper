@@ -12,9 +12,9 @@ dotenv.config();
 
 const SOURCES = [
     // 1. Google 圖片搜尋關鍵字 (針對各大捐血中心與關鍵字)
-    { type: 'google', query: 'site:instagram.com "捐血活動" 海報 2024', id: 'ig_2024' },
-    { type: 'google', query: 'site:facebook.com "捐血活動" 海報 2024', id: 'fb_2024' },
-    { type: 'google', query: '"捐血活動" 海報 2024', id: 'general_2024' },
+    { type: 'google', query: 'site:instagram.com "捐血活動" 海報', id: 'ig' },
+    { type: 'google', query: 'site:facebook.com "捐血活動" 海報', id: 'fb' },
+    { type: 'google', query: '"捐血活動" 海報', id: 'general' },
 
     // 2. 各地捐血中心官網 (直接抓取活動頁面) - 範例：台北捐血中心
     // 需針對不同中心寫特定Parser，這裡先示範通用架構
@@ -231,7 +231,7 @@ async function fetchGoogleImages(source) {
                         isSocialMedia: imageInfo.sourceUrl ?
                             (imageInfo.sourceUrl.includes('facebook.com') || imageInfo.sourceUrl.includes('instagram.com')) : false
                     });
-                    console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL}: ${imageInfo.imageUrl.slice(0, 50)}...`);
+                    console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL}: ${finalImageUrl.slice(0, 50)}...`);
                     consecutiveErrors = 0;
                 } else {
                     console.log(`[Google] #${i + 1}: 找不到高解析度圖片`);

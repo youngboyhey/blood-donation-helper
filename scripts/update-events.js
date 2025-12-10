@@ -122,122 +122,79 @@ async function fetchSourcePage(url, browser, cookies) {
 // Google Image Search
 async function fetchGoogleImages(source) {
     console.log(`[Google] Searching: ${source.query}`);
-    const cookies = await loadCookies();
-    const browser = await puppeteer.launch({ headless: "new", args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    const browser = await puppeteer.launch({
+        headless: "new",
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled']
+    });
     const page = await browser.newPage();
     await page.setViewport({ width: 1920, height: 1080 });
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
     try {
-        // Add recent filter (qdr:m = past month for more results)
-        await page.goto(`https://www.google.com/search?q=${encodeURIComponent(source.query)}&tbm=isch&tbs=qdr:m`, { waitUntil: 'networkidle2', timeout: 60000 });
+        // qdr:w = past week as user requested
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(source.query)}&tbm=isch&tbs=qdr:w`;
+        await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+
+        // Handle possible consent dialog
+        try {
+            const consentButton = await page.$('button[id*="accept"], button[aria-label*="Accept"]');
+            if (consentButton) {
+                await consentButton.click();
+                await new Promise(r => setTimeout(r, 2000));
+            }
+        } catch (e) { /* No consent dialog */ }
 
         // Scroll to load more images
         await page.evaluate(async () => {
             await new Promise((resolve) => {
                 let totalHeight = 0;
                 const timer = setInterval(() => {
-                    window.scrollBy(0, 200);
-                    totalHeight += 200;
-                    if (totalHeight > 4000) { clearInterval(timer); resolve(); }
+                    window.scrollBy(0, 300);
+                    totalHeight += 300;
+                    if (totalHeight > 2000) { clearInterval(timer); resolve(); }
                 }, 100);
             });
         });
-        await new Promise(r => setTimeout(r, 3000));
+        await new Promise(r => setTimeout(r, 2000));
 
-        const MAX_RESULTS = 8;
-        let images = [];
+        const MAX_RESULTS = 10; // User requested 10 images
 
-        // Try multiple selectors (Google changes structure often)
-        const selectorPatterns = [
-            'div[data-id] img',
-            'div[jsname] img.rg_i',
-            'img.rg_i',
-            'div.isv-r img',
-            'a[jsname] img'
-        ];
+        // Strategy: Extract image URLs directly from page HTML/scripts
+        const images = await page.evaluate((maxResults) => {
+            const results = [];
+            const seen = new Set();
 
-        let thumbnails = [];
-        for (const selector of selectorPatterns) {
-            thumbnails = await page.$$(selector);
-            if (thumbnails.length > 0) {
-                console.log(`[Google] Found ${thumbnails.length} thumbnails with selector: ${selector}`);
-                break;
-            }
-        }
+            // Method 1: Get from script tags containing image data
+            const pageContent = document.body.innerHTML;
 
-        if (thumbnails.length === 0) {
-            console.warn(`[Google] No thumbnails found for: ${source.query}`);
-            // Take screenshot for debugging
-            // await page.screenshot({ path: `debug_${source.id}.png` });
-            return [];
-        }
+            // Pattern to match high-res image URLs
+            const patterns = [
+                /\["(https?:\/\/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)",\d+,\d+\]/gi,
+                /"ou":"(https?:\/\/[^"]+)"/gi,
+                /"tu":"(https?:\/\/[^"]+)"/gi
+            ];
 
-        for (let i = 0; i < Math.min(thumbnails.length, 50); i++) {
-            if (images.length >= MAX_RESULTS) break;
+            for (const pattern of patterns) {
+                let match;
+                while ((match = pattern.exec(pageContent)) !== null && results.length < maxResults) {
+                    const url = match[1];
+                    if (seen.has(url)) continue;
+                    if (url.includes('gstatic.com')) continue;
+                    if (url.includes('google.com')) continue;
+                    if (url.includes('encrypted-tbn')) continue;
+                    if (url.includes('favicon')) continue;
+                    if (url.length < 30) continue; // Too short, probably invalid
 
-            try {
-                // Click thumbnail
-                await thumbnails[i].click();
-                await new Promise(r => setTimeout(r, 2500)); // Wait for side panel to load
-
-                // Find High Res image with multiple strategies
-                const result = await page.evaluate(() => {
-                    // Strategy 1: Look for large images in the side panel
-                    const allImgs = Array.from(document.querySelectorAll('img'));
-
-                    // Build candidates from various sources
-                    const candidates = [];
-                    for (const img of allImgs) {
-                        const rect = img.getBoundingClientRect();
-                        // Check both src and data-src (lazy loading)
-                        let src = img.src || img.getAttribute('data-src') || '';
-
-                        // Skip small images, Google assets
-                        if (rect.width < 200 || rect.height < 200) continue;
-                        if (!src.startsWith('http')) continue;
-                        if (src.includes('gstatic.com')) continue;
-                        if (src.includes('google.com/')) continue;
-                        if (src.includes('googleusercontent.com/favicon')) continue;
-                        if (src.includes('encrypted-tbn')) continue; // thumbnails
-
-                        candidates.push({
-                            src: src,
-                            area: rect.width * rect.height
-                        });
-                    }
-
-                    if (candidates.length === 0) return null;
-
-                    // Sort by area and get largest
-                    candidates.sort((a, b) => b.area - a.area);
-
-                    // Try to find source link
-                    const links = Array.from(document.querySelectorAll('a[href]'));
-                    const visitLink = links.find(a => {
-                        const text = a.innerText || '';
-                        return text.includes('前往') || text.includes('Visit') || text.includes('造訪');
-                    });
-
-                    return {
-                        src: candidates[0].src,
-                        visit: visitLink ? visitLink.href : null
-                    };
-                });
-
-                if (result && result.src) {
-                    // Check Dupes in batch
-                    if (!images.some(img => img.url === result.src)) {
-                        images.push({ type: 'image', url: result.src, sourceUrl: result.visit });
-                        console.log(`[Google] ✓ Found image ${images.length}/${MAX_RESULTS}: ${result.src.slice(0, 50)}...`);
-                    }
+                    seen.add(url);
+                    results.push({ type: 'image', url: url, sourceUrl: null });
                 }
-            } catch (e) {
-                // Silently continue on errors
             }
-        }
+
+            return results;
+        }, MAX_RESULTS);
 
         console.log(`[Google] Collected ${images.length} images for ${source.query}`);
-        return images;
+        return images.slice(0, MAX_RESULTS);
     } catch (e) {
         console.error(`[Google] Failed: ${e.message}`);
         return [];

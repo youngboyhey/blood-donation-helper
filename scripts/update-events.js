@@ -622,19 +622,19 @@ async function analyzeContentWithAI(item, sourceContext) {
 今天是 ${today}。
 
 【嚴格過濾規則 - 重要】
-若海報符合以下任一情況，請直接回傳 null (與其給錯誤資訊，不如不要)：
+若海報符合以下任一情況，請回傳包含 invalid_reason 的 JSON 物件 (例如: { "invalid_reason": "缺少完整日期" })：
 1. **缺少完整日期**：必須有明確的單一日期或多個不連續日期。
-2. **日期區間 (Range)**：若日期呈現「區間」形式 (如 12/8~12/12、114/12/10-12/15)，這通常是總表或宣傳期，**請直接回傳 null，不要收錄**。
-3. **缺少詳細地點/地址**：必須有具體的活動地點名稱甚至地址。若只有「新竹捐血中心」這種機構名稱而無具體舉辦地點，回傳 null。
+2. **日期區間 (Range)**：若日期呈現「區間」形式 (如 12/8~12/12)，這通常是總表或宣傳期，屬於無效。
+3. **缺少詳細地點/地址**：必須有具體的活動地點名稱甚至地址。若只有「新竹捐血中心」這種機構名稱而無具體舉辦地點，屬於無效。
 4. **已過期**：活動日期早於今日(${today})。
 5. **總表/行事曆/多場次** - 這是最嚴格的規則！
-   - **混合型檢查**：即使圖片上半部是宣傳插圖，只要下半部是「活動列表」或「表格」，一律回傳 null。
-   - **關鍵字檢查**：若圖片中出現「一覽表」、「巡迴表」、「場次表」文字，回傳 null。
-   - **數量檢查**：若圖片中包含 **2 個以上(含)** 的不同日期或不同地點，視為總表，**請直接回傳 null**。
+   - **混合型檢查**：即使圖片上半部是宣傳插圖，只要下半部是「活動列表」或「表格」，視為無效。
+   - **關鍵字檢查**：若圖片中出現「一覽表」、「巡迴表」、「場次表」文字，視為無效。
+   - **數量檢查**：若圖片中包含 **2 個以上(含)** 的不同日期或不同地點，視為總表，屬於無效。
    - 禁止將一張列表圖片拆解成單一活動回傳。
    **我只需要「單一場次」的活動海報。**
-6. **例行性文字** - 若僅有「每週」或「每月」等例行性說明，無具體日期，回傳 null
-7. **圖片品質差** - 若圖片尺寸極小或模糊無法辨識，回傳 null
+6. **例行性文字** - 若僅有「每週」或「每月」等例行性說明，無具體日期，屬於無效
+7. **圖片無法辨識** - 若圖片是登入畫面、模糊、或非海報內容
 
 **日期推算規則**：
 - 若無年份，依今日(${today})推算最近的未來日期。
@@ -648,23 +648,41 @@ async function analyzeContentWithAI(item, sourceContext) {
 請輸出 JSON 陣列，欄位如下：
 [
   {
-    "title": "活動標題 (請包含地點與關鍵特色)",
-    "date": "YYYY-MM-DD",
-    "time": "HH:MM-HH:MM",
-    "location": "地點名稱",
+    "title": "活動標題 (若無則使用 '捐血活動')",
+    "date": "YYYY-MM-DD (標準格式)",
+    "time": "HH:mm-HH:mm (若無則留空)",
+    "location": "完整地點名稱",
     "city": "縣市",
     "district": "行政區",
-    "organizer": "主辦單位",
-    "gift": { "name": "贈品名稱 (若無實質贈品填 null)", "image": null },
-    "tags": ["AI辨識"]
+    "organizer": "主辦單位 (若有)",
+    "gift": { "name": "贈品名稱 (若有)", "image": null },
+    "tags": ["標籤1", "標籤2"]
   }
 ]
-`;
-            const result = await gen.generateContent([prompt, { inlineData: { data: base64, mimeType: "image/jpeg" } }]);
-            const txt = result.response.text().replace(/```json/g, '').replace(/```/g, '').trim();
-            if (txt === 'null') return null;
 
-            return JSON.parse(txt);
+若無效，請回傳:
+{ "invalid_reason": "原本應回傳 null 的具體原因" }
+`;
+            `;
+            const result = await gen.generateContent([prompt, { inlineData: { data: base64, mimeType: "image/jpeg" } }]);
+            const text = result.response.text();
+            
+            // Clean markdown JSON
+            const jsonText = text.replace(/```json / g, '').replace(/```/g, '').trim();
+            let data;
+            try {
+                data = JSON.parse(jsonText);
+            } catch (e) {
+                console.warn(`[AI] JSON Parse Fail: ${jsonText.slice(0, 50)}...`);
+                return null;
+            }
+
+            if (data.invalid_reason) {
+                console.log(`[AI Reject] ${data.invalid_reason}`);
+                return null;
+            }
+
+            return Array.isArray(data) ? data : [data];
 
         } catch (e) {
             // Enhanced error logging

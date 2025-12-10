@@ -16,15 +16,20 @@ const ProtectedRoute = ({ children }) => {
 // --- Redirect Handler for GitHub Pages 404 Hack ---
 const RedirectHandler = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const redirect = searchParams.get('redirect');
+    // CRITICAL FIX: HashRouter's useSearchParams only looks at the hash part (e.g. #/page?q=1)
+    // But our 404.html puts the param in the main URL (e.g. /?redirect=/admin)
+    // So we MUST use window.location.search to read it.
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirect = urlParams.get('redirect');
+
     if (redirect) {
       console.log(`[Router] Redirecting to ${redirect}`);
+      // Navigate to the correct route
       navigate(redirect, { replace: true });
     }
-  }, [searchParams, navigate]);
+  }, [navigate]);
 
   return null;
 };

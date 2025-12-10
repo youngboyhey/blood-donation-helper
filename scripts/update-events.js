@@ -270,6 +270,13 @@ async function fetchGoogleImages(source) {
                         const sourcePage = await browser.newPage();
                         await sourcePage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
+                        // Inject cookies for Instagram access
+                        if (cookies.length > 0 && item.sourceUrl.includes('instagram.com')) {
+                            try {
+                                await sourcePage.setCookie(...cookies.filter(c => c.domain && c.domain.includes('instagram')));
+                            } catch (e) { /* ignore cookie errors */ }
+                        }
+
                         // Fast fail timeout, blocked resources
                         await sourcePage.setRequestInterception(true);
                         sourcePage.on('request', (req) => {

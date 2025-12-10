@@ -314,6 +314,8 @@ async function fetchWebImages(source) {
                 // 2. Date Filtering (Title Based - Enhanced)
                 const title = combinedText; // 使用合併後的文字
 
+
+
                 // Matches: 114年12月29日, 114/12/29, 12/29, 11-23~12-20
                 const dateMatches = title.match(/(\d{2,4})[年\/-](\d{1,2})[月\/-](\d{1,2})/g);
                 const shortDateMatches = title.match(/(\d{1,2})[月\/](\d{1,2})/g);
@@ -443,14 +445,14 @@ async function fetchWebImages(source) {
                 });
             }
 
-            // 放寬每頁圖片限制，針對新竹這種多場次彙整頁，需要抓更多
-            allImages = allImages.concat(pageImages.slice(0, 20));
+            // 不限制每頁圖片數量，確保抓取所有海報
+            allImages = allImages.concat(pageImages);
         }
 
         // 去重並限制數量
         const dedupedImages = [...new Map(allImages.map(item => [item.url, item])).values()];
         console.log(`[Web] 收集 ${dedupedImages.length} 張圖片`);
-        return dedupedImages.slice(0, 15);
+        return dedupedImages;
     } catch (e) {
         return [];
     }
@@ -590,17 +592,18 @@ async function analyzeContentWithAI(item, sourceContext) {
 
 【嚴格過濾規則 - 重要】
 若海報符合以下任一情況，請直接回傳 null (與其給錯誤資訊，不如不要)：
-1. **缺少日期** (日期必須明確)
-2. **缺少地點** (地點必須明確)
-3. **已過期** - 活動日期早於今日(${today})
-4. **總表/行事曆類** - 請仔細辨識！若符合以下任一特徵，必須回傳 null：
+1. **缺少完整日期**：必須有明確的單一日期或多個不連續日期。
+2. **日期區間 (Range)**：若日期呈現「區間」形式 (如 12/8~12/12、114/12/10-12/15)，這通常是總表或宣傳期，**請直接回傳 null，不要收錄**。
+3. **缺少詳細地點/地址**：必須有具體的活動地點名稱甚至地址。若只有「新竹捐血中心」這種機構名稱而無具體舉辦地點，回傳 null。
+4. **已過期**：活動日期早於今日(${today})。
+5. **總表/行事曆類** - 請仔細辨識！若符合以下任一特徵，必須回傳 null：
    - 圖片呈現「表格形式」，有多個日期和地點排列
    - 包含超過 2 場活動資訊（2 個以上不同日期或地點）
    - 標題含有「活動一覽」、「行事曆」、「總表」、「月行程」、「場次表」等字樣
    - 呈現類似行事曆/月曆的排版格式
    **我只需要「單場活動」的海報，請拒絕所有多場活動列表！**
-5. **例行性文字** - 若僅有「每週」或「每月」等例行性說明，無具體日期，回傳 null
-6. **圖片品質差** - 若圖片尺寸極小或模糊無法辨識，回傳 null
+6. **例行性文字** - 若僅有「每週」或「每月」等例行性說明，無具體日期，回傳 null
+7. **圖片品質差** - 若圖片尺寸極小或模糊無法辨識，回傳 null
 
 **日期推算規則**：
 - 若無年份，依今日(${today})推算最近的未來日期。

@@ -47,18 +47,23 @@ async function testWebScraper() {
             const $el = $(el);
             const text = $el.text().trim();
             const href = $el.attr('href');
+            const titleAttr = $el.attr('title') || '';
 
-            // Logic from update-events.js
-            if ((text.includes('捐血活動') || href?.includes('xmdoc/cont')) && !text.includes('暫停')) {
-                if (text.includes('總表') || text.includes('行事曆') ||
-                    text.includes('一覽') || text.includes('場次表') ||
-                    text.includes('月行程')) {
-                    // console.log(`[Test] Skipping summary link: ${text.slice(0, 30)}`);
+            const combinedText = text + ' ' + titleAttr;
+
+            // 嚴格過濾：必須包含「捐血活動」
+            if (combinedText.includes('捐血活動') && !combinedText.includes('暫停')) {
+                // 排除總表、新聞稿、活動報導等
+                if (combinedText.includes('總表') || combinedText.includes('行事曆') ||
+                    combinedText.includes('一覽') || combinedText.includes('場次表') ||
+                    combinedText.includes('月行程') || combinedText.includes('新聞稿') ||
+                    combinedText.includes('活動報導') || combinedText.includes('怎麼辦')) {
+                    console.log(`[Test] SKIP (非活動): ${combinedText.slice(0, 40)}...`);
                     return;
                 }
 
-                // Title-Based Filtering Logic
-                const title = text;
+                // Title-Based Date Filtering
+                const title = combinedText;
                 const dateMatches = title.match(/(\d{2,4})[年\/-](\d{1,2})[月\/-](\d{1,2})/g);
                 const shortDateMatches = title.match(/(\d{1,2})[月\/](\d{1,2})/g);
 
@@ -67,20 +72,17 @@ async function testWebScraper() {
 
                 const parseDate = (dStr) => {
                     let y, m, d;
-                    // Handle 114年...
                     if (dStr.includes('年')) {
                         const parts = dStr.split(/[年月日]/);
                         y = parseInt(parts[0]);
                         m = parseInt(parts[1]);
                         d = parseInt(parts[2]);
-                        if (y < 1911) y += 1911; // ROC Year
+                        if (y < 1911) y += 1911;
                     }
-                    // Handle YYYY/MM/DD or YY/MM/DD
                     else if (dStr.includes('/') || dStr.includes('-')) {
                         const parts = dStr.split(/[\/-]/);
                         y = parseInt(parts[0]);
                         if (y < 1911 && y > 100) y += 1911;
-
                         m = parseInt(parts[1]);
                         d = parseInt(parts[2]);
                     }
@@ -89,11 +91,9 @@ async function testWebScraper() {
 
                 if (dateMatches) {
                     hasDateInfo = true;
-                    // console.log(`[Test] Analyzing Dates in: ${title}`);
                     for (const match of dateMatches) {
                         try {
                             const evtDate = parseDate(match);
-                            // console.log(`  -> Found Date: ${evtDate.toLocaleDateString()}`);
                             if (evtDate >= today) {
                                 hasFutureDate = true;
                                 break;
@@ -117,58 +117,69 @@ async function testWebScraper() {
                 }
 
                 if (hasDateInfo && !hasFutureDate) {
-                    console.log(`[Test] SKIP (Title Expired): ${title.slice(0, 40)}...`);
+                    console.log(`[Test] SKIP (過期): ${title.slice(0, 40)}...`);
                     return;
-                } else if (hasDateInfo) {
-                    console.log(`[Test] DATE OK: ${title.slice(0, 40)}...`);
                 }
+
+                // 顯示找到的連結
+                const displayText = titleAttr || text;
+                console.log(`[Test] ✓ FOUND EVENT: ${displayText.slice(0, 50)}...`);
 
                 if (href) {
                     const fullUrl = href.startsWith('http') ? href : source.baseUrl + href;
                     targetLinks.push(fullUrl);
-                    // console.log(`[Test] Found candidate link: ${text.slice(0, 20)} -> ${fullUrl}`);
                 }
             }
         });
 
-        const uniqueLinks = [...new Set(targetLinks)].slice(0, 3); // Test first 3 links
-        console.log(`[Test] Testing ${uniqueLinks.length} unique links...`);
+        const uniqueLinks = [...new Set(targetLinks)].slice(0, 5);
+        console.log(`\n[Test] Found ${uniqueLinks.length} event links. Testing...`);
 
         for (const fullUrl of uniqueLinks) {
             console.log(`\n[Test] Visiting: ${fullUrl}`);
             const detailHtml = await fetchHTMLWithPuppeteer(fullUrl, browser);
             const $d = cheerio.load(detailHtml);
 
-            // Logic from update-events.js
+            // 總表頁檢測
             const pageText = $d('body').text();
-            const dateMatches = pageText.match(/\d{4}[-/]\d{1,2}[-/]\d{1,2}/g) || [];
-            if (dateMatches.length > 5) {
-                console.log(`[Test] FAIL: Detected as Summary Page (${dateMatches.length} dates)`);
+            const dateCount = (pageText.match(/\d{4}[-/]\d{1,2}[-/]\d{1,2}/g) || []).length;
+            if (dateCount > 5) {
+                console.log(`[Test] FAIL: Summary Page (${dateCount} dates)`);
                 continue;
             }
 
-            let foundImage = false;
-            $d('img').each((i, el) => {
-                const src = $d(el).attr('src') || $d(el).attr('data-src');
-                if (!src) return;
+            // 尋找海報圖片
+            const contentSelectors = ['div.xccont img', 'div.pt-3 img', 'article img', '.content img', 'img'];
+            let foundImages = [];
 
-                const url = src.startsWith('http') ? src : source.baseUrl + src;
+            for (const selector of contentSelectors) {
+                if (foundImages.length > 0) break;
 
-                if (!url.includes('file_pool') && !url.includes('upload') &&
-                    !url.includes('xmimg') && !url.includes('storage')) return;
+                $d(selector).each((i, el) => {
+                    const src = $d(el).attr('src') || $d(el).attr('data-src');
+                    if (!src) return;
 
-                const width = $d(el).attr('width');
-                const height = $d(el).attr('height');
-                if ((width && parseInt(width) < 100) || (height && parseInt(height) < 100)) return;
+                    const url = src.startsWith('http') ? src : source.baseUrl + src;
 
-                if (url.toLowerCase().includes('logo') || url.toLowerCase().includes('icon')) return;
+                    if (!url.includes('file_pool') && !url.includes('upload') &&
+                        !url.includes('xmimg') && !url.includes('storage')) return;
 
-                console.log(`[Test] PASS: Found Valid Image: ${url}`);
-                foundImage = true;
-            });
+                    if (url.toLowerCase().endsWith('.svg')) return;
+                    if (url.toLowerCase().includes('qr')) return;
 
-            if (!foundImage) {
-                console.log(`[Test] WARN: No valid images found on page.`);
+                    const width = $d(el).attr('width');
+                    const height = $d(el).attr('height');
+                    if ((width && parseInt(width) < 100) || (height && parseInt(height) < 100)) return;
+
+                    if (url.toLowerCase().includes('logo') || url.toLowerCase().includes('icon')) return;
+
+                    console.log(`[Test] ✓ POSTER: ${url.slice(0, 80)}...`);
+                    foundImages.push(url);
+                });
+            }
+
+            if (foundImages.length === 0) {
+                console.log(`[Test] ✗ No poster found`);
             }
         }
 

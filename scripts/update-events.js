@@ -11,18 +11,13 @@ dotenv.config();
 // --- Configuration ---
 
 const SOURCES = [
-    // 1. Google 圖片搜尋關鍵字 (針對各大捐血中心與關鍵字)
-    { type: 'google', query: 'site:instagram.com "捐血活動" 海報', id: 'ig' },
-    { type: 'google', query: 'site:facebook.com "捐血活動" 海報', id: 'fb' },
-    { type: 'google', query: '"捐血活動" 海報', id: 'general' },
-
-    // 2. 各地捐血中心官網 (直接抓取活動頁面) - 範例：台北捐血中心
-    // 需針對不同中心寫特定Parser，這裡先示範通用架構
+    // 官網爬蟲 - 先專注台北和新竹捐血中心
     { type: 'web', id: 'taipei', name: '台北捐血中心', url: 'https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284', baseUrl: 'https://www.tp.blood.org.tw' },
     { type: 'web', id: 'hsinchu', name: '新竹捐血中心', url: 'https://www.sc.blood.org.tw/xmdoc?xsmsid=0P062657380252119565', baseUrl: 'https://www.sc.blood.org.tw' },
-    { type: 'web', id: 'taichung', name: '台中捐血中心', url: 'https://www.tc.blood.org.tw/xmdoc?xsmsid=0P062683072836261596', baseUrl: 'https://www.tc.blood.org.tw' },
-    { type: 'web', id: 'tainan', name: '台南捐血中心', url: 'https://www.tn.blood.org.tw/xmdoc?xsmsid=0P062709282362870347', baseUrl: 'https://www.tn.blood.org.tw' },
-    { type: 'web', id: 'kaohsiung', name: '高雄捐血中心', url: 'https://www.ks.blood.org.tw/xmdoc?xsmsid=0P062734135544436585', baseUrl: 'https://www.ks.blood.org.tw' },
+    // 其他中心暫時註解，待上述兩個穩定後再開啟
+    // { type: 'web', id: 'taichung', name: '台中捐血中心', url: 'https://www.tc.blood.org.tw/xmdoc?xsmsid=0P062683072836261596', baseUrl: 'https://www.tc.blood.org.tw' },
+    // { type: 'web', id: 'tainan', name: '台南捐血中心', url: 'https://www.tn.blood.org.tw/xmdoc?xsmsid=0P062709282362870347', baseUrl: 'https://www.tn.blood.org.tw' },
+    // { type: 'web', id: 'kaohsiung', name: '高雄捐血中心', url: 'https://www.ks.blood.org.tw/xmdoc?xsmsid=0P062734135544436585', baseUrl: 'https://www.ks.blood.org.tw' },
 ];
 
 // --- Helpers ---
@@ -278,19 +273,26 @@ async function fetchWebImages(source) {
             const $el = $(el);
             const text = $el.text().trim();
             const href = $el.attr('href');
+            const titleAttr = $el.attr('title') || ''; // 重要：檢查 title 屬性
 
-            // 1. Check Link & Text Criteria
-            if ((text.includes('捐血活動') || href?.includes('xmdoc/cont')) && !text.includes('暫停')) {
-                // Exclude Summary/Calendar Links
-                if (text.includes('總表') || text.includes('行事曆') ||
-                    text.includes('一覽') || text.includes('場次表') ||
-                    text.includes('月行程')) {
-                    // console.log(`[Web] 跳過總表連結: ${text.slice(0, 30)}`);
+            // 合併 text 和 title 進行檢查
+            const combinedText = text + ' ' + titleAttr;
+
+            // 1. Check Link & Text Criteria - 必須包含「捐血活動」
+            // 嚴格過濾：只有明確標示為「捐血活動」的連結才處理
+            if (combinedText.includes('捐血活動') && !combinedText.includes('暫停')) {
+                // Exclude Summary/Calendar/News/Report Links
+                if (combinedText.includes('總表') || combinedText.includes('行事曆') ||
+                    combinedText.includes('一覽') || combinedText.includes('場次表') ||
+                    combinedText.includes('月行程') || combinedText.includes('新聞稿') ||
+                    combinedText.includes('活動報導') || combinedText.includes('怎麼') ||
+                    combinedText.includes('捐血點異動')) {
+                    // console.log(`[Web] 跳過非活動連結: ${combinedText.slice(0, 30)}`);
                     return;
                 }
 
                 // 2. Date Filtering (Title Based - Enhanced)
-                const title = text; // Usually the link text contains the info
+                const title = combinedText; // 使用合併後的文字
 
                 // Matches: 114年12月29日, 114/12/29, 12/29, 11-23~12-20
                 const dateMatches = title.match(/(\d{2,4})[年\/-](\d{1,2})[月\/-](\d{1,2})/g);
@@ -383,32 +385,46 @@ async function fetchWebImages(source) {
                 continue;
             }
 
-            // 尋找海報圖片 - 優先找大圖
+            // 尋找海報圖片 - 優先找 div.xccont 內的大圖
             const pageImages = [];
-            $d('img').each((i, el) => {
-                const src = $d(el).attr('src') || $d(el).attr('data-src');
-                if (!src) return;
 
-                // 過濾條件
-                const url = src.startsWith('http') ? src : source.baseUrl + src;
+            // 優先在主內容區尋找
+            const contentSelectors = ['div.xccont img', 'div.pt-3 img', 'article img', '.content img', 'img'];
+            let foundInContent = false;
 
-                // 必須包含這些路徑之一（確保是上傳的圖片）
-                if (!url.includes('file_pool') && !url.includes('upload') &&
-                    !url.includes('xmimg') && !url.includes('storage')) return;
+            for (const selector of contentSelectors) {
+                if (foundInContent) break;
 
-                // 排除太小的圖（如 icon）
-                const width = $d(el).attr('width');
-                const height = $d(el).attr('height');
-                if ((width && parseInt(width) < 100) || (height && parseInt(height) < 100)) return;
+                $d(selector).each((i, el) => {
+                    const src = $d(el).attr('src') || $d(el).attr('data-src');
+                    if (!src) return;
 
-                // 排除 logo、icon
-                if (url.toLowerCase().includes('logo') || url.toLowerCase().includes('icon')) return;
+                    // 過濾條件
+                    const url = src.startsWith('http') ? src : source.baseUrl + src;
 
-                pageImages.push({ type: 'image', url, sourceUrl: fullUrl });
-            });
+                    // 必須包含這些路徑之一（確保是上傳的圖片）
+                    if (!url.includes('file_pool') && !url.includes('upload') &&
+                        !url.includes('xmimg') && !url.includes('storage')) return;
 
-            // 只取每頁的前 3 張大圖（避免太多）
-            allImages = allImages.concat(pageImages.slice(0, 3));
+                    // 排除 SVG 和 QR Code
+                    if (url.toLowerCase().endsWith('.svg')) return;
+                    if (url.toLowerCase().includes('qr')) return;
+
+                    // 排除太小的圖（如 icon）
+                    const width = $d(el).attr('width');
+                    const height = $d(el).attr('height');
+                    if ((width && parseInt(width) < 100) || (height && parseInt(height) < 100)) return;
+
+                    // 排除 logo、icon
+                    if (url.toLowerCase().includes('logo') || url.toLowerCase().includes('icon')) return;
+
+                    pageImages.push({ type: 'image', url, sourceUrl: fullUrl });
+                    foundInContent = true;
+                });
+            }
+
+            // 只取每頁的前 2 張大圖（避免太多）
+            allImages = allImages.concat(pageImages.slice(0, 2));
         }
 
         // 去重並限制數量

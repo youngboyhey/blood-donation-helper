@@ -577,20 +577,6 @@ async function analyzeContentWithAI(item, sourceContext) {
             }
             if (!base64) return null; // Image load failed
 
-            // DEBUG: Save first 3 images to disk for manual inspection
-            const debugDir = './debug_images';
-            const debugIndex = global.debugImageIndex || 0;
-            if (debugIndex < 3) {
-                try {
-                    const fs = await import('fs');
-                    if (!fs.existsSync(debugDir)) fs.mkdirSync(debugDir);
-                    const filename = `${debugDir}/debug_${Date.now()}_${debugIndex}.jpg`;
-                    fs.writeFileSync(filename, Buffer.from(base64, 'base64'));
-                    console.log(`[DEBUG] Saved image to ${filename}`);
-                    global.debugImageIndex = debugIndex + 1;
-                } catch (e) { /* ignore debug errors */ }
-            }
-
             const prompt = `請分析這張捐血活動海報。
 今天是 ${today}。
 

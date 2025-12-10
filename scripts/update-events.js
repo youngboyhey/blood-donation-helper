@@ -285,9 +285,12 @@ const getModel = (retryCount) => {
 };
 
 async function fetchImageAsBase64(url, cookies = null) {
+    // First try direct fetch
     try {
         const headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+            'Referer': 'https://www.google.com/'
         };
 
         // Add cookies for social media access
@@ -297,10 +300,46 @@ async function fetchImageAsBase64(url, cookies = null) {
         }
 
         const res = await fetch(url, { headers });
-        if (!res.ok) return null;
-        const buf = await res.arrayBuffer();
-        return Buffer.from(buf).toString('base64');
-    } catch (e) { return null; }
+        if (res.ok) {
+            const contentType = res.headers.get('content-type') || '';
+            if (contentType.includes('image')) {
+                const buf = await res.arrayBuffer();
+                if (buf.byteLength > 5000) { // At least 5KB
+                    return Buffer.from(buf).toString('base64');
+                }
+            }
+        }
+    } catch (e) { /* Direct fetch failed, try Puppeteer */ }
+
+    // Fallback: Use Puppeteer to screenshot the image (handles hotlink protection)
+    try {
+        console.log(`[Image] Direct fetch failed, trying Puppeteer for: ${url.slice(0, 50)}...`);
+        const browser = await puppeteer.launch({
+            headless: "new",
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+        const page = await browser.newPage();
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+        // Set cookies if available
+        if (cookies && cookies.length > 0) {
+            try { await page.setCookie(...cookies); } catch (e) { }
+        }
+
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+
+        // Take screenshot of the image
+        const screenshot = await page.screenshot({ encoding: 'base64', type: 'png' });
+        await browser.close();
+
+        if (screenshot && screenshot.length > 1000) {
+            return screenshot;
+        }
+    } catch (e) {
+        console.warn(`[Image] Puppeteer fallback also failed: ${e.message.slice(0, 50)}`);
+    }
+
+    return null;
 }
 
 async function analyzeContentWithAI(item, sourceContext) {

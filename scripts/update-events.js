@@ -270,6 +270,15 @@ async function fetchGoogleImages(source) {
                 let finalImageUrl = googlePreview;
                 let isOgImage = false;
 
+                // 檢查是否與上一筆重複 (提早檢查)
+                if (sourceUrl && results.some(r => r.sourceUrl === sourceUrl)) {
+                    console.log(`[Google] 略過重複來源 (Early Skip): ${sourceUrl.slice(0, 50)}...`);
+                    processed++;
+                    await page.keyboard.press('Escape'); // 重置狀態
+                    await new Promise(r => setTimeout(r, 500));
+                    continue;
+                }
+
                 // 3. Smart Deep Fetch (智慧型來源抓取)
                 // 如果有來源連結，就去該網頁抓 meta og:image，這比 Google 預覽圖清晰非常多
                 if (sourceUrl) {

@@ -223,21 +223,44 @@ async function fetchGoogleImages(source) {
         let processed = 0;
         let consecutiveErrors = 0;
 
-        // 0. 初始點擊 & Keyboard Navigation Setup
-        try {
-            console.log("[Google] 初始化: 點擊第一張圖...");
-            await page.waitForSelector('div[data-id] img', { timeout: 5000 });
-            await page.evaluate(() => { const el = document.querySelector('div[data-id] img'); if (el) el.click(); });
-            await new Promise(r => setTimeout(r, 4000)); // 等待 Side Panel 開啟
-        } catch (e) { console.log("[Google] Init click failed: " + e.message); }
+        // 0. 獲取所有縮圖 ID (Data IDs)
+        console.log(`[Google] 收集圖片 IDs...`);
+        const thumbnailIds = await page.evaluate(() => {
+            const nodes = document.querySelectorAll('div[data-id]');
+            return Array.from(nodes).map(n => n.getAttribute('data-id')).filter(id => id && id.length > 0);
+        });
+        console.log(`[Google] 找到 ${thumbnailIds.length} 個潛在圖片 ID`);
 
-        let lastSourceUrl = null;
-        let consecutiveStuck = 0;
+        if (thumbnailIds.length === 0) {
+            console.log(`[Google] 無法找到任何 ID，退出`);
+            return [];
+        }
+
         let loopIndex = 0;
+        let lastSourceUrl = null;
 
-        while (results.length < MAX_INITIAL && processed < MAX_TOTAL) {
-            const i = loopIndex++;
+        // Loop through IDs directly with Hash Navigation
+        while (processed < MAX_TOTAL && results.length < MAX_INITIAL && loopIndex < thumbnailIds.length) {
+            const currentId = thumbnailIds[loopIndex];
+            loopIndex++;
+
             try {
+                // 1. Navigate via Hash Change (SPA Navigation)
+                // Google Images works by updating #imgrc={id}
+                const targetHash = `imgrc=${currentId}`;
+                await page.evaluate((hash) => {
+                    window.location.hash = hash;
+                }, targetHash);
+
+                // Wait for the side panel to update (Source URL change)
+                await new Promise(r => setTimeout(r, 2500));
+
+                /* 
+                   Wait for indicator? We assume 2500ms is enough for Side Panel to react.
+                   We check if sourceUrl matches lastSourceUrl to detect failure.
+                */
+
+                // 2. Extract Data
                 const googlePreview = await page.evaluate(() => {
                     const imgs = Array.from(document.querySelectorAll('img[src^="http"], img[src^="data:image"]'));
                     imgs.sort((a, b) => (b.width * b.height) - (a.width * a.height));
@@ -245,64 +268,39 @@ async function fetchGoogleImages(source) {
                     return candidates.length > 0 ? candidates[0].src : null;
                 });
 
-                // 2. 獲取 Source URL
                 const sourceUrl = await page.evaluate(() => {
                     const visitBtn = document.querySelector('a.EZAeBe');
                     if (visitBtn && visitBtn.href) return visitBtn.href;
                     return null;
                 });
 
-                // 3. 檢查是否卡住 (Stuck Check)
+                // 3. Verify Freshness / Deduplication
+                // If scraping same URL as before, Hash Navigation might have failed or duplicate event
                 if (sourceUrl && sourceUrl === lastSourceUrl) {
-                    consecutiveStuck++;
-                    console.log(`[Google] 畫面未更新 (Stuck count: ${consecutiveStuck})...`);
-                    if (consecutiveStuck > 3) {
-                        console.log(`[Google] 卡住太久，結束抓取`);
-                        break;
-                    }
-                    // 嘗試點擊 "下一張" 按鈕 (Next Button)
-                    await page.evaluate(() => {
-                        const nextBtn = document.querySelector('a[jsname="P3zTlc"]') ||
-                            document.querySelector('div[role="button"][aria-label="Next image"]') ||
-                            document.querySelector('div[role="button"][aria-label="下一張"]');
-                        if (nextBtn) nextBtn.click();
-                    });
-
-                    // 備用：ArrowRight
-                    await page.keyboard.press('ArrowRight');
-                    await new Promise(r => setTimeout(r, 1500));
+                    console.log(`[Google] Hash 切換無效 (Stuck on ${lastSourceUrl.slice(0, 30)}...), 跳過`);
                     continue;
                 }
-                consecutiveStuck = 0; // Reset
                 if (sourceUrl) lastSourceUrl = sourceUrl;
 
                 const isGlobalDuplicate = sourceUrl && results.some(r => r.sourceUrl === sourceUrl);
                 if (isGlobalDuplicate) {
                     console.log(`[Google] 略過重複 (Global): ${sourceUrl.slice(0, 30)}...`);
-                    await page.keyboard.press('ArrowRight');
-                    await new Promise(r => setTimeout(r, 1500));
                     continue;
                 }
 
                 let finalImageUrl = googlePreview;
                 let isOgImage = false;
 
-                // 3. Smart Deep Fetch (智慧型來源抓取)
-                // 如果有來源連結，就去該網頁抓 meta og:image，這比 Google 預覽圖清晰非常多
+                // 4. Smart Deep Fetch
                 if (sourceUrl) {
                     console.log(`[DeepFetch] 嘗試訪問來源: ${sourceUrl}`);
                     try {
                         const sourcePage = await browser.newPage();
                         await sourcePage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-
-                        // 快速訪問，超時設定短一點 (10秒)，避免卡住
-                        // 只需要 HTML (domcontentloaded) 即可讀取 meta tags
                         await sourcePage.goto(sourceUrl, { waitUntil: 'domcontentloaded', timeout: 10000 });
 
                         const ogImage = await sourcePage.evaluate(() => {
-                            // 優先順序：og:image > twitter:image > link[rel=image_src]
                             const getMeta = (prop) => document.querySelector(`meta[property="${prop}"]`)?.content || document.querySelector(`meta[name="${prop}"]`)?.content;
-
                             let img = getMeta('og:image') || getMeta('twitter:image');
                             if (!img) {
                                 const link = document.querySelector('link[rel="image_src"]');
@@ -316,61 +314,33 @@ async function fetchGoogleImages(source) {
                             finalImageUrl = ogImage;
                             isOgImage = true;
                         } else {
-                            console.log(`[DeepFetch] 該頁面無 og:image，使用 Google 預覽圖`);
+                            console.log(`[DeepFetch] 無 og:image，使用預覽圖`);
                         }
-
                         await sourcePage.close();
-
                     } catch (err) {
                         console.log(`[DeepFetch] 訪問失敗 (${err.message})，使用 Google 預覽圖`);
                         // 如果 sourcePage 還開著，關掉它
                         try { const pages = await browser.pages(); if (pages.length > 2) pages[pages.length - 1].close(); } catch (e) { }
                     }
-                } else {
-                    console.log(`[DeepFetch] 無法取得來源連結，跳過`);
                 }
 
+                // 5. Save Result
                 if (finalImageUrl) {
-                    // 檢查是否與上一筆重複 (避免 Side Panel 卡住導致一直抓同一篇)
-                    // 如果 URL 相同，直接當作重複處理不存入
-                    const isDuplicate = results.some(r => r.url === finalImageUrl || (sourceUrl && r.sourceUrl === sourceUrl));
-
-                    if (!isDuplicate) {
-                        results.push({
-                            type: 'image',
-                            url: finalImageUrl,
-                            sourceUrl: sourceUrl || null,
-                            isSocialMedia: sourceUrl ?
-                                (sourceUrl.includes('facebook.com') || sourceUrl.includes('instagram.com')) : false,
-                            isHighRes: isOgImage
-                        });
-                        console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL} (HighRes: ${isOgImage})`);
-                        consecutiveErrors = 0;
-                    } else {
-                        console.log(`[Google] 略過重複圖片/來源`);
-                    }
-                } else {
-                    console.log(`[Google] #${i + 1}: 找不到任何可用圖片`);
+                    results.push({
+                        type: 'image',
+                        url: finalImageUrl,
+                        sourceUrl: sourceUrl || null,
+                        isSocialMedia: sourceUrl ?
+                            (sourceUrl.includes('facebook.com') || sourceUrl.includes('instagram.com')) : false,
+                        isHighRes: isOgImage
+                    });
+                    console.log(`[Google] ✓ 圖片 ${results.length}/${MAX_INITIAL} (HighRes: ${isOgImage})`);
+                    consecutiveErrors = 0;
                 }
-
                 processed++;
-
-                // 5. Navigate to Next (Next Button preferred)
-                await page.evaluate(() => {
-                    const nextBtn = document.querySelector('a[jsname="P3zTlc"]') ||
-                        document.querySelector('div[role="button"][aria-label="Next image"]') ||
-                        document.querySelector('div[role="button"][aria-label="下一張"]');
-                    if (nextBtn) nextBtn.click();
-                });
-
-                // Fallback to ArrowRight if button not found (or to support mixed nav)
-                await page.keyboard.press('ArrowRight');
-                await new Promise(r => setTimeout(r, 2000));
 
             } catch (e) {
                 console.log(`[Google] Loop Error: ${e.message}`);
-                await page.keyboard.press('ArrowRight');
-                await new Promise(r => setTimeout(r, 1500));
             }
         }
 

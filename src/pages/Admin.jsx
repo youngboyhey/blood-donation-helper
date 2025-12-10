@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { analyzeImage } from '../utils/ai';
-import { Trash2, Upload, Plus, Loader2, Save, X } from 'lucide-react';
+import { Trash2, Upload, Plus, Loader2, Save, X, Home, Play } from 'lucide-react';
 
 const Admin = () => {
     const { signOut } = useAuth();
+    const navigate = useNavigate();
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -15,6 +17,11 @@ const Admin = () => {
     const [scannedEvents, setScannedEvents] = useState([]); // AI result candidates
     const [showScanner, setShowScanner] = useState(false);
     const [expandedImage, setExpandedImage] = useState(null); // For Lightbox
+
+    // New state for API key input and pending image
+    const [customApiKey, setCustomApiKey] = useState("");
+    const [pendingImageUrl, setPendingImageUrl] = useState(null);
+    const [pendingFileName, setPendingFileName] = useState("");
 
     useEffect(() => {
         fetchEvents();
@@ -51,33 +58,60 @@ const Admin = () => {
             const { data: { publicUrl } } = supabase.storage.from('posters').getPublicUrl(fileName);
             console.log('Uploaded:', publicUrl);
 
-            // Step 2: Analyze with AI
-            setAnalyzing(true);
-            setUploading(false); // Upload done, analyzing starts
-            // statusMessage will be updated by analyzeImage callback
+            setUploading(false);
+            setStatusMessage("");
 
-            const aiResults = await analyzeImage(publicUrl, (msg) => setStatusMessage(msg));
+            // Store the uploaded image URL and wait for user to click "Start Analysis"
+            setPendingImageUrl(publicUrl);
+            setPendingFileName(file.name);
+
+        } catch (error) {
+            console.error('Upload failed:', error);
+            alert('上傳失敗: ' + error.message);
+            setStatusMessage("");
+            setUploading(false);
+        }
+    };
+
+    const handleStartAnalysis = async () => {
+        if (!pendingImageUrl) return;
+
+        setAnalyzing(true);
+        setStatusMessage("開始 AI 分析...");
+
+        try {
+            // Pass custom API key if provided
+            const apiKeyToUse = customApiKey.trim() || null;
+            const aiResults = await analyzeImage(pendingImageUrl, (msg) => setStatusMessage(msg), apiKeyToUse);
 
             setAnalyzing(false);
-            setStatusMessage(""); // Clear status
+            setStatusMessage("");
 
             if (aiResults && aiResults.length > 0) {
-                // Attach the poster URL to each result
-                const candidates = aiResults.map(ev => ({ ...ev, poster_url: publicUrl }));
+                const candidates = aiResults.map(ev => ({ ...ev, poster_url: pendingImageUrl }));
                 setScannedEvents(candidates);
                 setShowScanner(true);
             } else {
                 alert("AI 無法辨識此圖片，請手動輸入或重試。");
             }
 
+            // Clear pending image after analysis
+            setPendingImageUrl(null);
+            setPendingFileName("");
+
         } catch (error) {
-            console.error('Upload failed:', error);
-            alert('上傳失敗: ' + error.message);
+            console.error('Analysis failed:', error);
+            alert('分析失敗: ' + error.message);
             setStatusMessage("");
         } finally {
-            setUploading(false);
             setAnalyzing(false);
         }
+    };
+
+    const handleCancelPending = () => {
+        setPendingImageUrl(null);
+        setPendingFileName("");
+        setCustomApiKey("");
     };
 
     const handleSaveCandidate = async (candidate, index) => {
@@ -120,22 +154,69 @@ const Admin = () => {
         <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <h1>活動管理後台</h1>
-                <button onClick={signOut} style={{ padding: '0.5rem 1rem', background: '#333', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                    登出
-                </button>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                        onClick={() => navigate('/')}
+                        style={{ padding: '0.5rem 1rem', background: '#2a9d8f', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                    >
+                        <Home size={16} /> 回首頁
+                    </button>
+                    <button onClick={signOut} style={{ padding: '0.5rem 1rem', background: '#333', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                        登出
+                    </button>
+                </div>
             </div>
 
             {/* Upload Section */}
             <div className="upload-section" style={{ marginBottom: '2rem', padding: '1rem', border: '2px dashed #ccc', borderRadius: '8px', textAlign: 'center' }}>
                 <h3>上傳活動海報</h3>
                 <p>AI 將自動辨識海報內容並填寫資訊</p>
-                <input type="file" accept="image/*" onChange={handleFileUpload} disabled={uploading || analyzing} />
 
-                {(uploading || analyzing) && (
+                {/* API Key Input */}
+                <div style={{ marginBottom: '1rem' }}>
+                    <input
+                        type="password"
+                        placeholder="輸入自訂 Gemini API Key（選填）"
+                        value={customApiKey}
+                        onChange={(e) => setCustomApiKey(e.target.value)}
+                        style={{ padding: '0.5rem', width: '300px', marginRight: '0.5rem', border: '1px solid #ccc', borderRadius: '4px' }}
+                    />
+                    <small style={{ color: '#666' }}>若不輸入則使用系統預設 Key</small>
+                </div>
+
+                <input type="file" accept="image/*" onChange={handleFileUpload} disabled={uploading || analyzing || pendingImageUrl} />
+
+                {uploading && (
                     <div style={{ marginTop: '1rem', color: '#007bff' }}>
-                        {uploading && <span>⏳ 上傳中...</span>}
-                        {analyzing && <span>🤖 </span>}
-                        <span>{statusMessage}</span>
+                        ⏳ 上傳中...
+                    </div>
+                )}
+
+                {/* Pending Image - Ready for Analysis */}
+                {pendingImageUrl && !analyzing && (
+                    <div style={{ marginTop: '1rem', padding: '1rem', background: '#f0f9ff', borderRadius: '8px', border: '1px solid #0284c7' }}>
+                        <p style={{ marginBottom: '0.5rem' }}>✅ 已上傳: <strong>{pendingFileName}</strong></p>
+                        <img src={pendingImageUrl} alt="preview" style={{ maxHeight: '150px', borderRadius: '4px', marginBottom: '1rem' }} />
+                        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                            <button
+                                onClick={handleStartAnalysis}
+                                style={{ padding: '0.75rem 1.5rem', background: '#e63946', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '1rem' }}
+                            >
+                                <Play size={18} /> 開始分析
+                            </button>
+                            <button
+                                onClick={handleCancelPending}
+                                style={{ padding: '0.75rem 1rem', background: '#6b7280', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                            >
+                                取消
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {analyzing && (
+                    <div style={{ marginTop: '1rem', color: '#007bff' }}>
+                        🤖 <span>{statusMessage}</span>
                     </div>
                 )}
             </div>

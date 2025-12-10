@@ -15,18 +15,18 @@ const MODELS = [
 ];
 
 // 3. 輔助函式：取得指定輪替的 Key 與 Model
-const getModel = (retryCount) => {
-    if (API_KEYS.length === 0) {
-        throw new Error("Missing VITE_GEMINI_API_KEY");
+const getModelWithKeys = (retryCount, keys) => {
+    if (keys.length === 0) {
+        throw new Error("Missing API key");
     }
 
     // 計算當前應該使用的 Key 和 Model index
     // 邏輯：每把 KEY 都會嘗試過所有 MODELS 後，才切換到下一把 KEY
     const totalModels = MODELS.length;
-    const keyIndex = Math.floor(retryCount / totalModels) % API_KEYS.length;
+    const keyIndex = Math.floor(retryCount / totalModels) % keys.length;
     const modelIndex = retryCount % totalModels;
 
-    const key = API_KEYS[keyIndex];
+    const key = keys[keyIndex];
     const modelName = MODELS[modelIndex];
 
     const genAI = new GoogleGenerativeAI(key);
@@ -40,9 +40,12 @@ const getModel = (retryCount) => {
     return { gen, desc };
 };
 
-export async function analyzeImage(imageUrl, onStatus = () => { }) {
-    if (!API_KEYS_STR) {
-        throw new Error("Missing VITE_GEMINI_API_KEY");
+export async function analyzeImage(imageUrl, onStatus = () => { }, customApiKey = null) {
+    // If custom API key is provided, use it exclusively
+    const keysToUse = customApiKey ? [customApiKey] : API_KEYS;
+
+    if (keysToUse.length === 0) {
+        throw new Error("Missing VITE_GEMINI_API_KEY or custom API key");
     }
 
     onStatus("準備下載圖片...");
@@ -99,11 +102,11 @@ export async function analyzeImage(imageUrl, onStatus = () => { }) {
 `;
 
     // Retry Loop
-    const maxRetries = API_KEYS.length * MODELS.length * 2; // Allow 2 full cycles
+    const maxRetries = keysToUse.length * MODELS.length * 2; // Allow 2 full cycles
     let retryCount = 0;
 
     while (retryCount < maxRetries) {
-        const { gen, desc } = getModel(retryCount);
+        const { gen, desc } = getModelWithKeys(retryCount, keysToUse);
         const msg = `AI 分析中... (${desc})`;
         console.log(msg);
         onStatus(msg);

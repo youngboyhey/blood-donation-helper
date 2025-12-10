@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      // https://github.com/rafrex/spa-github-pages
+      // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
+      // ----------------------------------------------------------------------
+      // This script takes the current url and converts the path and query
+      // string into just a query string, and then redirects the browser
+      // to the new url with this query string and hash fragment,
+      // e.g. http://www.foo.com/bar/baz becomes http://www.foo.com/?p=/bar/baz
+      //
+      // Note: We are adapting this to redirect directly to the hash router format
+      // needed for our specific React HashRouter setup.
+      // ----------------------------------------------------------------------
+      
+      var l = window.location;
+      var repoName = '/blood-donation-helper'; 
+      
+      if (l.pathname.startsWith(repoName)) {
+          var path = l.pathname.slice(repoName.length);
+          // If path is just "/" or empty, no need to redirect if index.html handles it,
+          // but for /admin we need to act.
+          
+          if (path && path !== '/' && !path.startsWith('/#')) {
+             l.replace(
+                l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+                repoName + '/#' + path + l.search
+             );
+          }
+      }
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to <a href="/blood-donation-helper/">Provent Blood Donation Helper</a>...</p>
+  </body>
+</html>

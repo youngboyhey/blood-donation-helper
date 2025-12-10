@@ -353,16 +353,18 @@ async function analyzeContentWithAI(item, sourceContext) {
         } catch (e) {
             // Enhanced error logging
             const isRateLimit = e.message.includes('429') || e.message.includes('Quota') || e.message.includes('Resource has been exhausted');
+            const isInvalidImage = e.message.includes('400') || e.message.includes('image is not valid') || e.message.includes('Bad Request');
 
-            if (isRateLimit) {
+            if (isInvalidImage) {
+                // Invalid image - skip this image entirely, don't retry
+                console.warn(`[AI] Invalid image, skipping: ${e.message.substring(0, 100)}`);
+                return null;
+            } else if (isRateLimit) {
                 console.warn(`[AI] Rate Limit hit (${desc}). Switching...`);
                 retries++;
                 await new Promise(r => setTimeout(r, 1000));
             } else {
                 console.warn(`[AI] Analysis Error (${desc}): ${e.message}`);
-                // Try next model/key anyway for robustness? Or skip?
-                // Typically parsing errors or blocked content won't be fixed by changing keys, but maybe models.
-                // Let's retry just in case.
                 retries++;
                 await new Promise(r => setTimeout(r, 1000));
             }

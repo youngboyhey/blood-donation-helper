@@ -913,8 +913,19 @@ async function updateEvents() {
                 console.log(`${imgLabel} 結果: AI 識別出 ${validEvents.length} 個活動`);
 
                 for (const evt of validEvents) {
-                    if (!evt || !evt.date || !evt.location) {
-                        console.log(`${imgLabel} Skip: 缺少日期或地點`);
+                    // 驗證必要欄位：title, date, location 都必須存在且非空
+                    if (!evt || !evt.title || !evt.date || !evt.location) {
+                        const missing = [];
+                        if (!evt?.title) missing.push('title');
+                        if (!evt?.date) missing.push('date');
+                        if (!evt?.location) missing.push('location');
+                        console.log(`${imgLabel} Skip: 缺少必要欄位 [${missing.join(', ')}]`);
+                        continue;
+                    }
+
+                    // 額外驗證 title 不能是空字串
+                    if (evt.title.trim() === '') {
+                        console.log(`${imgLabel} Skip: title 為空字串`);
                         continue;
                     }
 

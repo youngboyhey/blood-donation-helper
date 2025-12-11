@@ -574,39 +574,53 @@ async function analyzeContentWithAI(item, sourceContext) {
             if (!base64) return null; // Image load failed
 
             const prompt = `
-請分析這張圖片，提取捐血活動資訊。
-請嚴格遵守以下規則：
+請分析這張圖片，判斷是否為「單一場次」的捐血活動海報。
+今天是 ${today}。
 
-1. **有效性檢查 (Critical)**：
-   - 必須是未來的捐血活動（日期晚於今日）。
-   - 必須包含具體的「日期」和「地點」。
-   - **[嚴格執行] 地點檢查**：若地點過於模糊，僅有縣市名稱 (如 "嘉義"、"台南"、"嘉義或台南") 而無具體舉辦地點 (如 "某某公園"、"某某捐血室"、"某某路某號")，則視為 **INVALID**。
-   - 若圖片不是捐血活動海報，或資訊嚴重不足，回傳 JSON 的 \`valid\` 欄位設為 \`false\`，並在 \`reason\` 說明原因。
+【嚴格過濾規則 - 必須全部符合才算有效】
 
-2. **資訊提取**：
-   - **location**: 舉辦地點名稱 (例如 "新竹市東區公所", "巨城購物中心")。請勿包含縣市前綴 (如 "新竹市")，除非包含在建築名稱中。
-   - **address**: 完整地址 (若有)。若無，請根據地點自行推斷或留空。
-   - **date**: 活動日期，格式 YYYY-MM-DD。若跨日與年份，請判斷最接近未來的年份。
-   - **time_start**: 開始時間，格式 HH:mm (例如 09:00)。
-   - **time_end**: 結束時間，格式 HH:mm (例如 17:00)。
-   - **organizer**: 主辦單位名稱。
-   - **gift**: 贈品內容摘要。
-     - **[重要] 贈品分級**：若贈品區分捐血量 (250cc/500cc)，請完整列出差異 (例如 "250cc: 全聯禮券1張, 500cc: 全聯禮券2張+衛生紙")。
-     - 若海報有具體贈品資訊，切勿僅寫 "依現場為主"。
-     - 包含關鍵字如 "全聯禮券", "電影票", "牛排券" 等。
+1. **總表/列表檢查 (最重要)**：
+   - 若圖片是「活動總表」、「行事曆」、「場次表」、「巡迴表」，視為 **INVALID**。
+   - 若圖片中包含 **多個不同地點** 或 **多個不同日期** 的活動列表，視為 **INVALID**。
+   - 若圖片呈現表格形式，列出多個活動資訊，視為 **INVALID**。
+   - **我只需要「單一場次」的活動海報，不要總表！**
 
-請以 JSON 格式回傳，不要有 markdown code block 標記：
+2. **地點檢查**：
+   - 必須有具體的活動地點名稱（如「XXX公園」、「XXX大樓」、「XXX路XX號」）。
+   - **至少要有縣市或行政區其中一個**（如「台北市」或「中正區」）。
+   - 若僅有模糊地點（如「嘉義」、「南部」）而無具體地點，視為 **INVALID**。
+
+3. **日期檢查**：
+   - 必須有明確的單一日期，且為未來日期（晚於 ${today}）。
+   - 若是日期區間（如 12/1~12/31），視為 **INVALID**。
+
+若不符合以上任一規則，請回傳：
+{ "valid": false, "reason": "具體原因" }
+
+【資訊提取】（僅在有效時填寫）
+- **title**: 活動標題
+- **date**: YYYY-MM-DD 格式
+- **time_start**: HH:mm
+- **time_end**: HH:mm
+- **location**: 具體地點名稱（不含縣市前綴）
+- **city**: 縣市名稱（如「台北市」、「新竹縣」）
+- **district**: 行政區（如「中正區」、「竹北市」）
+- **organizer**: 主辦單位
+- **gift**: 贈品資訊。若有 250cc/500cc 差異請完整列出。
+
+請以 JSON 格式回傳：
 {
-  "valid": boolean,
-  "reason": "若無效，請說明原因",
-  "title": "活動標題 (若無則使用 '地區+地點+捐血活動')",
-  "location": "地點名稱",
-  "address": "完整地址",
+  "valid": true/false,
+  "reason": "若無效則說明原因",
+  "title": "活動標題",
   "date": "YYYY-MM-DD",
   "time_start": "HH:mm",
   "time_end": "HH:mm",
+  "location": "地點名稱",
+  "city": "縣市",
+  "district": "行政區",
   "organizer": "主辦單位",
-  "gift": "贈品內容 (含分級資訊)"
+  "gift": "贈品資訊"
 }
 `;
             const result = await gen.generateContent([prompt, { inlineData: { data: base64, mimeType: "image/jpeg" } }]);
@@ -622,6 +636,13 @@ async function analyzeContentWithAI(item, sourceContext) {
                 return null;
             }
 
+            // Check if AI marked as invalid
+            if (data.valid === false) {
+                console.log(`[AI Reject] ${data.reason || '無效活動'}`);
+                return null;
+            }
+
+            // Also check legacy format
             if (data.invalid_reason) {
                 console.log(`[AI Reject] ${data.invalid_reason}`);
                 return null;
@@ -717,8 +738,11 @@ function generateEventKey(evt) {
 
 function calculateEventScore(evt) {
     let score = 0;
-    if (evt.gift && evt.gift.name) score += 2;
-    if (evt.gift && evt.gift.image) score += 3; // Image URL for gift? Or just detecting it?
+    // gift 可能是 string 或 object
+    if (evt.gift) {
+        if (typeof evt.gift === 'string' && evt.gift.length > 5) score += 2;
+        else if (evt.gift.name) score += 2;
+    }
     if (evt.time && evt.time.length > 3) score += 1;
     if (evt.organizer) score += 1;
     if (evt.tags && evt.tags.length > 0) score += 1;

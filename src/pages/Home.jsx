@@ -152,7 +152,9 @@ const Home = () => {
                         ))}
                     </select>
                 </div>
-                <SearchBar onSearch={setSearchTerm} />
+                <div className={styles.searchWrapper}>
+                    <SearchBar onSearch={setSearchTerm} />
+                </div>
             </div>
 
 

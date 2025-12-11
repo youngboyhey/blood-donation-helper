@@ -17,14 +17,15 @@
 
 /* Variants */
 .primary {
-    background-color: var(--color-primary);
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%);
     color: var(--color-surface);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
 
 .primary:hover:not(:disabled) {
-    background-color: var(--color-primary-hover);
+    background: linear-gradient(135deg, #FF5252 0%, #FF3D47 100%);
     transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
 }
 
 .secondary {

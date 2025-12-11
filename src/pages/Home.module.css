@@ -24,20 +24,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--spacing-6);
+    margin-bottom: var(--spacing-4);
     gap: var(--spacing-4);
-    flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .filters {
     display: flex;
     gap: var(--spacing-3);
-    flex-grow: 0; /* Left align */
+    flex-shrink: 0;
 }
 
-/* Ensure SearchBar container doesn't shrink improperly */
-.filterSection > div:last-child {
-    flex-grow: 0;
+.searchWrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .select {
@@ -67,10 +67,9 @@
 
 .listHeader {
     display: flex;
-    justify-content: flex-end; /* Right align count */
+    justify-content: flex-end;
     align-items: center;
     margin-bottom: var(--spacing-2);
-    /* border-bottom: 1px solid var(--color-border); */ /* Removed as per design trend */
     padding-bottom: var(--spacing-2);
 }
 
@@ -82,26 +81,29 @@
     border-radius: 12px;
 }
 
+/* 手機版佈局：搜尋列在上方，縣市選單在下方 */
 @media (max-width: 768px) {
     .filterSection {
-        flex-direction: column;
+        flex-direction: column-reverse;
+        /* 反轉順序：搜尋列移到上面 */
         align-items: stretch;
+        gap: var(--spacing-3);
     }
 
     .filters {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Side-by-side dropdowns on mobile */
+        grid-template-columns: 1fr 1fr;
         width: 100%;
         gap: var(--spacing-2);
     }
-    
+
     .select {
         width: 100%;
         min-width: 0;
     }
 
-    .filterSection > div:last-child {
-        width: 100%; /* Full width search bar */
-        margin-top: var(--spacing-2);
+    .searchWrapper {
+        width: 100%;
+        justify-content: stretch;
     }
 }

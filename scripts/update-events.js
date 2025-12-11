@@ -12,22 +12,12 @@ dotenv.config({ path: './.env' });
 // --- Configuration ---
 
 const SOURCES = [
-    // 官網爬蟲 (官方源)
-    { type: 'web', id: 'taipei', name: '台北捐血中心', url: 'https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284', baseUrl: 'https://www.tp.blood.org.tw' },
-    { type: 'web', id: 'hsinchu', name: '新竹捐血中心', url: 'https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492', baseUrl: 'https://www.sc.blood.org.tw' },
-
-    // Google 搜尋爬蟲 (針對無彙整頁的縣市，搜尋一週內圖片)
-    // 規則：前5-10張，一週內，限定 Instagram 來源
-    { type: 'google', id: 'taichung', name: '台中', query: '台中 捐血活動 site:instagram.com' },
-    { type: 'google', id: 'changhua', name: '彰化', query: '彰化 捐血活動 site:instagram.com' },
-    { type: 'google', id: 'nantou', name: '南投', query: '南投 捐血活動 site:instagram.com' },
-    { type: 'google', id: 'yunlin', name: '雲林', query: '雲林 捐血活動 site:instagram.com' },
-    { type: 'google', id: 'tainan', name: '台南', query: '台南 捐血活動 site:instagram.com' },
-    { type: 'google', id: 'chiayi', name: '嘉義', query: '嘉義 捐血活動 site:instagram.com' },
-    { type: 'google', id: 'kaohsiung', name: '高雄', query: '高雄 捐血活動 site:instagram.com' },
-    { type: 'google', id: 'pingtung', name: '屏東', query: '屏東 捐血活動 site:instagram.com' },
-    { type: 'google', id: 'taitung', name: '台東', query: '台東 捐血活動 site:instagram.com' },
-    { type: 'google', id: 'penghu', name: '澎湖', query: '澎湖 捐血活動 site:instagram.com' },
+    // 1. PTT Source (指定網頁)
+    {
+        name: "PTT Lifeismoney",
+        type: "ptt",
+        url: "https://www.pttweb.cc/bbs/Lifeismoney/M.1735838860.A.6F3"
+    }
 ];
 
 // --- Helpers ---
@@ -177,129 +167,85 @@ async function fetchPageImagesWithPuppeteer(url) {
 
 // --- Scrapers ---
 
-async function fetchGoogleImages(source) {
-    console.log(`[Google] 搜尋: ${source.query}`);
-    const cookies = await loadCookies();
-    if (cookies.length > 0) {
-        console.log(`[Google] 載入 ${cookies.length} 個 cookies`);
-    }
-
+async function fetchPTTImages(source) {
+    console.log(`[PTT] Scraping: ${source.url}`);
+    const results = [];
     const browser = await puppeteer.launch({
         headless: "new",
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-blink-features=AutomationControlled',
-            '--disable-dev-shm-usage',
-            '--no-zygote',
-            // '--single-process', // Sometimes causes issues on Windows, limiting if possible
-            '--disable-gpu'
-        ]
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu']
     });
 
     try {
         const page = await browser.newPage();
-        await page.setViewport({ width: 1920, height: 1080 });
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+        await page.goto(source.url, { waitUntil: 'networkidle2', timeout: 60000 });
 
-        // 搜尋 Google 圖片 (qdr:w = 一週內)
-        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(source.query)}&tbm=isch&tbs=qdr:w`;
-        console.log(`[Google] URL: ${searchUrl}`);
+        // 提取所有圖片連結
+        const imageUrls = await page.evaluate(() => {
+            const links = new Set();
+            const validExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+            const validDomains = ['imgur.com', 'meee.com.tw', 'mopix.cc', 'ppt.cc'];
 
-        // Navigation Retry Logic
-        let navSuccess = false;
-        for (let attempt = 0; attempt < 3; attempt++) {
-            try {
-                await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 60000 });
-                navSuccess = true;
-                break;
-            } catch (e) {
-                console.warn(`[Google] Navigation attempt ${attempt + 1} failed: ${e.message}`);
-                await new Promise(r => setTimeout(r, 2000));
-            }
-        }
+            // 1. 找所有 <a> 標籤的 href
+            document.querySelectorAll('a').forEach(a => {
+                const href = a.href;
+                if (!href) return;
 
-        if (!navSuccess) throw new Error("Failed to navigate to Google Images after 3 attempts");
+                const lowerHref = href.toLowerCase();
+                const isImageExt = validExtensions.some(ext => lowerHref.endsWith(ext));
+                const isImageDomain = validDomains.some(domain => lowerHref.includes(domain));
 
-        // 捲動載入更多圖片
-        await page.evaluate(async () => {
-            await new Promise(resolve => {
-                let h = 0;
-                const t = setInterval(() => { window.scrollBy(0, 400); h += 400; if (h > 3000) { clearInterval(t); resolve(); } }, 100);
+                if (isImageExt || isImageDomain) {
+                    links.add(href);
+                }
             });
-        });
-        await new Promise(r => setTimeout(r, 2000));
 
-        // 1. Collect Candidates directly from Grid (Zero-Click Strategy)
-        // We use 'data-docid' container which holds the 'data-lpage' (Source URL)
-        console.log(`[Google] 收集圖片來源連結 (Zero-Click Strategy)...`);
-        const candidates = await page.evaluate(() => {
-            const items = Array.from(document.querySelectorAll('div[data-docid]'));
-            return items.map(div => ({
-                id: div.getAttribute('data-docid'),
-                sourceUrl: div.getAttribute('data-lpage'), // The Key: Source URL is right here!
-                previewUrl: div.querySelector('img') ? div.querySelector('img').src : null
-            })).filter(item => item.sourceUrl && item.previewUrl);
-        });
-        console.log(`[Google] 找到 ${candidates.length} 個潛在圖片來源`);
+            // 2. 找所有文字內容是否包含圖片網址 (PTT 網頁版有時候會顯示純文字連結)
+            const textContent = document.body.innerText;
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            const matches = textContent.match(urlRegex) || [];
+            matches.forEach(match => {
+                const lowerMatch = match.toLowerCase();
+                const isImageExt = validExtensions.some(ext => lowerMatch.endsWith(ext));
+                const isImageDomain = validDomains.some(domain => lowerMatch.includes(domain));
 
-        const results = [];
-        const MAX_INITIAL = 15;
-        const MAX_TOTAL = Math.min(candidates.length, 50);
-        let processed = 0;
-
-        // 2. Process Candidates
-        for (let i = 0; i < MAX_TOTAL && results.length < MAX_INITIAL; i++) {
-            const item = candidates[i];
-
-            try {
-                // Deduplication Check
-                const isDuplicate = results.some(r => r.sourceUrl === item.sourceUrl);
-                if (isDuplicate) {
-                    console.log(`[Google] 略過重複來源: ${item.sourceUrl.slice(0, 40)}...`);
-                    continue;
+                if (isImageExt || isImageDomain) {
+                    // 清理可能黏在後面的標點符號
+                    let cleanUrl = match;
+                    if (cleanUrl.endsWith(')') || cleanUrl.endsWith(']')) cleanUrl = cleanUrl.slice(0, -1);
+                    links.add(cleanUrl);
                 }
+            });
 
-                let finalImageUrl = item.previewUrl;
-                let isOgImage = false;
+            return Array.from(links);
+        });
 
-                // 3. Deep Fetch (Visit Source URL) - STOPPED
-                // 使用者指示：不要使用 Deep Fetch，直接使用 Google 搜尋結果的縮圖
-                /*
-                const isInstagram = item.sourceUrl && item.sourceUrl.includes('instagram.com');
-                if (isInstagram && item.sourceUrl) {
-                     // ... Deep fetch logic removed ...
-                }
-                */
-                console.log(`[Google] 使用預覽縮圖 (Deep Fetch Disabled)`);
+        console.log(`[PTT] Found ${imageUrls.length} potential images`);
 
-                // 4. Save Result
-                results.push({
-                    type: 'image',
-                    url: finalImageUrl,
-                    sourceUrl: item.sourceUrl, // 使用原始連結
-                    isSocialMedia: item.sourceUrl ? (item.sourceUrl.includes('facebook.com') || item.sourceUrl.includes('instagram.com')) : false,
-                    isHighRes: isOgImage
-                });
-
-            } catch (e) {
-                console.log(`[Google] Item Error: ${e.message}`);
+        for (const imgUrl of imageUrls) {
+            // 轉換 Imgur 網頁連結為圖片直連 (雖然後端 AI 讀取通常沒問題，但轉成直連更保險)
+            let directUrl = imgUrl;
+            if (imgUrl.includes('imgur.com') && !imgUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                // 簡單嘗試加 .jpg，雖然不一定對，但對大多數 Imgur 分享有效
+                // 或者依靠 fetchImageAsBase64 的強大相容性
+                directUrl = imgUrl + '.jpg';
             }
 
-            processed++;
-            // Small delay to be polite
-            await new Promise(r => setTimeout(r, 500));
+            results.push({
+                type: 'image',
+                url: directUrl,
+                sourceUrl: source.url,
+                isSocialMedia: false,
+                isHighRes: true
+            });
         }
-
-        console.log(`[Google] 完成: ${results.length} 張圖片`);
-        return results;
 
     } catch (e) {
-        console.error(`[Google] 失敗: ${e.message}`);
-        return [];
+        console.error(`[PTT] Error fetching ${source.url}:`, e);
     } finally {
         await browser.close();
     }
+    return results;
 }
 
 // Web Scraper - 改進版：過濾總表、專注單場活動海報、日期標題過濾
@@ -855,7 +801,11 @@ async function updateEvents() {
 
         let items = [];
         try {
-            items = source.type === 'web' ? await fetchWebImages(source) : await fetchGoogleImages(source);
+            if (source.type === 'ptt') {
+                items = await fetchPTTImages(source);
+            } else {
+                items = await fetchWebImages(source);
+            }
         } catch (e) {
             console.error(`[Fetch] Source failed ${source.id}: ${e.message}`);
             continue;

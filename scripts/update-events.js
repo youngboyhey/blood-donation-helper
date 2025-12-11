@@ -12,15 +12,60 @@ dotenv.config({ path: './.env' });
 // --- Configuration ---
 
 const SOURCES = [
-    // 1. PTT Source (指定網頁)
+    // 1. PTT Source (指定網頁) - 測試模式：只抓前 10 張
     {
         name: "PTT Lifeismoney",
         type: "ptt",
-        url: "https://www.pttweb.cc/bbs/Lifeismoney/M.1735838860.A.6F3"
+        url: "https://www.pttweb.cc/bbs/Lifeismoney/M.1735838860.A.6F3",
+        limit: 10 // 測試用，限制抓取數量
+    },
+    // 2. 官網爬蟲 (官方源)
+    {
+        name: "台北捐血中心",
+        type: "web",
+        url: "https://www.tp.blood.org.tw/xmdoc?xsmsid=0P062646965467323284",
+        baseUrl: "https://www.tp.blood.org.tw"
+    },
+    {
+        name: "新竹捐血中心",
+        type: "web",
+        url: "https://www.sc.blood.org.tw/xmdoc?xsmsid=0P066666699492479492",
+        baseUrl: "https://www.sc.blood.org.tw"
     }
 ];
 
 // --- Helpers ---
+
+// 從地點名稱中提取縣市
+function extractCity(location) {
+    if (!location) return null;
+    const cities = [
+        '台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市',
+        '基隆市', '新竹市', '嘉義市', '新竹縣', '苗栗縣', '彰化縣',
+        '南投縣', '雲林縣', '嘉義縣', '屏東縣', '宜蘭縣', '花蓮縣',
+        '台東縣', '澎湖縣', '金門縣', '連江縣'
+    ];
+    for (const city of cities) {
+        if (location.includes(city)) return city;
+    }
+    // 嘗試模糊匹配（如 "台北" -> "台北市"）
+    const fuzzyMap = {
+        '台北': '台北市', '新北': '新北市', '桃園': '桃園市',
+        '台中': '台中市', '台南': '台南市', '高雄': '高雄市',
+        '基隆': '基隆市', '新竹': '新竹市', '嘉義': '嘉義市'
+    };
+    for (const [key, val] of Object.entries(fuzzyMap)) {
+        if (location.includes(key)) return val;
+    }
+    return null;
+}
+
+// 從地點名稱中提取行政區
+function extractDistrict(location) {
+    if (!location) return null;
+    const districtMatch = location.match(/([\u4e00-\u9fa5]{2,3}[區鄉鎮市])/);
+    return districtMatch ? districtMatch[1] : null;
+}
 
 // Load Cookies from ENV or File
 async function loadCookies() {
@@ -245,7 +290,11 @@ async function fetchPTTImages(source) {
     } finally {
         await browser.close();
     }
-    return results;
+
+    // 套用數量限制 (測試用)
+    const limit = source.limit || results.length;
+    console.log(`[PTT] Returning ${Math.min(results.length, limit)} of ${results.length} images (limit: ${source.limit || 'none'})`);
+    return results.slice(0, limit);
 }
 
 // Web Scraper - 改進版：過濾總表、專注單場活動海報、日期標題過濾
@@ -882,8 +931,18 @@ async function updateEvents() {
                     }
 
                     // Prepare Final Object
+                    // Prepare Final Object
                     const finalEvent = {
-                        ...evt,
+                        // ...evt, // 不要直接展開 evt，避免包含 address 等無效欄位
+                        title: evt.title,
+                        date: evt.date,
+                        time: evt.time || `${evt.time_start}-${evt.time_end}`, // 相容舊欄位 time
+                        location: evt.address ? `${evt.location} (${evt.address})` : evt.location, // 將地址合併到地點
+                        city: evt.city || extractCity(evt.location),
+                        district: evt.district || extractDistrict(evt.location),
+                        organizer: evt.organizer,
+                        gift: evt.gift,
+
                         poster_url: storageUrl,
                         original_image_url: item.url,
                         source_url: evt.sourceUrl || item.sourceUrl,

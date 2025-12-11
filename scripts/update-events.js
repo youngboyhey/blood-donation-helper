@@ -260,24 +260,91 @@ async function fetchGoogleImages(source) {
                     continue;
                 }
 
-                let finalImageUrl = item.previewUrl;
+                let finalImageUrl = null;
                 let isOgImage = false;
+                const isInstagram = item.sourceUrl && item.sourceUrl.includes('instagram.com');
 
-                // 3. Deep Fetch (Visit Source URL) - DISABLED BY USER REQUEST
-                // Using previewUrl directly to avoid login walls and CDN issues
-                /*
-                if (item.sourceUrl) {
-                    // ... (Deep Fetch logic removed for stability) ...
+                // 3. Deep Fetch (Visit Source URL) - 針對 Instagram 來源
+                if (isInstagram && item.sourceUrl) {
+                    console.log(`[Google] Deep Fetch Instagram: ${item.sourceUrl.slice(0, 50)}...`);
+
+                    const deepPage = await browser.newPage();
+                    try {
+                        await deepPage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+                        // 設定 Cookies (Instagram 登入)
+                        if (cookies.length > 0) {
+                            const instagramCookies = cookies.filter(c =>
+                                c.domain && (c.domain.includes('instagram.com') || c.domain.includes('.instagram.com'))
+                            );
+                            if (instagramCookies.length > 0) {
+                                await deepPage.setCookie(...instagramCookies);
+                                console.log(`[Google] 已載入 ${instagramCookies.length} 個 Instagram cookies`);
+                            }
+                        }
+
+                        await deepPage.goto(item.sourceUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+                        await new Promise(r => setTimeout(r, 2000)); // 等待頁面穩定
+
+                        // 提取 og:image (Instagram 的高解析度圖片)
+                        const ogImage = await deepPage.evaluate(() => {
+                            const meta = document.querySelector('meta[property="og:image"]');
+                            return meta ? meta.getAttribute('content') : null;
+                        });
+
+                        if (ogImage && ogImage.startsWith('http')) {
+                            finalImageUrl = ogImage;
+                            isOgImage = true;
+                            console.log(`[Google] ✓ 取得 og:image: ${ogImage.slice(0, 60)}...`);
+                        } else {
+                            // 備用：嘗試從頁面中找最大的圖片
+                            const largestImg = await deepPage.evaluate(() => {
+                                const imgs = Array.from(document.querySelectorAll('img'));
+                                let best = null;
+                                let maxArea = 0;
+                                for (const img of imgs) {
+                                    const area = (img.naturalWidth || img.width) * (img.naturalHeight || img.height);
+                                    if (area > maxArea && img.src && img.src.startsWith('http')) {
+                                        maxArea = area;
+                                        best = img.src;
+                                    }
+                                }
+                                return best;
+                            });
+
+                            if (largestImg) {
+                                finalImageUrl = largestImg;
+                                console.log(`[Google] ✓ 取得最大圖片: ${largestImg.slice(0, 60)}...`);
+                            }
+                        }
+                    } catch (deepErr) {
+                        console.log(`[Google] Deep Fetch 失敗: ${deepErr.message.slice(0, 50)}`);
+                    } finally {
+                        await deepPage.close();
+                    }
                 }
-                */
-                console.log(`[Google] 使用預覽縮圖 (Deep Fetch Disabled)`);
+
+                // 若 Deep Fetch 失敗或非 Instagram，檢查 previewUrl 是否可用
+                if (!finalImageUrl) {
+                    // 檢查 previewUrl 是否為 base64（無法用於 Storage 上傳）
+                    if (item.previewUrl && item.previewUrl.startsWith('data:image/')) {
+                        console.log(`[Google] 跳過 base64 縮圖 (無法上傳)`);
+                        continue; // 跳過此項目
+                    } else if (item.previewUrl && item.previewUrl.startsWith('http')) {
+                        finalImageUrl = item.previewUrl;
+                        console.log(`[Google] 使用 HTTP preview URL`);
+                    } else {
+                        console.log(`[Google] 無有效圖片 URL，跳過`);
+                        continue; // 跳過此項目
+                    }
+                }
 
                 // 4. Save Result
                 results.push({
                     type: 'image',
                     url: finalImageUrl,
                     sourceUrl: item.sourceUrl,
-                    isSocialMedia: item.sourceUrl ? (item.sourceUrl.includes('facebook.com') || item.sourceUrl.includes('instagram.com')) : false,
+                    isSocialMedia: isInstagram || (item.sourceUrl && item.sourceUrl.includes('facebook.com')),
                     isHighRes: isOgImage
                 });
 
@@ -669,22 +736,41 @@ async function analyzeContentWithAI(item, sourceContext) {
 
 async function uploadImageToStorage(supabase, imageUrl) {
     try {
-        const response = await fetch(imageUrl);
-        if (!response.ok) throw new Error('Download failed');
-        const buffer = await response.arrayBuffer();
+        let buffer;
+        let contentType = 'image/jpeg';
+        let ext = 'jpg';
+
+        // 處理 base64 data URL
+        if (imageUrl.startsWith('data:image/')) {
+            console.log(`[Upload] 處理 base64 圖片...`);
+            const match = imageUrl.match(/^data:image\/(\w+);base64,(.+)$/);
+            if (!match) {
+                console.log(`[Upload] 無效的 base64 格式`);
+                return null;
+            }
+            ext = match[1] === 'jpeg' ? 'jpg' : match[1];
+            contentType = `image/${match[1]}`;
+            const base64Data = match[2];
+            buffer = Buffer.from(base64Data, 'base64');
+        } else {
+            // 處理 HTTP URL
+            const response = await fetch(imageUrl);
+            if (!response.ok) throw new Error('Download failed');
+            buffer = Buffer.from(await response.arrayBuffer());
+            contentType = response.headers.get('content-type') || 'image/jpeg';
+            ext = imageUrl.split('.').pop().split(/[?#]/)[0] || 'jpg';
+        }
 
         // Strict Size Check (Double Check)
         if (buffer.byteLength < 5000) { // < 5KB is likely junk or tiny icon
-            // Can't check pixels easily without lib, checking bytes as proxy
             console.log(`[Upload] Skip tiny image (${buffer.byteLength} bytes)`);
             return null;
         }
 
-        const ext = imageUrl.split('.').pop().split(/[?#]/)[0] || 'jpg';
         const filename = `${crypto.createHash('md5').update(imageUrl).digest('hex')}.${ext}`;
 
         const { data, error } = await supabase.storage.from('posters').upload(filename, buffer, {
-            contentType: response.headers.get('content-type') || 'image/jpeg',
+            contentType: contentType,
             upsert: false // Don't overwrite, if exists, just use it
         });
 

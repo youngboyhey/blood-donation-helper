@@ -796,7 +796,17 @@ async function uploadImageToStorage(supabase, imageUrl) {
             if (!response.ok) throw new Error('Download failed');
             buffer = Buffer.from(await response.arrayBuffer());
             contentType = response.headers.get('content-type') || 'image/jpeg';
-            ext = imageUrl.split('.').pop().split(/[?#]/)[0] || 'jpg';
+
+            // 安全提取副檔名：只取最後一個 . 之後的部分，並過濾非法字元
+            const urlPath = imageUrl.split('?')[0].split('#')[0]; // 移除 query 和 hash
+            const lastDot = urlPath.lastIndexOf('.');
+            if (lastDot > 0) {
+                ext = urlPath.substring(lastDot + 1).toLowerCase();
+                // 只保留合法的圖片副檔名
+                if (!['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'].includes(ext)) {
+                    ext = 'jpg';
+                }
+            }
         }
 
         // Strict Size Check (Double Check)
@@ -805,7 +815,11 @@ async function uploadImageToStorage(supabase, imageUrl) {
             return null;
         }
 
-        const filename = `${crypto.createHash('md5').update(imageUrl).digest('hex')}.${ext}`;
+        // 使用圖片內容的 hash 作為檔名（而非 URL），確保唯一性且無非法字元
+        const contentHash = crypto.createHash('md5').update(buffer).digest('hex');
+        const filename = `${contentHash}.${ext}`;
+
+        console.log(`[Upload] 上傳檔案: ${filename}`);
 
         const { data, error } = await supabase.storage.from('posters').upload(filename, buffer, {
             contentType: contentType,

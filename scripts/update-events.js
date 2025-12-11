@@ -963,7 +963,8 @@ async function updateEvents() {
 
     // Map: Key -> { event, score }
     const existingEventsMap = new Map();
-    const existingUrlSet = new Set();
+    const existingUrlSet = new Set();        // 原始圖片 URL 去重
+    const existingPosterUrlSet = new Set();  // poster_url（基於圖片內容 hash）去重 - 跨來源去重關鍵！
 
     if (existingEventsData) {
         for (const e of existingEventsData) {
@@ -975,9 +976,10 @@ async function updateEvents() {
                 existingEventsMap.set(key, { ...e, _score: score });
             }
             if (e.original_image_url) existingUrlSet.add(e.original_image_url);
+            if (e.poster_url) existingPosterUrlSet.add(e.poster_url);  // 加入 poster_url 去重
         }
     }
-    console.log(`[Dedupe] Loaded ${existingEventsMap.size} unique future events.`);
+    console.log(`[Dedupe] Loaded ${existingEventsMap.size} unique future events, ${existingPosterUrlSet.size} unique poster URLs.`);
 
     const eventsToInsert = [];
     const eventsToUpdate = [];
@@ -1080,6 +1082,13 @@ async function updateEvents() {
                         continue;
                     }
 
+                    // 跨來源圖片去重：檢查 poster_url 是否已存在（基於圖片內容 hash）
+                    // 這可以捕捉到來自不同來源但內容相同的海報圖片
+                    if (existingPosterUrlSet.has(storageUrl)) {
+                        console.log(`${imgLabel} Skip: 相同圖片已存在（跨來源去重）`);
+                        continue;
+                    }
+
                     // Prepare Final Object
                     // Prepare Final Object
 
@@ -1128,6 +1137,7 @@ async function updateEvents() {
                     }
 
                     existingUrlSet.add(item.url); // Prevent URL reprocessing
+                    existingPosterUrlSet.add(storageUrl); // 跨來源去重：同一次執行中也要追蹤
                     console.log(`[${isUpdate ? 'Update' : 'New'}] ${evt.date} ${evt.title} (${evt.city})`);
                 }
             } catch (e) {

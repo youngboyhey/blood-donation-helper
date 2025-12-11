@@ -60,6 +60,81 @@ function extractCity(location) {
     return null;
 }
 
+// 有效的台灣 22 縣市清單
+const VALID_CITIES = [
+    '台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市',
+    '基隆市', '新竹市', '嘉義市', '新竹縣', '苗栗縣', '彰化縣',
+    '南投縣', '雲林縣', '嘉義縣', '屏東縣', '宜蘭縣', '花蓮縣',
+    '台東縣', '澎湖縣', '金門縣', '連江縣'
+];
+
+// 地標對應縣市 - 用於智慧修正
+const LANDMARK_TO_CITY = {
+    '藝文特區': '桃園市', '中壢': '桃園市', '八德': '桃園市', '平鎮': '桃園市',
+    '楊梅': '桃園市', '龍潭': '桃園市', '大溪': '桃園市', '蘆竹': '桃園市',
+    '信義區': '台北市', '大安區': '台北市', '中正區': '台北市', '松山區': '台北市',
+    '內湖區': '台北市', '南港區': '台北市', '士林區': '台北市', '北投區': '台北市',
+    '板橋': '新北市', '三重': '新北市', '新莊': '新北市', '中和': '新北市',
+    '永和': '新北市', '土城': '新北市', '汐止': '新北市', '樹林': '新北市',
+    '竹北': '新竹縣', '竹東': '新竹縣', '湖口': '新竹縣', '新豐': '新竹縣',
+    '東區': '新竹市', '北區': '新竹市', '香山區': '新竹市', // 新竹市只有3區
+    '豐原': '台中市', '大里': '台中市', '太平': '台中市', '沙鹿': '台中市',
+    '清水': '台中市', '大甲': '台中市', '烏日': '台中市', '霧峰': '台中市',
+    '鳳山': '高雄市', '左營': '高雄市', '前鎮': '高雄市', '三民': '高雄市',
+    '楠梓': '高雄市', '岡山': '高雄市', '小港': '高雄市', '鼓山': '高雄市',
+    '安平': '台南市', '永康': '台南市', '新營': '台南市', '仁德': '台南市',
+    '頭份': '苗栗縣', '竹南': '苗栗縣', '苗栗市': '苗栗縣',
+    '員林': '彰化縣', '彰化市': '彰化縣', '鹿港': '彰化縣',
+    '斗六': '雲林縣', '虎尾': '雲林縣',
+    '太保': '嘉義縣', '朴子': '嘉義縣', '民雄': '嘉義縣',
+    '潮州': '屏東縣', '屏東市': '屏東縣', '東港': '屏東縣',
+    '宜蘭市': '宜蘭縣', '羅東': '宜蘭縣',
+    '花蓮市': '花蓮縣',
+    '台東市': '台東縣'
+};
+
+// 驗證並修正 AI 回傳的縣市
+function validateAndFixCity(aiCity, location, district, organizer) {
+    // 1. 如果 AI 回傳的 city 已經是有效縣市，直接返回
+    if (aiCity && VALID_CITIES.includes(aiCity)) {
+        return aiCity;
+    }
+
+    // 2. 嘗試從 location/district/organizer 透過地標對應修正
+    const allText = `${location || ''} ${district || ''} ${organizer || ''}`;
+
+    for (const [landmark, city] of Object.entries(LANDMARK_TO_CITY)) {
+        if (allText.includes(landmark)) {
+            console.log(`[City Fix] 透過地標「${landmark}」修正為「${city}」`);
+            return city;
+        }
+    }
+
+    // 3. 嘗試模糊匹配（如 "新竹" -> "新竹市"）
+    const fuzzyMap = {
+        '台北': '台北市', '新北': '新北市', '桃園': '桃園市',
+        '台中': '台中市', '台南': '台南市', '高雄': '高雄市',
+        '基隆': '基隆市', '新竹': '新竹市', '嘉義': '嘉義市'
+    };
+
+    for (const [key, val] of Object.entries(fuzzyMap)) {
+        if (aiCity && aiCity.includes(key)) {
+            console.log(`[City Fix] 模糊匹配「${aiCity}」修正為「${val}」`);
+            return val;
+        }
+    }
+
+    // 4. 最後嘗試從 location 提取
+    const extracted = extractCity(allText);
+    if (extracted) {
+        console.log(`[City Fix] 從文字中提取出「${extracted}」`);
+        return extracted;
+    }
+
+    console.log(`[City Fix] 無法修正縣市「${aiCity}」`);
+    return null;
+}
+
 // 從地點名稱中提取行政區
 function extractDistrict(location) {
     if (!location) return null;
@@ -573,9 +648,30 @@ async function analyzeContentWithAI(item, sourceContext) {
             }
             if (!base64) return null; // Image load failed
 
+
             const prompt = `
 請分析這張圖片，判斷是否為「單一場次」的捐血活動海報。
 今天是 ${today}。
+
+【台灣縣市清單 - city 欄位只能填以下 22 個縣市之一】
+台北市、新北市、桃園市、台中市、台南市、高雄市、
+基隆市、新竹市、新竹縣、苗栗縣、彰化縣、南投縣、
+雲林縣、嘉義市、嘉義縣、屏東縣、宜蘭縣、花蓮縣、
+台東縣、澎湖縣、金門縣、連江縣
+
+⚠️ 注意：
+- 「新竹」不是有效縣市，必須明確填寫「新竹市」或「新竹縣」
+- 「嘉義」不是有效縣市，必須明確填寫「嘉義市」或「嘉義縣」
+- city 欄位必須是上述 22 個縣市之一，不可填寫其他值
+
+【常見地標對應縣市 - 請依此判斷正確縣市】
+- 藝文特區、中壢、八德、平鎮、楊梅、龍潭 → 桃園市
+- 信義區、大安區、中正區、松山區、內湖區 → 台北市
+- 板橋、三重、新莊、中和、永和、土城 → 新北市
+- 竹北、竹東、湖口、新豐 → 新竹縣
+- 東區、北區、香山區 → 新竹市
+- 豐原、大里、太平、沙鹿、清水 → 台中市
+- 鳳山、左營、前鎮、三民、楠梓、岡山 → 高雄市
 
 【嚴格過濾規則 - 必須全部符合才算有效】
 
@@ -585,9 +681,10 @@ async function analyzeContentWithAI(item, sourceContext) {
    - 若圖片呈現表格形式，列出多個活動資訊，視為 **INVALID**。
    - **我只需要「單一場次」的活動海報，不要總表！**
 
-2. **地點檢查**：
-   - 必須有具體的活動地點名稱（如「XXX公園」、「XXX大樓」、「XXX路XX號」）。
-   - **至少要有縣市或行政區其中一個**（如「台北市」或「中正區」）。
+2. **地點檢查 (重要！)**：
+   - 必須有具體的活動地點名稱（如「XXX公園」、「XXX大樓」、「XXX路XX號」、「XXX捐血亭」）。
+   - **至少要有縣市或行政區其中一個**。
+   - ⚠️ **「XX捐血中心」是發布來源，不是活動地點！** 請忽略「新竹捐血中心」、「台北捐血中心」等字樣，從海報內容中找出實際活動地點。
    - 若僅有模糊地點（如「嘉義」、「南部」）而無具體地點，視為 **INVALID**。
 
 3. **日期檢查**：
@@ -602,9 +699,9 @@ async function analyzeContentWithAI(item, sourceContext) {
 - **date**: YYYY-MM-DD 格式
 - **time_start**: HH:mm
 - **time_end**: HH:mm
-- **location**: 具體地點名稱（不含縣市前綴）
-- **city**: 縣市名稱（如「台北市」、「新竹縣」）
-- **district**: 行政區（如「中正區」、「竹北市」）
+- **location**: 具體地點名稱（如「藝文特區同德六街捐血亭」，不含縣市前綴）
+- **city**: 必須是上述 22 縣市之一（如「桃園市」、「新竹市」）
+- **district**: 行政區（如「八德區」、「中正區」、「竹北市」）
 - **organizer**: 主辦單位
 - **gift**: 贈品資訊。若有 250cc/500cc 差異請完整列出。
 
@@ -617,7 +714,7 @@ async function analyzeContentWithAI(item, sourceContext) {
   "time_start": "HH:mm",
   "time_end": "HH:mm",
   "location": "地點名稱",
-  "city": "縣市",
+  "city": "縣市（必須是22縣市之一）",
   "district": "行政區",
   "organizer": "主辦單位",
   "gift": "贈品資訊"
@@ -967,13 +1064,22 @@ async function updateEvents() {
 
                     // Prepare Final Object
                     // Prepare Final Object
+
+                    // 驗證並修正縣市（確保是有效的 22 縣市之一）
+                    const validatedCity = validateAndFixCity(evt.city, evt.location, evt.district, evt.organizer);
+
+                    if (!validatedCity) {
+                        console.log(`${imgLabel} Skip: 無法辨識有效縣市 - ${evt.location}`);
+                        continue;
+                    }
+
                     const finalEvent = {
                         // ...evt, // 不要直接展開 evt，避免包含 address 等無效欄位
                         title: evt.title,
                         date: evt.date,
                         time: evt.time || `${evt.time_start}-${evt.time_end}`, // 相容舊欄位 time
                         location: evt.address ? `${evt.location} (${evt.address})` : evt.location, // 將地址合併到地點
-                        city: evt.city || extractCity(evt.location),
+                        city: validatedCity,
                         district: evt.district || extractDistrict(evt.location),
                         organizer: evt.organizer,
                         gift: evt.gift,

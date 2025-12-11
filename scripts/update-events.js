@@ -12,12 +12,11 @@ dotenv.config({ path: './.env' });
 // --- Configuration ---
 
 const SOURCES = [
-    // 1. PTT Source (指定網頁) - 測試模式：只抓前 10 張
+    // 1. PTT Source (指定網頁)
     {
         name: "PTT Lifeismoney",
         type: "ptt",
-        url: "https://www.pttweb.cc/bbs/Lifeismoney/M.1735838860.A.6F3",
-        limit: 10 // 測試用，限制抓取數量
+        url: "https://www.pttweb.cc/bbs/Lifeismoney/M.1735838860.A.6F3"
     },
     // 2. 官網爬蟲 (官方源)
     {

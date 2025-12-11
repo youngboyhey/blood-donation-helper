@@ -261,7 +261,12 @@ const Home = () => {
                         <p><strong>主辦單位:</strong> {selectedEvent.organizer}</p>
                         <hr style={{ margin: '1rem 0', border: '0', borderTop: '1px solid #eee' }} />
                         <h4>贈品資訊</h4>
-                        <p>{selectedEvent.gift?.name || '以現場提供為主'}</p>
+                        <p>
+                            {/* gift 可能是字串或物件，需要同時處理 */}
+                            {typeof selectedEvent.gift === 'string' && selectedEvent.gift && selectedEvent.gift !== 'null'
+                                ? selectedEvent.gift
+                                : (selectedEvent.gift?.name || '以現場提供為主')}
+                        </p>
                         <div style={{ marginTop: '1rem', textAlign: 'center' }}>
                             {(selectedEvent.poster_url || selectedEvent.gift?.image) && (
                                 <img

@@ -33,7 +33,12 @@ const EventCard = ({ event, onClick }) => {
             <div className={styles.giftSection}>
                 <div className={styles.giftLabel}>贈品亮點</div>
                 <div className={styles.giftContent}>
-                    <span className={styles.giftName}>{gift?.name || '以現場提供為主'}</span>
+                    <span className={styles.giftName}>
+                        {/* gift 可能是字串或物件，需要同時處理 */}
+                        {typeof gift === 'string' && gift && gift !== 'null'
+                            ? gift
+                            : (gift?.name || '以現場提供為主')}
+                    </span>
                 </div>
             </div>
 

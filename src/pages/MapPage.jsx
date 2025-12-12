@@ -195,7 +195,7 @@ const MapPage = () => {
                                 title={`${group.events.length} 個活動`}
                                 icon={{
                                     url: `${import.meta.env.BASE_URL}favicon.png`,
-                                    scaledSize: { width: 60, height: 60 }
+                                    scaledSize: { width: 54, height: 54 }
                                 }}
                             />
                         ))}

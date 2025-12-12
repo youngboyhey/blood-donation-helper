@@ -88,6 +88,7 @@
 }
 
 .eventMarker {
+    position: relative;
     width: 36px;
     height: 36px;
     background: white;
@@ -110,10 +111,69 @@
     object-fit: contain;
 }
 
+/* 多活動數量標記 */
+.markerBadge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 /* InfoWindow Styles */
 .infoWindow {
     max-width: 280px;
     padding: 0.5rem;
+}
+
+/* 多活動切換器 */
+.eventSwitcher {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.eventCounter {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.switchButton {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.switchButton:hover:not(:disabled) {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.switchButton:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }
 
 .infoWindow h3 {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { APIProvider, Map, AdvancedMarker, InfoWindow, useAdvancedMarkerRef } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps';
 import { supabase } from '../lib/supabase';
 import styles from './MapPage.module.css';
 
@@ -13,7 +13,8 @@ const MapPage = () => {
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState(null); // 選中的位置 key
+    const [selectedEventIndex, setSelectedEventIndex] = useState(0); // 同一位置多活動時的索引
     const [userLocation, setUserLocation] = useState(null);
     const [mapCenter, setMapCenter] = useState(TAIWAN_CENTER);
 
@@ -46,6 +47,24 @@ const MapPage = () => {
         }
     };
 
+    // 將活動按位置分組（經緯度四捨五入到小數點後4位作為key）
+    const groupedEvents = useMemo(() => {
+        const groups = {};
+        events.forEach(event => {
+            // 四捨五入到小數4位（約11公尺精度），視為同一位置
+            const key = `${event.latitude.toFixed(4)}_${event.longitude.toFixed(4)}`;
+            if (!groups[key]) {
+                groups[key] = {
+                    lat: event.latitude,
+                    lng: event.longitude,
+                    events: []
+                };
+            }
+            groups[key].events.push(event);
+        });
+        return groups;
+    }, [events]);
+
     const getUserLocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -64,9 +83,13 @@ const MapPage = () => {
         }
     };
 
-    const handleMarkerClick = (event) => {
-        setSelectedEvent(event);
-        setMapCenter({ lat: event.latitude, lng: event.longitude });
+    const handleMarkerClick = (locationKey) => {
+        setSelectedLocation(locationKey);
+        setSelectedEventIndex(0); // 重置為第一個活動
+        const group = groupedEvents[locationKey];
+        if (group) {
+            setMapCenter({ lat: group.lat, lng: group.lng });
+        }
     };
 
     const handleNavigate = (event) => {
@@ -80,6 +103,10 @@ const MapPage = () => {
         if (typeof gift === 'string') return gift;
         return gift.name || '以現場提供為主';
     };
+
+    // 選中位置的活動群組
+    const selectedGroup = selectedLocation ? groupedEvents[selectedLocation] : null;
+    const selectedEvent = selectedGroup?.events[selectedEventIndex];
 
     if (!GOOGLE_MAPS_API_KEY) {
         return (
@@ -125,27 +152,56 @@ const MapPage = () => {
                                 </AdvancedMarker>
                             )}
 
-                            {/* 活動標記 */}
-                            {events.map((event) => (
+                            {/* 活動標記（按位置分組） */}
+                            {Object.entries(groupedEvents).map(([key, group]) => (
                                 <AdvancedMarker
-                                    key={event.id}
-                                    position={{ lat: event.latitude, lng: event.longitude }}
-                                    onClick={() => handleMarkerClick(event)}
+                                    key={key}
+                                    position={{ lat: group.lat, lng: group.lng }}
+                                    onClick={() => handleMarkerClick(key)}
                                 >
                                     <div className={styles.eventMarker}>
                                         <img src="/favicon.png" alt="marker" />
+                                        {/* 如果有多個活動，顯示數量 */}
+                                        {group.events.length > 1 && (
+                                            <span className={styles.markerBadge}>
+                                                {group.events.length}
+                                            </span>
+                                        )}
                                     </div>
                                 </AdvancedMarker>
                             ))}
 
                             {/* InfoWindow */}
-                            {selectedEvent && (
+                            {selectedEvent && selectedGroup && (
                                 <InfoWindow
-                                    position={{ lat: selectedEvent.latitude, lng: selectedEvent.longitude }}
-                                    onCloseClick={() => setSelectedEvent(null)}
+                                    position={{ lat: selectedGroup.lat, lng: selectedGroup.lng }}
+                                    onCloseClick={() => setSelectedLocation(null)}
                                     pixelOffset={[0, -40]}
                                 >
                                     <div className={styles.infoWindow}>
+                                        {/* 多活動切換器 */}
+                                        {selectedGroup.events.length > 1 && (
+                                            <div className={styles.eventSwitcher}>
+                                                <button
+                                                    className={styles.switchButton}
+                                                    disabled={selectedEventIndex === 0}
+                                                    onClick={() => setSelectedEventIndex(i => i - 1)}
+                                                >
+                                                    ◀
+                                                </button>
+                                                <span className={styles.eventCounter}>
+                                                    {selectedEventIndex + 1} / {selectedGroup.events.length} 場活動
+                                                </span>
+                                                <button
+                                                    className={styles.switchButton}
+                                                    disabled={selectedEventIndex >= selectedGroup.events.length - 1}
+                                                    onClick={() => setSelectedEventIndex(i => i + 1)}
+                                                >
+                                                    ▶
+                                                </button>
+                                            </div>
+                                        )}
+
                                         <h3>{selectedEvent.title}</h3>
                                         <p className={styles.infoDate}>
                                             📅 {selectedEvent.date} {selectedEvent.time}

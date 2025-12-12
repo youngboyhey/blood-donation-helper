@@ -194,7 +194,7 @@ const MapPage = () => {
                                 onClick={() => handleMarkerClick(key)}
                                 title={`${group.events.length} 個活動`}
                                 icon={{
-                                    url: `${import.meta.env.BASE_URL}favicon.png?v=2`,
+                                    url: `${import.meta.env.BASE_URL}event-marker.png`,
                                     scaledSize: { width: 54, height: 54 }
                                 }}
                             />

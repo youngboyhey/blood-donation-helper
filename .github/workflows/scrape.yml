@@ -39,6 +39,7 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
         run: node scripts/update-events.js
 
       - name: Build
@@ -46,10 +47,11 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
           GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
         run: |
           npm run build
-          sed -i "s/%VITE_GA_TRACKING_ID%/$GA_TRACKING_ID/g" dist/index.html
+          sed -i "s/__GA_TRACKING_ID__/$GA_TRACKING_ID/g" dist/index.html
           node scripts/apply-seo.js
           cp public/404.html dist/404.html
 

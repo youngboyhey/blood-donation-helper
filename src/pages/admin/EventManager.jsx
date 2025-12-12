@@ -3,6 +3,46 @@ import { supabase } from '../../lib/supabase';
 import { analyzeImage } from '../../utils/ai';
 import { Trash2, Save, X, Play } from 'lucide-react';
 
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
+// Geocoding 函式 - 將地址轉換為經緯度
+async function geocodeAddress(city, district, location) {
+    if (!GOOGLE_MAPS_API_KEY) {
+        console.log('[Geocode] 未設定 GOOGLE_MAPS_API_KEY，跳過經緯度轉換');
+        return null;
+    }
+
+    const parts = [];
+    if (city) parts.push(city);
+    if (district) parts.push(district);
+    if (location) parts.push(location);
+    const fullAddress = parts.join('');
+
+    if (!fullAddress) return null;
+
+    try {
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(fullAddress)}&key=${GOOGLE_MAPS_API_KEY}&language=zh-TW&region=tw`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.status === 'OK' && data.results.length > 0) {
+            const coords = data.results[0].geometry.location;
+            console.log(`[Geocode] ${fullAddress} -> ${coords.lat}, ${coords.lng}`);
+            return {
+                latitude: coords.lat,
+                longitude: coords.lng
+            };
+        } else {
+            console.log(`[Geocode] 無法取得座標: ${data.status}`);
+            return null;
+        }
+    } catch (error) {
+        console.error(`[Geocode] 請求失敗: ${error.message}`);
+        return null;
+    }
+}
+
 const EventManager = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -135,6 +175,9 @@ const EventManager = () => {
     };
 
     const handleSaveCandidate = async (candidate, index) => {
+        // 取得經緯度（用於地圖功能）
+        const coords = await geocodeAddress(candidate.city, candidate.district, candidate.location);
+
         const newEvent = {
             title: candidate.title,
             date: candidate.date,
@@ -148,6 +191,9 @@ const EventManager = () => {
             poster_url: candidate.poster_url,
             original_image_url: candidate.poster_url, // 用於去重追蹤
             source_url: candidate.poster_url,
+            // 經緯度（地圖功能）
+            latitude: coords?.latitude || null,
+            longitude: coords?.longitude || null,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
         };

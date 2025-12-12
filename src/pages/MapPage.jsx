@@ -179,7 +179,8 @@ const MapPage = () => {
                             <MarkerF
                                 position={userLocation}
                                 icon={{
-                                    url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                                    url: `${import.meta.env.BASE_URL}user-marker.png`,
+                                    scaledSize: { width: 50, height: 50 }
                                 }}
                                 title="你的位置"
                             />
@@ -194,7 +195,7 @@ const MapPage = () => {
                                 title={`${group.events.length} 個活動`}
                                 icon={{
                                     url: `${import.meta.env.BASE_URL}favicon.png`,
-                                    scaledSize: { width: 40, height: 40 }
+                                    scaledSize: { width: 60, height: 60 }
                                 }}
                             />
                         ))}

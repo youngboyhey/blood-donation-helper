@@ -131,7 +131,7 @@ const MapPage = () => {
             </div>
 
             {/* Map */}
-            <div className={styles.mapContainer}>
+            <div className={styles.mapContainer} style={{ height: 'calc(100vh - 60px)' }}>
                 {loading ? (
                     <div className={styles.loading}>載入中...</div>
                 ) : (

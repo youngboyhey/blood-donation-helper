@@ -1007,19 +1007,30 @@ async function updateEvents() {
     const { data: existingEventsData } = await supabase.from('events').select('*').gte('date', todayStr);
 
     // Map: Key -> { event, score }
+    // Map: Key -> { event, score }
     const existingEventsMap = new Map();
+    const existingEventsByTitle = new Map(); // New: For fuzzy title match
     const existingUrlSet = new Set();        // 原始圖片 URL 去重
     const existingPosterUrlSet = new Set();  // poster_url（基於圖片內容 hash）去重 - 跨來源去重關鍵！
 
     if (existingEventsData) {
         for (const e of existingEventsData) {
             const key = generateEventKey(e);
+            const titleKey = `${e.date}_${normalizeText(e.city)}_${normalizeText(e.title)}`;
             const score = calculateEventScore(e);
+            const enrichedEvent = { ...e, _score: score };
 
             // Keep the best one if DB already has dupes (unlikely but safe)
             if (!existingEventsMap.has(key) || score > existingEventsMap.get(key).score) {
-                existingEventsMap.set(key, { ...e, _score: score });
+                existingEventsMap.set(key, enrichedEvent);
             }
+
+            // Populate Title Map (allow multiple candidates per title)
+            if (!existingEventsByTitle.has(titleKey)) {
+                existingEventsByTitle.set(titleKey, []);
+            }
+            existingEventsByTitle.get(titleKey).push(enrichedEvent);
+
             if (e.original_image_url) existingUrlSet.add(e.original_image_url);
             if (e.poster_url) existingPosterUrlSet.add(e.poster_url);  // 加入 poster_url 去重
         }
@@ -1097,15 +1108,40 @@ async function updateEvents() {
                         continue;
                     }
 
+                    // New or Better Version Found - Upload Image
                     const newEventScore = calculateEventScore(evt);
                     const eventKey = generateEventKey(evt);
+                    const titleKey = `${evt.date}_${normalizeText(evt.city)}_${normalizeText(evt.title)}`; // Secondary Key
 
                     // Smart Dedupe Check
                     let isUpdate = false;
                     let shouldSkip = false;
+                    let existing = null;
 
+                    // 1. Check Exact Location Key
                     if (existingEventsMap.has(eventKey)) {
-                        const existing = existingEventsMap.get(eventKey);
+                        existing = existingEventsMap.get(eventKey);
+                    }
+                    // 2. Check Title Key + Location Containment (Secondary fuzzy match)
+                    else if (existingEventsByTitle.has(titleKey)) {
+                        // Potential Duplicate found by Title
+                        const candidates = existingEventsByTitle.get(titleKey);
+                        for (const candidate of candidates) {
+                            // Normalize locations for comparison
+                            const locA = normalizeText(evt.location);
+                            const locB = normalizeText(candidate.location);
+
+                            // Check if one location contains the other (e.g., "Park" vs "Park (Entrance A)")
+                            // Or if they are very similar (could add Levenshtein here if needed, but containment is safer for address)
+                            if (locA.includes(locB) || locB.includes(locA)) {
+                                existing = candidate;
+                                console.log(`${imgLabel} Fuzzy Match: 標題相符且地點包含 - [${evt.location}] vs [${candidate.location}]`);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (existing) {
                         if (newEventScore > existing._score) {
                             console.log(`${imgLabel} Action: 更新現有活動 (Score ${newEventScore} > ${existing._score}) - ${evt.date} ${evt.location}`);
                             isUpdate = true;

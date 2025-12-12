@@ -179,7 +179,7 @@ const MapPage = () => {
                             <MarkerF
                                 position={userLocation}
                                 icon={{
-                                    url: `${import.meta.env.BASE_URL}user-marker.png`,
+                                    url: `${import.meta.env.BASE_URL}user-marker.png?v=2`,
                                     scaledSize: { width: 50, height: 50 }
                                 }}
                                 title="你的位置"
@@ -194,7 +194,7 @@ const MapPage = () => {
                                 onClick={() => handleMarkerClick(key)}
                                 title={`${group.events.length} 個活動`}
                                 icon={{
-                                    url: `${import.meta.env.BASE_URL}favicon.png`,
+                                    url: `${import.meta.env.BASE_URL}favicon.png?v=2`,
                                     scaledSize: { width: 54, height: 54 }
                                 }}
                             />

@@ -66,9 +66,13 @@ const EventCard = ({ event, onDelete }) => (
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#e63946' }}>🎁 {event.gift.name}</p>
             )}
             <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
-                {event.source_url?.includes('blood.org.tw') && <span style={{ fontSize: '0.7rem', background: '#d1fae5', color: '#065f46', padding: '2px 4px', borderRadius: '2px' }}>官網</span>}
-                {event.source_url?.includes('ptt.cc') && <span style={{ fontSize: '0.7rem', background: '#dbeafe', color: '#1e40af', padding: '2px 4px', borderRadius: '2px' }}>PTT</span>}
-                {event.tags?.includes('手動上傳') && <span style={{ fontSize: '0.7rem', background: '#f3f4f6', color: '#374151', padding: '2px 4px', borderRadius: '2px' }}>人工上傳</span>}
+                {event.tags?.includes('手動上傳') ? (
+                    <span style={{ fontSize: '0.7rem', background: '#f3f4f6', color: '#374151', padding: '2px 4px', borderRadius: '2px' }}>人工上傳</span>
+                ) : event.source_url?.includes('blood.org.tw') ? (
+                    <span style={{ fontSize: '0.7rem', background: '#d1fae5', color: '#065f46', padding: '2px 4px', borderRadius: '2px' }}>官網</span>
+                ) : (
+                    <span style={{ fontSize: '0.7rem', background: '#dbeafe', color: '#1e40af', padding: '2px 4px', borderRadius: '2px' }}>PTT</span>
+                )}
             </div>
         </div>
     </div>
@@ -414,9 +418,13 @@ const EventManager = () => {
                                     <div style={{ fontWeight: '500' }}>{event.title}</div>
                                     <small style={{ color: '#e63946', display: 'block', marginBottom: '0.25rem' }}>{event.gift?.name}</small>
                                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                        {event.source_url?.includes('blood.org.tw') && <span style={{ fontSize: '0.75rem', background: '#d1fae5', color: '#065f46', padding: '2px 6px', borderRadius: '4px' }}>官網</span>}
-                                        {event.source_url?.includes('ptt.cc') && <span style={{ fontSize: '0.75rem', background: '#dbeafe', color: '#1e40af', padding: '2px 6px', borderRadius: '4px' }}>PTT</span>}
-                                        {event.tags?.includes('手動上傳') && <span style={{ fontSize: '0.75rem', background: '#f3f4f6', color: '#374151', padding: '2px 6px', borderRadius: '4px' }}>人工上傳</span>}
+                                        {event.tags?.includes('手動上傳') ? (
+                                            <span style={{ fontSize: '0.75rem', background: '#f3f4f6', color: '#374151', padding: '2px 6px', borderRadius: '4px' }}>人工上傳</span>
+                                        ) : event.source_url?.includes('blood.org.tw') ? (
+                                            <span style={{ fontSize: '0.75rem', background: '#d1fae5', color: '#065f46', padding: '2px 6px', borderRadius: '4px' }}>官網</span>
+                                        ) : (
+                                            <span style={{ fontSize: '0.75rem', background: '#dbeafe', color: '#1e40af', padding: '2px 6px', borderRadius: '4px' }}>PTT</span>
+                                        )}
                                     </div>
                                 </td>
                                 <td style={{ padding: '1rem' }}>{event.location}</td>

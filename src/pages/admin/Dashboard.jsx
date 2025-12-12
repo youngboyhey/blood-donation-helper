@@ -4,7 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Calendar, MapPin, TrendingUp, Globe, RefreshCw, Clock, CheckCircle, XCircle } from 'lucide-react';
 
 const CITY_COLORS = ['#e63946', '#2a9d8f', '#e9c46a', '#264653', '#f4a261', '#a8dadc', '#457b9d', '#1d3557'];
-const SOURCE_COLORS = { '官網': '#e63946', 'PTT': '#1e40af', '人工上傳': '#457b9d', '其他': '#9ca3af' };
+const SOURCE_COLORS = { '官網': '#e63946', 'PTT': '#1e40af', '人工上傳': '#457b9d' };
 
 const Dashboard = () => {
     // State for time range
@@ -72,19 +72,18 @@ const Dashboard = () => {
             .sort((a, b) => b.value - a.value);
 
         // Source Stats
-        const sourceCount = { '官網': 0, 'PTT': 0, '人工上傳': 0, '其他': 0 };
+        const sourceCount = { '官網': 0, 'PTT': 0, '人工上傳': 0 };
         filteredEvents.forEach(ev => {
             const url = ev.source_url || ev.poster_url || '';
             const tag = ev.tags || [];
 
-            if (url.includes('blood.org.tw')) {
-                sourceCount['官網']++;
-            } else if (url.includes('ptt.cc')) {
-                sourceCount['PTT']++;
-            } else if (tag.includes('手動上傳')) { // Check tag first for manual upload (priority over url)
+            if (tag.includes('手動上傳')) {
                 sourceCount['人工上傳']++;
+            } else if (url.includes('blood.org.tw')) {
+                sourceCount['官網']++;
             } else {
-                sourceCount['其他']++;
+                // User confirmed everything else is PTT
+                sourceCount['PTT']++;
             }
         });
 

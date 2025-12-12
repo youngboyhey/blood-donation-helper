@@ -38,6 +38,7 @@ jobs:
           VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
           GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
         run: |
+          echo "VITE_GOOGLE_MAPS_API_KEY length: ${#VITE_GOOGLE_MAPS_API_KEY}"
           npm run build
           # Replace GA placeholder with actual tracking ID
           sed -i "s/%VITE_GA_TRACKING_ID%/$GA_TRACKING_ID/g" dist/index.html

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { APIProvider, Map, Marker, InfoWindow, Pin } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps';
 import { supabase } from '../lib/supabase';
 import styles from './MapPage.module.css';
 
@@ -140,26 +140,35 @@ const MapPage = () => {
                             defaultZoom={userLocation ? 12 : 8}
                             defaultCenter={mapCenter}
                             center={mapCenter}
+                            mapId="a636bb6553f3b8858c6b746d"
                             gestureHandling="greedy"
                             disableDefaultUI={false}
                             style={{ width: '100%', height: '100%' }}
                         >
                             {/* 使用者位置標記 */}
                             {userLocation && (
-                                <Marker
-                                    position={userLocation}
-                                    title="你的位置"
-                                />
+                                <AdvancedMarker position={userLocation}>
+                                    <div className={styles.userMarker}>📍</div>
+                                </AdvancedMarker>
                             )}
 
                             {/* 活動標記（按位置分組） */}
                             {Object.entries(groupedEvents).map(([key, group]) => (
-                                <Marker
+                                <AdvancedMarker
                                     key={key}
                                     position={{ lat: group.lat, lng: group.lng }}
                                     onClick={() => handleMarkerClick(key)}
-                                    title={`${group.events.length} 個活動`}
-                                />
+                                >
+                                    <div className={styles.eventMarker}>
+                                        <img src="/favicon.png" alt="marker" />
+                                        {/* 如果有多個活動，顯示數量 */}
+                                        {group.events.length > 1 && (
+                                            <span className={styles.markerBadge}>
+                                                {group.events.length}
+                                            </span>
+                                        )}
+                                    </div>
+                                </AdvancedMarker>
                             ))}
 
                             {/* InfoWindow */}

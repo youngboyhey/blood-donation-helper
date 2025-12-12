@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Save, Eye, CheckCircle, Loader2 } from 'lucide-react';
 
-const SEOSettings = () => {
+const SEOSettings = ({ isMobile }) => {
     const [seo, setSeo] = useState({
         title: '捐血小幫手 - 查詢捐血活動與贈品',
         description: '捐血小幫手 - 查詢全台捐血活動、地點與豐富贈品資訊。即時掌握最新捐血好康，一起熱血助人！',
@@ -63,7 +63,7 @@ const SEOSettings = () => {
         <div>
             <div style={{
                 background: 'white',
-                padding: '2rem',
+                padding: isMobile ? '1.5rem' : '2rem',
                 borderRadius: '16px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                 border: '1px solid #f0f0f0'
@@ -78,7 +78,7 @@ const SEOSettings = () => {
                         type="text"
                         value={seo.title}
                         onChange={(e) => setSeo({ ...seo, title: e.target.value })}
-                        style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '8px', fontSize: '1rem' }}
+                        style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box' }}
                     />
                     <small style={{ color: '#666' }}>建議 50-60 個字元。目前：{seo.title.length} 字元</small>
                 </div>
@@ -91,7 +91,7 @@ const SEOSettings = () => {
                         value={seo.description}
                         onChange={(e) => setSeo({ ...seo, description: e.target.value })}
                         rows={3}
-                        style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '8px', fontSize: '1rem', resize: 'vertical' }}
+                        style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '8px', fontSize: '1rem', resize: 'vertical', boxSizing: 'border-box' }}
                     />
                     <small style={{ color: '#666' }}>建議 150-160 個字元。目前：{seo.description.length} 字元</small>
                 </div>
@@ -104,7 +104,7 @@ const SEOSettings = () => {
                         type="text"
                         value={seo.keywords}
                         onChange={(e) => setSeo({ ...seo, keywords: e.target.value })}
-                        style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '8px', fontSize: '1rem' }}
+                        style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box' }}
                     />
                     <small style={{ color: '#666' }}>以逗號分隔</small>
                 </div>
@@ -118,11 +118,11 @@ const SEOSettings = () => {
                         value={seo.ogImage}
                         onChange={(e) => setSeo({ ...seo, ogImage: e.target.value })}
                         placeholder="https://example.com/og-image.jpg"
-                        style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '8px', fontSize: '1rem' }}
+                        style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box' }}
                     />
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '1rem', alignItems: isMobile ? 'stretch' : 'center' }}>
                     <button
                         onClick={handleSave}
                         disabled={saving}
@@ -134,6 +134,7 @@ const SEOSettings = () => {
                             borderRadius: '8px',
                             cursor: saving ? 'not-allowed' : 'pointer',
                             display: 'flex',
+                            justifyContent: 'center',
                             alignItems: 'center',
                             gap: '0.5rem',
                             fontSize: '1rem'
@@ -143,7 +144,7 @@ const SEOSettings = () => {
                         {saving ? '儲存中...' : '儲存變更'}
                     </button>
                     {saved && (
-                        <span style={{ color: '#2a9d8f', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        <span style={{ color: '#2a9d8f', display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', gap: '0.25rem' }}>
                             <CheckCircle size={16} /> 已儲存！下次部署時生效
                         </span>
                     )}
@@ -170,7 +171,7 @@ const SEOSettings = () => {
             <div style={{
                 marginTop: '1.5rem',
                 background: 'white',
-                padding: '2rem',
+                padding: isMobile ? '1.5rem' : '2rem',
                 borderRadius: '16px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                 border: '1px solid #f0f0f0'
@@ -178,7 +179,7 @@ const SEOSettings = () => {
                 <h3 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Eye size={18} /> Google 搜尋結果預覽
                 </h3>
-                <div style={{ padding: '1rem', border: '1px solid #ddd', borderRadius: '8px', fontFamily: 'Arial, sans-serif' }}>
+                <div style={{ padding: '1rem', border: '1px solid #ddd', borderRadius: '8px', fontFamily: 'Arial, sans-serif', wordWrap: 'break-word' }}>
                     <div style={{ color: '#1a0dab', fontSize: '18px', marginBottom: '4px' }}>
                         {seo.title}
                     </div>

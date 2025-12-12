@@ -6,7 +6,7 @@ import { Calendar, MapPin, TrendingUp, Globe, RefreshCw, Clock, CheckCircle, XCi
 const CITY_COLORS = ['#e63946', '#2a9d8f', '#e9c46a', '#264653', '#f4a261', '#a8dadc', '#457b9d', '#1d3557'];
 const SOURCE_COLORS = { '官網': '#e63946', 'PTT': '#1e40af', '人工上傳': '#457b9d' };
 
-const Dashboard = () => {
+const Dashboard = ({ isMobile }) => {
     // State for time range
     const [statsRange, setStatsRange] = useState('week'); // 'week' | 'all'
     const [loading, setLoading] = useState(true);
@@ -153,20 +153,49 @@ const Dashboard = () => {
     const topSource = stats.bySource.length > 0 ? stats.bySource.reduce((a, b) => a.value > b.value ? a : b).name : '無';
 
     return (
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '1rem' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: isMobile ? '0' : '1rem' }}>
             {/* Header with Toggle */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2 style={{ margin: 0, color: '#1f2937' }}>營運總覽</h2>
-                <div style={{ display: 'flex', background: '#f3f4f6', padding: '4px', borderRadius: '8px' }}>
+            <div style={{
+                display: 'flex',
+                flexDirection: isMobile ? 'column' : 'row',
+                justifyContent: 'space-between',
+                alignItems: isMobile ? 'flex-start' : 'center',
+                gap: isMobile ? '1rem' : '0',
+                marginBottom: '1.5rem'
+            }}>
+                <h2 style={{ margin: 0, color: '#1f2937', fontSize: isMobile ? '1.5rem' : '1.75rem' }}>營運總覽</h2>
+                <div style={{ display: 'flex', background: '#f3f4f6', padding: '4px', borderRadius: '8px', width: isMobile ? '100%' : 'auto' }}>
                     <button
                         onClick={() => setStatsRange('week')}
-                        style={{ padding: '0.5rem 1rem', borderRadius: '6px', border: 'none', background: statsRange === 'week' ? 'white' : 'transparent', color: statsRange === 'week' ? '#e63946' : '#6b7280', boxShadow: statsRange === 'week' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', fontWeight: '500' }}
+                        style={{
+                            flex: isMobile ? 1 : 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '6px',
+                            border: 'none',
+                            background: statsRange === 'week' ? 'white' : 'transparent',
+                            color: statsRange === 'week' ? '#e63946' : '#6b7280',
+                            boxShadow: statsRange === 'week' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                            cursor: 'pointer',
+                            fontWeight: '500',
+                            textAlign: 'center'
+                        }}
                     >
                         未來 7 天
                     </button>
                     <button
                         onClick={() => setStatsRange('all')}
-                        style={{ padding: '0.5rem 1rem', borderRadius: '6px', border: 'none', background: statsRange === 'all' ? 'white' : 'transparent', color: statsRange === 'all' ? '#e63946' : '#6b7280', boxShadow: statsRange === 'all' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', fontWeight: '500' }}
+                        style={{
+                            flex: isMobile ? 1 : 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '6px',
+                            border: 'none',
+                            background: statsRange === 'all' ? 'white' : 'transparent',
+                            color: statsRange === 'all' ? '#e63946' : '#6b7280',
+                            boxShadow: statsRange === 'all' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                            cursor: 'pointer',
+                            fontWeight: '500',
+                            textAlign: 'center'
+                        }}
                     >
                         全部活動
                     </button>
@@ -178,18 +207,23 @@ const Dashboard = () => {
                 background: crawlerStatus?.status === 'success' ? 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)' : '#fef3c7',
                 border: `1px solid ${crawlerStatus?.status === 'success' ? '#86efac' : '#fcd34d'}`,
                 borderRadius: '12px',
-                padding: '1rem 1.5rem',
+                padding: isMobile ? '1rem' : '1rem 1.5rem',
                 marginBottom: '1.5rem',
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: isMobile ? 'flex-start' : 'center',
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: isMobile ? '1rem' : '0',
                 justifyContent: 'space-between'
             }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    {crawlerStatus?.status === 'success' ? (
-                        <CheckCircle size={24} color="#22c55e" />
-                    ) : (
-                        <Clock size={24} color="#f59e0b" />
-                    )}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                    <div style={{ marginTop: '2px' }}>
+                        {crawlerStatus?.status === 'success' ? (
+                            <CheckCircle size={24} color="#22c55e" />
+                        ) : (
+                            <Clock size={24} color="#f59e0b" />
+                        )}
+                    </div>
+
                     <div>
                         <div style={{ fontWeight: '600', color: '#333' }}>
                             🕷️ 爬蟲狀態：{crawlerStatus ? '上次執行成功' : '尚未執行'}
@@ -207,7 +241,7 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </div>
-                <a href="https://github.com/youngboyhey/blood-donation-helper/actions" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.85rem', color: '#2563eb', textDecoration: 'none' }}>查看 Actions →</a>
+                <a href="https://github.com/youngboyhey/blood-donation-helper/actions" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.85rem', color: '#2563eb', textDecoration: 'none', alignSelf: isMobile ? 'flex-end' : 'auto' }}>查看 Actions →</a>
             </div>
 
             {/* Stats Cards */}
@@ -238,9 +272,9 @@ const Dashboard = () => {
             </div>
 
             {/* Charts Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
                 {/* Bar Chart */}
-                <div style={{ background: 'white', padding: '1.5rem', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                <div style={{ background: 'white', padding: isMobile ? '1rem' : '1.5rem', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                     <h3 style={{ margin: '0 0 1rem 0' }}>未來 7 天趨勢</h3>
                     <ResponsiveContainer width="100%" height={250}>
                         <BarChart data={stats.weeklyDistribution}>
@@ -254,7 +288,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* City Pie Chart */}
-                <div style={{ background: 'white', padding: '1.5rem', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                <div style={{ background: 'white', padding: isMobile ? '1rem' : '1.5rem', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                     <h3 style={{ margin: '0 0 1rem 0' }}>縣市分佈 ({stats.dateLabel})</h3>
                     <ResponsiveContainer width="100%" height={250}>
                         <PieChart>
@@ -270,7 +304,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Source Pie Chart */}
-                <div style={{ background: 'white', padding: '1.5rem', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                <div style={{ background: 'white', padding: isMobile ? '1rem' : '1.5rem', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                     <h3 style={{ margin: '0 0 1rem 0' }}>資料來源佔比 ({stats.dateLabel})</h3>
                     <ResponsiveContainer width="100%" height={250}>
                         <PieChart>

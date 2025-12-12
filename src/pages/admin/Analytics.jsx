@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ExternalLink, CheckCircle, XCircle, BarChart3 } from 'lucide-react';
 
-const Analytics = () => {
+const Analytics = ({ isMobile }) => {
     const [gaStatus, setGaStatus] = useState({ installed: false, trackingId: null });
 
     useEffect(() => {
@@ -42,7 +42,7 @@ const Analytics = () => {
             {/* Status Card */}
             <div style={{
                 background: 'white',
-                padding: '2rem',
+                padding: isMobile ? '1.5rem' : '2rem',
                 borderRadius: '16px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                 border: '1px solid #f0f0f0',
@@ -55,7 +55,8 @@ const Analytics = () => {
 
                 <div style={{
                     display: 'flex',
-                    alignItems: 'center',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    alignItems: isMobile ? 'flex-start' : 'center',
                     gap: '1rem',
                     padding: '1.5rem',
                     background: gaStatus.installed ? '#f0fdf4' : '#fef2f2',
@@ -75,7 +76,7 @@ const Analytics = () => {
                         }}>
                             {gaStatus.installed ? '✓ GA 追蹤已啟用' : '✗ GA 追蹤未啟用'}
                         </div>
-                        <div style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem' }}>
+                        <div style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem', wordBreak: 'break-all' }}>
                             {gaStatus.trackingId
                                 ? `追蹤代碼: ${gaStatus.trackingId}`
                                 : '請在 GitHub Secrets 中設定 GA_TRACKING_ID 並重新部署'
@@ -88,7 +89,7 @@ const Analytics = () => {
             {/* GA Link Card */}
             <div style={{
                 background: 'white',
-                padding: '2rem',
+                padding: isMobile ? '1.5rem' : '2rem',
                 borderRadius: '16px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                 border: '1px solid #f0f0f0'
@@ -103,6 +104,8 @@ const Analytics = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
+                        width: isMobile ? '100%' : 'auto',
+                        justifyContent: 'center',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.5rem',
@@ -114,7 +117,8 @@ const Analytics = () => {
                         fontWeight: '600',
                         fontSize: '1rem',
                         boxShadow: '0 4px 12px rgba(66, 133, 244, 0.3)',
-                        transition: 'transform 0.2s ease'
+                        transition: 'transform 0.2s ease',
+                        boxSizing: 'border-box'
                     }}
                 >
                     <ExternalLink size={20} />

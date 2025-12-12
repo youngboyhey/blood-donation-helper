@@ -1,20 +1,40 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import EventList from '../components/EventList';
 import { supabase } from '../lib/supabase';
 import styles from './Home.module.css';
 import Modal from '../components/Modal';
 
+// Haversine 公式計算兩點間距離 (km)
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+
 const Home = () => {
+    const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedDistrict, setSelectedDistrict] = useState('');
-    const [selectedDate, setSelectedDate] = useState(''); // Date filter
+    const [selectedDate, setSelectedDate] = useState('');
     const [events, setEvents] = useState([]);
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    // 距離排序相關
+    const [userLocation, setUserLocation] = useState(null);
+    const [sortByDistance, setSortByDistance] = useState(false);
+    const [locationLoading, setLocationLoading] = useState(false);
 
     useEffect(() => {
         fetchEvents();
@@ -112,7 +132,7 @@ const Home = () => {
     // 3. Final Filtered Events (for the list)
     // This is the intersection of ALL filters
     useEffect(() => {
-        const results = events.filter(event => {
+        let results = events.filter(event => {
             const matchesSearch = filterBySearch(event);
             const matchesCity = selectedCity ? event.city === selectedCity : true;
             const matchesDistrict = selectedDistrict ? event.district === selectedDistrict : true;
@@ -121,11 +141,60 @@ const Home = () => {
             return matchesSearch && matchesCity && matchesDistrict && matchesDate;
         });
 
-        // 依照日期排序：由近到遠
-        results.sort((a, b) => new Date(a.date) - new Date(b.date));
+        // 排序邏輯
+        if (sortByDistance && userLocation) {
+            // 依距離排序（有經緯度的優先顯示）
+            results = results.map(event => ({
+                ...event,
+                distance: event.latitude && event.longitude
+                    ? getDistanceFromLatLonInKm(userLocation.lat, userLocation.lng, event.latitude, event.longitude)
+                    : Infinity
+            }));
+            results.sort((a, b) => a.distance - b.distance);
+        } else {
+            // 依照日期排序：由近到遠
+            results.sort((a, b) => new Date(a.date) - new Date(b.date));
+        }
 
         setFilteredEvents(results);
-    }, [searchTerm, selectedCity, selectedDistrict, selectedDate, events]);
+    }, [searchTerm, selectedCity, selectedDistrict, selectedDate, events, sortByDistance, userLocation]);
+
+    // 取得使用者位置並啟用距離排序
+    const handleSortByDistance = () => {
+        if (sortByDistance) {
+            // 關閉距離排序
+            setSortByDistance(false);
+            return;
+        }
+
+        if (userLocation) {
+            // 已有位置，直接啟用
+            setSortByDistance(true);
+            return;
+        }
+
+        // 取得位置
+        setLocationLoading(true);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setUserLocation({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    });
+                    setSortByDistance(true);
+                    setLocationLoading(false);
+                },
+                (error) => {
+                    alert('無法取得您的位置，請確認已授權位置存取。');
+                    setLocationLoading(false);
+                }
+            );
+        } else {
+            alert('您的瀏覽器不支援定位功能。');
+            setLocationLoading(false);
+        }
+    };
 
     return (
         <div className={styles.container}>
@@ -253,7 +322,25 @@ const Home = () => {
 
             <main className={styles.main}>
                 <div className={styles.listHeader}>
-                    <span className={styles.count}>共 {filteredEvents.length} 場活動</span>
+                    <div className={styles.actionButtons}>
+                        <button
+                            className={`${styles.actionButton} ${sortByDistance ? styles.actionButtonActive : ''}`}
+                            onClick={handleSortByDistance}
+                            disabled={locationLoading}
+                        >
+                            {locationLoading ? '定位中...' : (sortByDistance ? '📍 依距離排序中' : '📍 依距離排序')}
+                        </button>
+                        <button
+                            className={styles.actionButton}
+                            onClick={() => navigate('/map')}
+                        >
+                            🗺️ 查看地圖
+                        </button>
+                    </div>
+                    <span className={styles.count}>
+                        共 {filteredEvents.length} 場活動
+                        {sortByDistance && userLocation && ' (依距離排序)'}
+                    </span>
                 </div>
                 <EventList events={filteredEvents} onEventClick={setSelectedEvent} />
             </main>

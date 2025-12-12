@@ -67,10 +67,51 @@
 
 .listHeader {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: var(--spacing-2);
     padding-bottom: var(--spacing-2);
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+}
+
+.actionButtons {
+    display: flex;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+}
+
+.actionButton {
+    padding: 0.5rem 0.75rem;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.actionButton:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.actionButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.actionButtonActive {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%);
+    color: white;
+    border-color: transparent;
+}
+
+.actionButtonActive:hover {
+    color: white;
 }
 
 .count {

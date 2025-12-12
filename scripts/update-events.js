@@ -141,6 +141,50 @@ function extractDistrict(location) {
     return districtMatch ? districtMatch[1] : null;
 }
 
+// Google Maps Geocoding API - 將地址轉換為經緯度
+const GOOGLE_MAPS_API_KEY = process.env.VITE_GOOGLE_MAPS_API_KEY;
+
+async function geocodeAddress(city, district, location) {
+    if (!GOOGLE_MAPS_API_KEY) {
+        console.log('[Geocode] 未設定 GOOGLE_MAPS_API_KEY，跳過經緯度轉換');
+        return null;
+    }
+
+    // 組合完整地址
+    const parts = [];
+    if (city) parts.push(city);
+    if (district) parts.push(district);
+    if (location) parts.push(location);
+    const fullAddress = parts.join('');
+
+    if (!fullAddress) return null;
+
+    try {
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(fullAddress)}&key=${GOOGLE_MAPS_API_KEY}&language=zh-TW&region=tw`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.status === 'OK' && data.results.length > 0) {
+            const coords = data.results[0].geometry.location;
+            console.log(`[Geocode] ${fullAddress} -> ${coords.lat}, ${coords.lng}`);
+            return {
+                latitude: coords.lat,
+                longitude: coords.lng
+            };
+        } else if (data.status === 'ZERO_RESULTS') {
+            console.log(`[Geocode] 找不到地址: ${fullAddress}`);
+            return null;
+        } else {
+            console.log(`[Geocode] API 錯誤: ${data.status}`);
+            return null;
+        }
+    } catch (error) {
+        console.error(`[Geocode] 請求失敗: ${error.message}`);
+        return null;
+    }
+}
+
 // Load Cookies from ENV or File
 async function loadCookies() {
     // 1. Try ENV
@@ -1101,16 +1145,25 @@ async function updateEvents() {
                         continue;
                     }
 
+                    // 取得經緯度（用於地圖功能）
+                    const finalDistrict = evt.district || extractDistrict(evt.location);
+                    const finalLocation = evt.address ? `${evt.location} (${evt.address})` : evt.location;
+                    const coords = await geocodeAddress(validatedCity, finalDistrict, finalLocation);
+
                     const finalEvent = {
                         // ...evt, // 不要直接展開 evt，避免包含 address 等無效欄位
                         title: evt.title,
                         date: evt.date,
                         time: evt.time || `${evt.time_start}-${evt.time_end}`, // 相容舊欄位 time
-                        location: evt.address ? `${evt.location} (${evt.address})` : evt.location, // 將地址合併到地點
+                        location: finalLocation,
                         city: validatedCity,
-                        district: evt.district || extractDistrict(evt.location),
+                        district: finalDistrict,
                         organizer: evt.organizer,
                         gift: evt.gift,
+
+                        // 經緯度（地圖功能）
+                        latitude: coords?.latitude || null,
+                        longitude: coords?.longitude || null,
 
                         poster_url: storageUrl,
                         original_image_url: item.url,

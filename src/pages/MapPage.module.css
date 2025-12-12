@@ -1,0 +1,195 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-background);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+}
+
+.backButton {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--color-text-main);
+    transition: all 0.2s ease;
+}
+
+.backButton:hover {
+    background: var(--color-background);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.title {
+    flex: 1;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.count {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.mapContainer {
+    flex: 1;
+    position: relative;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+}
+
+.error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    padding: 2rem;
+}
+
+.error h2 {
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+}
+
+.error p {
+    color: var(--color-text-secondary);
+}
+
+/* Marker Styles */
+.userMarker {
+    font-size: 24px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.eventMarker {
+    width: 36px;
+    height: 36px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.eventMarker:hover {
+    transform: scale(1.2);
+}
+
+.eventMarker img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* InfoWindow Styles */
+.infoWindow {
+    max-width: 280px;
+    padding: 0.5rem;
+}
+
+.infoWindow h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: var(--color-text-main);
+    line-height: 1.3;
+}
+
+.infoDate {
+    margin: 0.3rem 0;
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.infoLocation {
+    margin: 0.3rem 0;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+.infoLocationDetail {
+    margin: 0.3rem 0;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    opacity: 0.8;
+}
+
+.infoGift {
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+    color: #2a9d8f;
+    font-weight: 500;
+}
+
+.infoActions {
+    margin-top: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.navigateButton {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.navigateButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 0.75rem;
+    }
+
+    .title {
+        font-size: 1.1rem;
+    }
+
+    .eventMarker {
+        width: 32px;
+        height: 32px;
+    }
+
+    .eventMarker img {
+        width: 20px;
+        height: 20px;
+    }
+}

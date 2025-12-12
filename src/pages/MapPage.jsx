@@ -135,7 +135,7 @@ const MapPage = () => {
                 {loading ? (
                     <div className={styles.loading}>載入中...</div>
                 ) : (
-                    <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>
+                    <APIProvider apiKey={GOOGLE_MAPS_API_KEY} onLoad={() => console.log('Google Maps API loaded')}>
                         <Map
                             defaultZoom={userLocation ? 12 : 8}
                             defaultCenter={mapCenter}
@@ -144,6 +144,7 @@ const MapPage = () => {
                             gestureHandling="greedy"
                             disableDefaultUI={false}
                             style={{ width: '100%', height: '100%' }}
+                            onTilesLoaded={() => console.log('Map tiles loaded')}
                         >
                             {/* 使用者位置標記 */}
                             {userLocation && (

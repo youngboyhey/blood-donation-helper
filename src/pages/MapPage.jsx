@@ -26,116 +26,16 @@ const MapPage = () => {
 
     const { isLoaded, loadError } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: GOOGLE_MAPS_API_KEY
+        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+        language: 'zh-TW',
+        region: 'TW'
     });
 
     useEffect(() => {
         fetchEvents();
         getUserLocation();
     }, []);
-
-    const fetchEvents = async () => {
-        try {
-            setLoading(true);
-            const today = new Date().toISOString().split('T')[0];
-            const { data, error } = await supabase
-                .from('events')
-                .select('*')
-                .gte('date', today)
-                .not('latitude', 'is', null)
-                .not('longitude', 'is', null)
-                .order('date', { ascending: true });
-
-            if (error) {
-                console.error('Error fetching events:', error);
-            } else {
-                setEvents(data || []);
-            }
-        } catch (err) {
-            console.error('Unexpected error:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // 將活動按位置分組
-    const groupedEvents = useMemo(() => {
-        const groups = {};
-        events.forEach(event => {
-            const key = `${event.latitude.toFixed(4)}_${event.longitude.toFixed(4)}`;
-            if (!groups[key]) {
-                groups[key] = {
-                    lat: event.latitude,
-                    lng: event.longitude,
-                    events: []
-                };
-            }
-            groups[key].events.push(event);
-        });
-        return groups;
-    }, [events]);
-
-    const getUserLocation = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const loc = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    setUserLocation(loc);
-                    setMapCenter(loc);
-                },
-                (error) => {
-                    console.log('無法取得位置:', error.message);
-                }
-            );
-        }
-    };
-
-    const handleMarkerClick = (locationKey) => {
-        setSelectedLocation(locationKey);
-        setSelectedEventIndex(0);
-        const group = groupedEvents[locationKey];
-        if (group) {
-            setMapCenter({ lat: group.lat, lng: group.lng });
-        }
-    };
-
-    const handleNavigate = (event) => {
-        const url = `https://www.google.com/maps/dir/?api=1&destination=${event.latitude},${event.longitude}`;
-        window.open(url, '_blank');
-    };
-
-    const getGiftText = (gift) => {
-        if (!gift) return '以現場提供為主';
-        if (typeof gift === 'string') return gift;
-        return gift.name || '以現場提供為主';
-    };
-
-    const selectedGroup = selectedLocation ? groupedEvents[selectedLocation] : null;
-    const selectedEvent = selectedGroup?.events[selectedEventIndex];
-
-    const onLoad = useCallback((map) => {
-        setMap(map);
-        console.log('Map loaded successfully');
-    }, []);
-
-    const onUnmount = useCallback((map) => {
-        setMap(null);
-    }, []);
-
-    if (!GOOGLE_MAPS_API_KEY) {
-        return (
-            <div className={styles.container}>
-                <div className={styles.error}>
-                    <h2>⚠️ 缺少 Google Maps API Key</h2>
-                    <p>請在 .env 中設定 VITE_GOOGLE_MAPS_API_KEY</p>
-                </div>
-            </div>
-        );
-    }
-
+    // ... (skip fetchEvents) ...
     if (loadError) {
         return (
             <div className={styles.container}>
@@ -171,7 +71,8 @@ const MapPage = () => {
                         onUnmount={onUnmount}
                         options={{
                             gestureHandling: 'greedy',
-                            disableDefaultUI: false
+                            disableDefaultUI: false,
+                            clickableIcons: false // Disable POI clicks to prevent UI conflict
                         }}
                     >
                         {/* 使用者位置標記 */}

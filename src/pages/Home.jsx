@@ -53,11 +53,18 @@ const Home = () => {
     const filterBySearch = (event) => {
         if (!searchTerm) return true;
         const term = searchTerm.toLowerCase();
+
+        // gift 可能是字串或物件，需要同時處理
+        const giftText = typeof event.gift === 'string'
+            ? event.gift
+            : (event.gift?.name || '');
+
         return (
             event.title?.toLowerCase().includes(term) ||
             event.location?.toLowerCase().includes(term) ||
-            event.gift?.name?.toLowerCase().includes(term) ||
-            event.tags?.some(tag => tag.toLowerCase().includes(term))
+            event.organizer?.toLowerCase().includes(term) ||
+            giftText?.toLowerCase().includes(term) ||
+            event.tags?.some(tag => tag?.toLowerCase().includes(term))
         );
     };
 

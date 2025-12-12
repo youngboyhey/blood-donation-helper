@@ -160,7 +160,7 @@ const MapPage = () => {
                                     onClick={() => handleMarkerClick(key)}
                                 >
                                     <div className={styles.eventMarker}>
-                                        <img src="/favicon.png" alt="marker" />
+                                        <img src={`${import.meta.env.BASE_URL}favicon.png`} alt="marker" />
                                         {/* 如果有多個活動，顯示數量 */}
                                         {group.events.length > 1 && (
                                             <span className={styles.markerBadge}>

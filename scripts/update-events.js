@@ -819,8 +819,9 @@ async function uploadImageToStorage(supabase, imageUrl) {
             return null;
         }
 
-        // 使用圖片內容的 hash 作為檔名（而非 URL），確保唯一性且無非法字元
-        const contentHash = crypto.createHash('md5').update(buffer).digest('hex');
+        // 使用圖片內容的 SHA-256 hash 作為檔名（與 Admin 前端一致），確保唯一性且無非法字元
+        // 截取前 32 字元以與瀏覽器端 SHA-256 實作保持一致
+        const contentHash = crypto.createHash('sha256').update(buffer).digest('hex').substring(0, 32);
         const filename = `${contentHash}.${ext}`;
 
         console.log(`[Upload] 上傳檔案: ${filename}`);

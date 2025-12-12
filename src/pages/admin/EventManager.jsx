@@ -78,7 +78,7 @@ const EventCard = ({ event, onDelete }) => (
     </div>
 );
 
-const EventManager = () => {
+const EventManager = ({ isMobile }) => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -93,14 +93,8 @@ const EventManager = () => {
     const [pendingImageUrl, setPendingImageUrl] = useState(null);
     const [pendingFileName, setPendingFileName] = useState("");
 
-    // RWD State
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
     useEffect(() => {
         fetchEvents();
-        const handleResize = () => setIsMobile(window.innerWidth < 768);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     const fetchEvents = async () => {
@@ -391,55 +385,65 @@ const EventManager = () => {
 
             {/* Event List */}
             <h3>現有活動列表 ({events.length})</h3>
-            <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead style={{ background: '#f1f1f1' }}>
-                        <tr>
-                            <th style={{ padding: '1rem', textAlign: 'left', width: '80px', whiteSpace: 'nowrap' }}>圖片</th>
-                            <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>日期</th>
-                            <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>活動名稱/來源</th>
-                            <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>地點</th>
-                            <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>縣市</th>
-                            <th style={{ padding: '1rem', textAlign: 'center', whiteSpace: 'nowrap' }}>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {events.map(event => (
-                            <tr key={event.id} style={{ borderBottom: '1px solid #eee' }}>
-                                <td style={{ padding: '1rem' }}>
-                                    {event.poster_url && (
-                                        <div style={{ width: '60px', height: '80px', borderRadius: '4px', overflow: 'hidden', cursor: 'zoom-in', background: '#eee' }} onClick={() => setExpandedImage(event.poster_url)}>
-                                            <img src={event.poster_url} alt="poster" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        </div>
-                                    )}
-                                </td>
-                                <td style={{ padding: '1rem', whiteSpace: 'nowrap' }}>{event.date} <br /> <small style={{ color: '#666' }}>{event.time}</small></td>
-                                <td style={{ padding: '1rem', maxWidth: '300px' }}>
-                                    <div style={{ fontWeight: '500' }}>{event.title}</div>
-                                    <small style={{ color: '#e63946', display: 'block', marginBottom: '0.25rem' }}>{event.gift?.name}</small>
-                                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                        {event.tags?.includes('手動上傳') ? (
-                                            <span style={{ fontSize: '0.75rem', background: '#f3f4f6', color: '#374151', padding: '2px 6px', borderRadius: '4px' }}>人工上傳</span>
-                                        ) : event.source_url?.includes('blood.org.tw') ? (
-                                            <span style={{ fontSize: '0.75rem', background: '#d1fae5', color: '#065f46', padding: '2px 6px', borderRadius: '4px' }}>官網</span>
-                                        ) : (
-                                            <span style={{ fontSize: '0.75rem', background: '#dbeafe', color: '#1e40af', padding: '2px 6px', borderRadius: '4px' }}>PTT</span>
-                                        )}
-                                    </div>
-                                </td>
-                                <td style={{ padding: '1rem' }}>{event.location}</td>
-                                <td style={{ padding: '1rem', whiteSpace: 'nowrap' }}>{event.city}</td>
-                                <td style={{ padding: '1rem', textAlign: 'center', whiteSpace: 'nowrap' }}>
-                                    <button onClick={() => handleDelete(event.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#e63946' }}>
-                                        <Trash2 size={18} />
-                                    </button>
-                                </td>
+
+            {isMobile ? (
+                <div style={{ marginTop: '1rem' }}>
+                    {events.map(event => (
+                        <EventCard key={event.id} event={event} onDelete={handleDelete} />
+                    ))}
+                    {events.length === 0 && <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>目前沒有活動資料</div>}
+                </div>
+            ) : (
+                <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', overflow: 'hidden' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead style={{ background: '#f1f1f1' }}>
+                            <tr>
+                                <th style={{ padding: '1rem', textAlign: 'left', width: '80px', whiteSpace: 'nowrap' }}>圖片</th>
+                                <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>日期</th>
+                                <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>活動名稱/來源</th>
+                                <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>地點</th>
+                                <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>縣市</th>
+                                <th style={{ padding: '1rem', textAlign: 'center', whiteSpace: 'nowrap' }}>操作</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {events.length === 0 && <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>目前沒有活動資料</div>}
-            </div>
+                        </thead>
+                        <tbody>
+                            {events.map(event => (
+                                <tr key={event.id} style={{ borderBottom: '1px solid #eee' }}>
+                                    <td style={{ padding: '1rem' }}>
+                                        {event.poster_url && (
+                                            <div style={{ width: '60px', height: '80px', borderRadius: '4px', overflow: 'hidden', cursor: 'zoom-in', background: '#eee' }} onClick={() => setExpandedImage(event.poster_url)}>
+                                                <img src={event.poster_url} alt="poster" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            </div>
+                                        )}
+                                    </td>
+                                    <td style={{ padding: '1rem', whiteSpace: 'nowrap' }}>{event.date} <br /> <small style={{ color: '#666' }}>{event.time}</small></td>
+                                    <td style={{ padding: '1rem', maxWidth: '300px' }}>
+                                        <div style={{ fontWeight: '500' }}>{event.title}</div>
+                                        <small style={{ color: '#e63946', display: 'block', marginBottom: '0.25rem' }}>{event.gift?.name}</small>
+                                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                            {event.tags?.includes('手動上傳') ? (
+                                                <span style={{ fontSize: '0.75rem', background: '#f3f4f6', color: '#374151', padding: '2px 6px', borderRadius: '4px' }}>人工上傳</span>
+                                            ) : event.source_url?.includes('blood.org.tw') ? (
+                                                <span style={{ fontSize: '0.75rem', background: '#d1fae5', color: '#065f46', padding: '2px 6px', borderRadius: '4px' }}>官網</span>
+                                            ) : (
+                                                <span style={{ fontSize: '0.75rem', background: '#dbeafe', color: '#1e40af', padding: '2px 6px', borderRadius: '4px' }}>PTT</span>
+                                            )}
+                                        </div>
+                                    </td>
+                                    <td style={{ padding: '1rem' }}>{event.location}</td>
+                                    <td style={{ padding: '1rem', whiteSpace: 'nowrap' }}>{event.city}</td>
+                                    <td style={{ padding: '1rem', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                                        <button onClick={() => handleDelete(event.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#e63946' }}>
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    {events.length === 0 && <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>目前沒有活動資料</div>}
+                </div>
+            )}
 
             {/* Lightbox */}
             {expandedImage && (

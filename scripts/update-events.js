@@ -910,6 +910,94 @@ function calculateEventScore(evt) {
     return score;
 }
 
+// 模糊去重清理函式
+async function cleanupExistingDuplicates(supabase) {
+    console.log('[Cleanup] Scan and remove existing duplicates in DB...');
+    const today = new Date().toISOString().split('T')[0];
+    const { data: events, error } = await supabase
+        .from('events')
+        .select('*')
+        .gte('date', today);
+
+    if (error) {
+        console.error('[Cleanup] Fetch failed:', error.message);
+        return;
+    }
+
+    const eventsToDelete = [];
+    const groupedByTitle = new Map();
+
+    // 1. Group by Title Key First
+    for (const evt of events) {
+        const titleKey = `${evt.date}_${normalizeText(evt.city)}_${normalizeText(evt.title)}`;
+        if (!groupedByTitle.has(titleKey)) {
+            groupedByTitle.set(titleKey, []);
+        }
+        groupedByTitle.get(titleKey).push(evt);
+    }
+
+    // 2. Intra-group Fuzzy Location Match
+    for (const [key, candidates] of groupedByTitle) {
+        if (candidates.length < 2) continue;
+
+        const locationClusters = [];
+        for (const candidate of candidates) {
+            let placed = false;
+            const normLoc = normalizeText(candidate.location);
+
+            for (const cluster of locationClusters) {
+                const repLoc = normalizeText(cluster[0].location);
+                // logic: either contains other
+                if (normLoc.includes(repLoc) || repLoc.includes(normLoc)) {
+                    cluster.push(candidate);
+                    placed = true;
+                    break;
+                }
+            }
+            if (!placed) locationClusters.push([candidate]);
+        }
+
+        // 3. Mark Losers for Deletion
+        for (const cluster of locationClusters) {
+            if (cluster.length > 1) {
+                // Calculate scores
+                cluster.forEach(e => e._score = calculateEventScore(e));
+                // Sort: Highest Score First, then Created At Ascending (keep older ID to preserve stable URLs/Refs if redundant)
+                // Actually keep Newest created is usually better parsed? No, oldest ID is better for SEO stability.
+                // Let's stick to Score -> ID (Ascending = Oldest).
+                cluster.sort((a, b) => {
+                    if (b._score !== a._score) return b._score - a._score;
+                    return a.id - b.id; // Keep smaller ID (older)
+                });
+
+                const winner = cluster[0];
+                const losers = cluster.slice(1);
+
+                console.log(`[Cleanup] Duplicate Found: ${winner.date} ${winner.title}`);
+                console.log(`   KEEP (ID:${winner.id}): ${winner.location}`);
+                for (const loser of losers) {
+                    console.log(`   DEL  (ID:${loser.id}): ${loser.location}`);
+                    eventsToDelete.push(loser.id);
+                }
+            }
+        }
+    }
+
+    // 4. Batch Delete
+    if (eventsToDelete.length > 0) {
+        console.log(`[Cleanup] Deleting ${eventsToDelete.length} duplicates...`);
+        // Batch delete in chunks of 50
+        for (let i = 0; i < eventsToDelete.length; i += 50) {
+            const batch = eventsToDelete.slice(i, i + 50);
+            const { error: delError } = await supabase.from('events').delete().in('id', batch);
+            if (delError) console.error('[Cleanup] Delete failed:', delError.message);
+        }
+        console.log('[Cleanup] ✓ Deletion complete.');
+    } else {
+        console.log('[Cleanup] No duplicates found.');
+    }
+}
+
 async function updateEvents() {
     let supabase;
     try {
@@ -944,6 +1032,11 @@ async function updateEvents() {
     } catch (e) {
         console.warn(`[Init] Supabase Init Failed: ${e.message}`);
         return;
+    }
+
+    // --- Cleanup Existing Duplicates First ---
+    if (supabase) {
+        await cleanupExistingDuplicates(supabase);
     }
 
     // Use Taiwan Timezone (UTC+8) for date calculation

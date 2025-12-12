@@ -45,12 +45,40 @@ const EventManager = () => {
         setUploading(true);
         setStatusMessage("正在上傳圖片至 Supabase...");
         try {
-            const fileName = `${Date.now()}_${file.name}`;
-            const { data, error } = await supabase.storage.from('posters').upload(fileName, file);
+            // 讀取檔案內容並計算 MD5 hash
+            const arrayBuffer = await file.arrayBuffer();
+            const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-            if (error) throw error;
+            // 取得副檔名
+            const ext = file.name.split('.').pop().toLowerCase() || 'jpg';
+            const validExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            const finalExt = validExts.includes(ext) ? ext : 'jpg';
 
-            const { data: { publicUrl } } = supabase.storage.from('posters').getPublicUrl(fileName);
+            // 使用 hash 作為檔名（與爬蟲邏輯一致）
+            const fileName = `${hashHex.substring(0, 32)}.${finalExt}`;
+
+            // 檢查是否已存在相同 hash 的檔案
+            const { data: existingUrl } = supabase.storage.from('posters').getPublicUrl(fileName);
+
+            // 嘗試上傳（如果已存在會失敗，但我們可以使用現有的 URL）
+            const { data, error } = await supabase.storage.from('posters').upload(fileName, file, {
+                upsert: false // 不覆蓋現有檔案
+            });
+
+            let publicUrl;
+            if (error && error.message.includes('already exists')) {
+                // 檔案已存在，使用現有 URL
+                console.log('檔案已存在，使用現有 URL');
+                publicUrl = existingUrl.publicUrl;
+            } else if (error) {
+                throw error;
+            } else {
+                const { data: { publicUrl: newUrl } } = supabase.storage.from('posters').getPublicUrl(fileName);
+                publicUrl = newUrl;
+            }
+
             console.log('Uploaded:', publicUrl);
 
             setUploading(false);
@@ -116,12 +144,34 @@ const EventManager = () => {
             district: candidate.district,
             organizer: candidate.organizer,
             gift: candidate.gift,
-            tags: candidate.tags,
+            tags: candidate.tags || ['手動上傳'],
             poster_url: candidate.poster_url,
-            source_url: candidate.poster_url
+            original_image_url: candidate.poster_url, // 用於去重追蹤
+            source_url: candidate.poster_url,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
         };
 
-        // Check for duplicate
+        // 1. 檢查圖片去重（基於 poster_url / 圖片內容 hash）
+        const { data: posterDuplicates } = await supabase
+            .from('events')
+            .select('id, title, date, location')
+            .eq('poster_url', candidate.poster_url);
+
+        if (posterDuplicates && posterDuplicates.length > 0) {
+            const dupInfo = posterDuplicates.map(d => `• ${d.title} @ ${d.location} (${d.date})`).join('\n');
+            const action = window.confirm(
+                `⚠️ 發現相同圖片的活動已存在：\n\n${dupInfo}\n\n點擊「確定」覆蓋現有活動，點擊「取消」放棄儲存。`
+            );
+
+            if (!action) return;
+
+            for (const dup of posterDuplicates) {
+                await supabase.from('events').delete().eq('id', dup.id);
+            }
+        }
+
+        // 2. 檢查日期+地點去重
         const { data: existingEvents } = await supabase
             .from('events')
             .select('id, title, date, location, city')
@@ -136,7 +186,7 @@ const EventManager = () => {
         if (duplicates.length > 0) {
             const dupInfo = duplicates.map(d => `• ${d.title} @ ${d.location}`).join('\n');
             const action = window.confirm(
-                `⚠️ 發現可能重複的活動：\n\n${dupInfo}\n\n日期: ${candidate.date}\n地點: ${candidate.location}\n\n點擊「確定」覆蓋現有活動，點擊「取消」放棄儲存。`
+                `⚠️ 發現可能重複的活動（日期+地點相似）：\n\n${dupInfo}\n\n日期: ${candidate.date}\n地點: ${candidate.location}\n\n點擊「確定」覆蓋現有活動，點擊「取消」放棄儲存。`
             );
 
             if (!action) return;

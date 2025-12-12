@@ -11,7 +11,7 @@ const TAIWAN_CENTER = { lat: 23.973875, lng: 120.982024 };
 
 const containerStyle = {
     width: '100%',
-    height: '100%'
+    height: 'calc(100vh - 60px)'
 };
 
 const MapPage = () => {

@@ -192,6 +192,10 @@ const MapPage = () => {
                                 position={{ lat: group.lat, lng: group.lng }}
                                 onClick={() => handleMarkerClick(key)}
                                 title={`${group.events.length} 個活動`}
+                                icon={{
+                                    url: `${import.meta.env.BASE_URL}favicon.png`,
+                                    scaledSize: { width: 40, height: 40 }
+                                }}
                             />
                         ))}
 

@@ -159,10 +159,13 @@ const MapPage = () => {
                         zoom={userLocation ? 12 : 8}
                         onLoad={onLoad}
                         onUnmount={onUnmount}
+                        onClick={() => setSelectedLocation(null)} // 點擊地圖空白處關閉視窗
                         options={{
                             gestureHandling: 'greedy',
                             disableDefaultUI: false,
-                            clickableIcons: false // Disable POI clicks to prevent UI conflict
+                            mapTypeControl: false,    // 移除地圖/衛星切換
+                            streetViewControl: false, // 移除街景小人
+                            clickableIcons: false     // 停用 POI 點擊
                         }}
                     >
                         {/* 使用者位置標記 */}

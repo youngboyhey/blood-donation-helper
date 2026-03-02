@@ -26,7 +26,7 @@ const HomeClient = ({ initialEvents }) => {
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedDistrict, setSelectedDistrict] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
-    const [events] = useState(initialEvents || []);
+    const [events, setEvents] = useState(initialEvents || []);
     const [filteredEvents, setFilteredEvents] = useState(initialEvents || []);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -35,6 +35,30 @@ const HomeClient = ({ initialEvents }) => {
     const [userLocation, setUserLocation] = useState(null);
     const [sortByDistance, setSortByDistance] = useState(false);
     const [locationLoading, setLocationLoading] = useState(false);
+
+    // Client-side fallback：若 SSR 沒拿到資料，在 client 端補抓
+    useEffect(() => {
+        if (events.length === 0) {
+            const fetchFromClient = async () => {
+                try {
+                    const { supabase } = await import('../lib/supabase');
+                    const today = new Date().toISOString().split('T')[0];
+                    const { data } = await supabase
+                        .from('events')
+                        .select('*')
+                        .gte('date', today)
+                        .order('date', { ascending: true });
+                    if (data && data.length > 0) {
+                        setEvents(data);
+                        setFilteredEvents(data);
+                    }
+                } catch (err) {
+                    console.error('Client-side fetch failed:', err);
+                }
+            };
+            fetchFromClient();
+        }
+    }, []);
 
     // 台灣縣市標準排序
     const CITY_ORDER = [

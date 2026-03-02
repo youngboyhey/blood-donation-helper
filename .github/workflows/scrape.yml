@@ -1,23 +1,16 @@
 name: Scrape and Update Data
 
 on:
-  push:
-    branches: [ "main" ]
   schedule:
     - cron: '0 1 * * 3,5' # 每週三、週五凌晨 1 點執行 (UTC) -> 台灣時間早上 9 點
   workflow_dispatch: # 允許手動觸發
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
-  scrape-and-deploy:
+  scrape:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Puppeteer
+        run: npx puppeteer browsers install chrome
+
       - name: Run Scraper Script
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -41,26 +37,4 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
         run: node scripts/update-events.js
-
-      - name: Build
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
-          GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
-        run: |
-          npm run build
-          sed -i "s/__GA_TRACKING_ID__/$GA_TRACKING_ID/g" dist/index.html
-          node scripts/apply-seo.js
-          cp public/404.html dist/404.html
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
+        # 部署由 Vercel 自動處理，不需要在此 build

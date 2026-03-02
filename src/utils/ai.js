@@ -5,7 +5,7 @@ const API_KEYS_STR = import.meta.env.VITE_GEMINI_API_KEY || "";
 const API_KEYS = API_KEYS_STR.split(',').map(k => k.trim()).filter(k => k);
 
 // 2. 定義模型 - 使用付費版 Gemini 2.0 Flash
-const MODELS = ["gemini-2.0-flash"];
+const MODELS = ["gemini-2.5-flash"];
 
 // 3. 輔助函式：取得指定輪替的 Key 與 Model
 const getModelWithKeys = (retryCount, keys) => {

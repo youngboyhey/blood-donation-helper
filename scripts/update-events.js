@@ -563,8 +563,8 @@ class QuotaExhaustedError extends Error { constructor(m) { super(m); this.name =
 const API_KEYS_STR = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "";
 const API_KEYS = API_KEYS_STR.split(',').map(k => k.trim()).filter(k => k);
 
-// 2. 定義模型 - 使用付費版 Gemini 2.0 Flash
-const MODELS = ["gemini-2.0-flash"];
+// 2. 定義模型 - 使用付費版 Gemini 2.5 Flash
+const MODELS = ["gemini-2.5-flash"];
 
 // 3. 輔助函式：取得指定輪替的 Key 與 Model
 const getModel = (retryCount) => {
@@ -658,7 +658,7 @@ async function analyzeContentWithAI(item, sourceContext) {
     // const keys = (process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "").split(',').map(k => k.trim()).filter(k => k);
     // if (!keys.length) return null;
 
-    // const MODELS = ["gemini-2.5-flash-lite", "gemini-2.0-flash"]; // No 1.5
+    // const MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash"]; // No 1.5
 
     // const getModel = (retry) => {
     //     const k = keys[retry % keys.length];

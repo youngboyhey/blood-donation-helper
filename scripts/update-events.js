@@ -16,7 +16,7 @@ const SOURCES = [
     {
         name: "PTT Lifeismoney",
         type: "ptt",
-        url: "https://www.pttweb.cc/bbs/Lifeismoney/M.1735838860.A.6F3"
+        url: "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html"
     },
     // 2. 官網爬蟲 (官方源)
     {

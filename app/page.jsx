@@ -1,4 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
 import HomeClient from '../components/HomeClient';
 
 // ✅ SEO 核心：在伺服器端抓取 Supabase 資料，Google 爬蟲能讀到資料
@@ -11,28 +10,37 @@ export const metadata = {
 export const revalidate = 60;
 
 async function getEvents() {
-    const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    );
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    const today = new Date().toISOString().split('T')[0];
-    const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .gte('date', today)
-        .order('date', { ascending: true });
-
-    if (error) {
-        console.error('Error fetching events:', error);
+    // 若環境變數未設定（例如 build 時），回傳空陣列，避免 pre-render 崩潰
+    if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('placeholder')) {
+        console.warn('Supabase env vars not set, returning empty events for build');
         return [];
     }
 
-    return data || [];
+    try {
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+        const today = new Date().toISOString().split('T')[0];
+        const { data, error } = await supabase
+            .from('events')
+            .select('*')
+            .gte('date', today)
+            .order('date', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching events:', error);
+            return [];
+        }
+        return data || [];
+    } catch (err) {
+        console.error('Error fetching events:', err);
+        return [];
+    }
 }
 
 export default async function HomePage() {
     const events = await getEvents();
-
     return <HomeClient initialEvents={events} />;
 }

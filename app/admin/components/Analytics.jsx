@@ -1,3 +1,5 @@
+﻿'use client';
+
 import React, { useState, useEffect } from 'react';
 import { ExternalLink, CheckCircle, XCircle, BarChart3 } from 'lucide-react';
 
@@ -13,7 +15,6 @@ const Analytics = ({ isMobile }) => {
             scripts.forEach(script => {
                 const src = script.src || '';
                 if (src.includes('googletagmanager.com/gtag/js')) {
-                    // Extract tracking ID from URL
                     const match = src.match(/id=(G-[A-Z0-9]+)/);
                     if (match) {
                         trackingId = match[1];
@@ -21,7 +22,6 @@ const Analytics = ({ isMobile }) => {
                 }
             });
 
-            // Also check if gtag function exists
             const hasGtag = typeof window.gtag === 'function';
 
             setGaStatus({
@@ -125,7 +125,6 @@ const Analytics = ({ isMobile }) => {
                     前往 Google Analytics 後台
                 </a>
 
-                {/* Setup Instructions */}
                 {!gaStatus.installed && (
                     <div style={{
                         marginTop: '2rem',

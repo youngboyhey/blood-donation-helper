@@ -1,10 +1,12 @@
+'use client';
+
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from '@react-google-maps/api';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../../lib/supabase';
 import styles from './MapPage.module.css';
 
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 // 台灣中心點（預設位置）
 const TAIWAN_CENTER = { lat: 23.973875, lng: 120.982024 };
@@ -14,8 +16,8 @@ const containerStyle = {
     height: 'calc(100vh - 60px)'
 };
 
-const MapPage = () => {
-    const navigate = useNavigate();
+export default function MapPage() {
+    const router = useRouter();
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedLocation, setSelectedLocation] = useState(null);
@@ -120,12 +122,12 @@ const MapPage = () => {
 
     const onLoad = useCallback((map) => {
         setMap(map);
-        console.log('Map loaded successfully');
     }, []);
 
     const onUnmount = useCallback((map) => {
         setMap(null);
     }, []);
+
     if (loadError) {
         return (
             <div className={styles.container}>
@@ -141,7 +143,7 @@ const MapPage = () => {
         <div className={styles.container}>
             {/* Header */}
             <div className={styles.header}>
-                <button className={styles.backButton} onClick={() => navigate('/')}>
+                <button className={styles.backButton} onClick={() => router.push('/')}>
                     ← 返回首頁
                 </button>
                 <h1 className={styles.title}>活動地圖</h1>
@@ -159,13 +161,13 @@ const MapPage = () => {
                         zoom={userLocation ? 12 : 8}
                         onLoad={onLoad}
                         onUnmount={onUnmount}
-                        onClick={() => setSelectedLocation(null)} // 點擊地圖空白處關閉視窗
+                        onClick={() => setSelectedLocation(null)}
                         options={{
                             gestureHandling: 'greedy',
                             disableDefaultUI: false,
-                            mapTypeControl: false,    // 移除地圖/衛星切換
-                            streetViewControl: false, // 移除街景小人
-                            clickableIcons: false     // 停用 POI 點擊
+                            mapTypeControl: false,
+                            streetViewControl: false,
+                            clickableIcons: false
                         }}
                     >
                         {/* 使用者位置標記 */}
@@ -173,7 +175,7 @@ const MapPage = () => {
                             <MarkerF
                                 position={userLocation}
                                 icon={{
-                                    url: `${import.meta.env.BASE_URL}user-marker.png?v=2`,
+                                    url: `/user-marker.png?v=2`,
                                     scaledSize: { width: 50, height: 50 }
                                 }}
                                 title="你的位置"
@@ -188,7 +190,7 @@ const MapPage = () => {
                                 onClick={() => handleMarkerClick(key)}
                                 title={`${group.events.length} 個活動`}
                                 icon={{
-                                    url: `${import.meta.env.BASE_URL}event-marker.png`,
+                                    url: `/event-marker.png`,
                                     scaledSize: { width: 54, height: 54 }
                                 }}
                             />
@@ -253,6 +255,4 @@ const MapPage = () => {
             </div>
         </div>
     );
-};
-
-export default MapPage;
+}

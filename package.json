@@ -1,38 +1,25 @@
 {
-  "name": "blood-donation-helper",
+  "name": "blood-donation-helper-next",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@react-google-maps/api": "^2.20.7",
-    "@supabase/supabase-js": "^2.87.0",
-    "@vis.gl/react-google-maps": "^1.7.1",
-    "cheerio": "^1.1.2",
-    "lucide-react": "^0.556.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-router-dom": "^7.10.1",
-    "recharts": "^3.5.1"
+    "@react-google-maps/api": "^2.20.8",
+    "@supabase/supabase-js": "^2.98.0",
+    "lucide-react": "^0.576.0",
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "recharts": "^3.7.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@types/node": "^24.10.1",
-    "@types/react": "^19.2.5",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
-    "dotenv": "^16.4.5",
-    "eslint": "^9.39.1",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "globals": "^16.5.0",
-    "puppeteer": "^24.31.0",
-    "vite": "^7.2.4"
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6"
   }
 }

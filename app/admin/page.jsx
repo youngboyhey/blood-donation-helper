@@ -1,13 +1,15 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../../context/AuthContext';
 import { Home, LayoutDashboard, Calendar, BarChart3, Search, LogOut } from 'lucide-react';
 
 // Import Tab components
-import Dashboard from './admin/Dashboard';
-import EventManager from './admin/EventManager';
-import Analytics from './admin/Analytics';
-import SEOSettings from './admin/SEOSettings';
+import Dashboard from './components/Dashboard';
+import EventManager from './components/EventManager';
+import Analytics from './components/Analytics';
+import SEOSettings from './components/SEOSettings';
 
 const TABS = [
     { id: 'dashboard', label: '總覽', icon: LayoutDashboard },
@@ -16,31 +18,34 @@ const TABS = [
     { id: 'seo', label: 'SEO 設定', icon: Search },
 ];
 
-const Admin = () => {
-    const { signOut } = useAuth();
-    const navigate = useNavigate();
+export default function AdminPage() {
+    const { user, signOut } = useAuth();
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState('dashboard');
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
+        // 未登入則導向登入頁
+        if (!user) {
+            router.push('/login');
+            return;
+        }
+        setIsMobile(window.innerWidth < 768);
         const handleResize = () => setIsMobile(window.innerWidth < 768);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [user, router]);
+
+    if (!user) return null;
 
     const renderTabContent = () => {
         const props = { isMobile };
         switch (activeTab) {
-            case 'dashboard':
-                return <Dashboard {...props} />;
-            case 'events':
-                return <EventManager {...props} />; // Note: EventManager might explicitly check window size itself, but passing prop doesn't hurt
-            case 'analytics':
-                return <Analytics {...props} />;
-            case 'seo':
-                return <SEOSettings {...props} />;
-            default:
-                return <Dashboard {...props} />;
+            case 'dashboard': return <Dashboard {...props} />;
+            case 'events': return <EventManager {...props} />;
+            case 'analytics': return <Analytics {...props} />;
+            case 'seo': return <SEOSettings {...props} />;
+            default: return <Dashboard {...props} />;
         }
     };
 
@@ -58,7 +63,7 @@ const Admin = () => {
                 <h1 style={{ margin: 0, fontSize: isMobile ? '1.25rem' : '1.5rem' }}>管理後台</h1>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button
-                        onClick={() => navigate('/')}
+                        onClick={() => router.push('/')}
                         style={{
                             padding: isMobile ? '0.5rem' : '0.5rem 1rem',
                             background: '#2a9d8f',
@@ -97,11 +102,11 @@ const Admin = () => {
                 background: 'white',
                 borderBottom: '1px solid #e5e5e5',
                 padding: isMobile ? '0' : '0 2rem',
-                overflowX: 'auto', // Enable horizontal scroll on mobile
-                scrollbarWidth: 'none', // Hide scrollbar Firefox
-                msOverflowStyle: 'none' // Hide scrollbar IE/Edge
+                overflowX: 'auto',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none'
             }}>
-                <div style={{ display: 'flex', gap: isMobile ? '0' : '0', minWidth: 'min-content' }}>
+                <div style={{ display: 'flex', minWidth: 'min-content' }}>
                     {TABS.map(tab => (
                         <button
                             key={tab.id}
@@ -139,6 +144,4 @@ const Admin = () => {
             </div>
         </div>
     );
-};
-
-export default Admin;
+}

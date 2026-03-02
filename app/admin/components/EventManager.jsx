@@ -1,49 +1,38 @@
+﻿'use client';
+
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
-import { analyzeImage } from '../../utils/ai';
+import { supabase } from '../../../lib/supabase';
+import { analyzeImage } from '../../../utils/ai';
 import { Trash2, Save, X, Play } from 'lucide-react';
 
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-// Geocoding 函式 - 將地址轉換為經緯度
 async function geocodeAddress(city, district, location) {
     if (!GOOGLE_MAPS_API_KEY) {
-        console.log('[Geocode] 未設定 GOOGLE_MAPS_API_KEY，跳過經緯度轉換');
+        console.log('[Geocode] 未設定 GOOGLE_MAPS_API_KEY，跳過');
         return null;
     }
-
     const parts = [];
     if (city) parts.push(city);
     if (district) parts.push(district);
     if (location) parts.push(location);
     const fullAddress = parts.join('');
-
     if (!fullAddress) return null;
-
     try {
         const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(fullAddress)}&key=${GOOGLE_MAPS_API_KEY}&language=zh-TW&region=tw`;
-
         const response = await fetch(url);
         const data = await response.json();
-
         if (data.status === 'OK' && data.results.length > 0) {
             const coords = data.results[0].geometry.location;
-            console.log(`[Geocode] ${fullAddress} -> ${coords.lat}, ${coords.lng}`);
-            return {
-                latitude: coords.lat,
-                longitude: coords.lng
-            };
-        } else {
-            console.log(`[Geocode] 無法取得座標: ${data.status}`);
-            return null;
+            return { latitude: coords.lat, longitude: coords.lng };
         }
+        return null;
     } catch (error) {
         console.error(`[Geocode] 請求失敗: ${error.message}`);
         return null;
     }
 }
 
-// 手機版活動卡片
 const EventCard = ({ event, onDelete }) => (
     <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', marginBottom: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', display: 'flex', gap: '1rem' }}>
         <div style={{ width: '80px', height: '100px', flexShrink: 0, background: '#f3f4f6', borderRadius: '4px', overflow: 'hidden' }}>
@@ -65,15 +54,6 @@ const EventCard = ({ event, onDelete }) => (
             {event.gift?.name && (
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#e63946' }}>🎁 {event.gift.name}</p>
             )}
-            <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
-                {event.tags?.includes('手動上傳') ? (
-                    <span style={{ fontSize: '0.7rem', background: '#f3f4f6', color: '#374151', padding: '2px 4px', borderRadius: '2px' }}>人工上傳</span>
-                ) : event.source_url?.includes('blood.org.tw') ? (
-                    <span style={{ fontSize: '0.7rem', background: '#d1fae5', color: '#065f46', padding: '2px 4px', borderRadius: '2px' }}>官網</span>
-                ) : (
-                    <span style={{ fontSize: '0.7rem', background: '#dbeafe', color: '#1e40af', padding: '2px 4px', borderRadius: '2px' }}>PTT</span>
-                )}
-            </div>
         </div>
     </div>
 );
@@ -81,27 +61,21 @@ const EventCard = ({ event, onDelete }) => (
 const EventManager = ({ isMobile }) => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
-
     const [uploading, setUploading] = useState(false);
     const [analyzing, setAnalyzing] = useState(false);
-    const [statusMessage, setStatusMessage] = useState("");
+    const [statusMessage, setStatusMessage] = useState('');
     const [scannedEvents, setScannedEvents] = useState([]);
     const [showScanner, setShowScanner] = useState(false);
     const [expandedImage, setExpandedImage] = useState(null);
-
-    const [customApiKey, setCustomApiKey] = useState("");
+    const [customApiKey, setCustomApiKey] = useState('');
     const [pendingImageUrl, setPendingImageUrl] = useState(null);
-    const [pendingFileName, setPendingFileName] = useState("");
+    const [pendingFileName, setPendingFileName] = useState('');
 
-    useEffect(() => {
-        fetchEvents();
-    }, []);
+    useEffect(() => { fetchEvents(); }, []);
 
     const fetchEvents = async () => {
         setLoading(true);
-        const { data } = await supabase.from('events')
-            .select('*')
-            .order('date', { ascending: true });
+        const { data } = await supabase.from('events').select('*').order('date', { ascending: true });
         setEvents(data || []);
         setLoading(false);
     };
@@ -116,35 +90,21 @@ const EventManager = ({ isMobile }) => {
     const handleFileUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
         setUploading(true);
-        setStatusMessage("正在上傳圖片至 Supabase...");
+        setStatusMessage('正在上傳圖片至 Supabase...');
         try {
-            // 讀取檔案內容並計算 MD5 hash
             const arrayBuffer = await file.arrayBuffer();
             const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-
-            // 取得副檔名
             const ext = file.name.split('.').pop().toLowerCase() || 'jpg';
             const validExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
             const finalExt = validExts.includes(ext) ? ext : 'jpg';
-
-            // 使用 hash 作為檔名（與爬蟲邏輯一致）
             const fileName = `${hashHex.substring(0, 32)}.${finalExt}`;
-
-            // 檢查是否已存在相同 hash 的檔案
             const { data: existingUrl } = supabase.storage.from('posters').getPublicUrl(fileName);
-
-            // 嘗試上傳（如果已存在會失敗，但我們可以使用現有的 URL）
-            const { data, error } = await supabase.storage.from('posters').upload(fileName, file, {
-                upsert: false // 不覆蓋現有檔案
-            });
-
+            const { data, error } = await supabase.storage.from('posters').upload(fileName, file, { upsert: false });
             let publicUrl;
             if (error && error.message.includes('already exists')) {
-                // 檔案已存在，使用現有 URL
                 publicUrl = existingUrl.publicUrl;
             } else if (error) {
                 throw error;
@@ -152,49 +112,40 @@ const EventManager = ({ isMobile }) => {
                 const { data: { publicUrl: newUrl } } = supabase.storage.from('posters').getPublicUrl(fileName);
                 publicUrl = newUrl;
             }
-
             setUploading(false);
-            setStatusMessage("");
-
+            setStatusMessage('');
             setPendingImageUrl(publicUrl);
             setPendingFileName(file.name);
-
         } catch (error) {
             console.error('Upload failed:', error);
             alert('上傳失敗: ' + error.message);
-            setStatusMessage("");
+            setStatusMessage('');
             setUploading(false);
         }
     };
 
     const handleStartAnalysis = async () => {
         if (!pendingImageUrl) return;
-
         setAnalyzing(true);
-        setStatusMessage("開始 AI 分析...");
-
+        setStatusMessage('開始 AI 分析...');
         try {
             const apiKeyToUse = customApiKey.trim() || null;
             const aiResults = await analyzeImage(pendingImageUrl, (msg) => setStatusMessage(msg), apiKeyToUse);
-
             setAnalyzing(false);
-            setStatusMessage("");
-
+            setStatusMessage('');
             if (aiResults && aiResults.length > 0) {
                 const candidates = aiResults.map(ev => ({ ...ev, poster_url: pendingImageUrl }));
                 setScannedEvents(candidates);
                 setShowScanner(true);
             } else {
-                alert("AI 無法辨識此圖片，請手動輸入或重試。");
+                alert('AI 無法辨識此圖片，請手動輸入或重試。');
             }
-
             setPendingImageUrl(null);
-            setPendingFileName("");
-
+            setPendingFileName('');
         } catch (error) {
             console.error('Analysis failed:', error);
             alert('分析失敗: ' + error.message);
-            setStatusMessage("");
+            setStatusMessage('');
         } finally {
             setAnalyzing(false);
         }
@@ -202,14 +153,12 @@ const EventManager = ({ isMobile }) => {
 
     const handleCancelPending = () => {
         setPendingImageUrl(null);
-        setPendingFileName("");
-        setCustomApiKey("");
+        setPendingFileName('');
+        setCustomApiKey('');
     };
 
     const handleSaveCandidate = async (candidate, index) => {
-        // 取得經緯度（用於地圖功能）
         const coords = await geocodeAddress(candidate.city, candidate.district, candidate.location);
-
         const newEvent = {
             title: candidate.title,
             date: candidate.date,
@@ -221,40 +170,25 @@ const EventManager = ({ isMobile }) => {
             gift: candidate.gift,
             tags: candidate.tags || ['手動上傳'],
             poster_url: candidate.poster_url,
-            original_image_url: candidate.poster_url, // 用於去重追蹤
+            original_image_url: candidate.poster_url,
             source_url: candidate.poster_url,
-            // 經緯度（地圖功能）
             latitude: coords?.latitude || null,
             longitude: coords?.longitude || null,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
         };
 
-        // 1. 檢查圖片去重（基於 poster_url / 圖片內容 hash）
-        const { data: posterDuplicates } = await supabase
-            .from('events')
-            .select('id, title, date, location')
-            .eq('poster_url', candidate.poster_url);
-
+        const { data: posterDuplicates } = await supabase.from('events').select('id, title, date, location').eq('poster_url', candidate.poster_url);
         if (posterDuplicates && posterDuplicates.length > 0) {
             const dupInfo = posterDuplicates.map(d => `• ${d.title} @ ${d.location} (${d.date})`).join('\n');
-            const action = window.confirm(
-                `⚠️ 發現相同圖片的活動已存在：\n\n${dupInfo}\n\n點擊「確定」覆蓋現有活動，點擊「取消」放棄儲存。`
-            );
-
+            const action = window.confirm(`⚠️ 發現相同圖片的活動已存在：\n\n${dupInfo}\n\n點擊「確定」覆蓋現有活動，點擊「取消」放棄儲存。`);
             if (!action) return;
-
             for (const dup of posterDuplicates) {
                 await supabase.from('events').delete().eq('id', dup.id);
             }
         }
 
-        // 2. 檢查日期+地點去重
-        const { data: existingEvents } = await supabase
-            .from('events')
-            .select('id, title, date, location, city')
-            .eq('date', candidate.date);
-
+        const { data: existingEvents } = await supabase.from('events').select('id, title, date, location, city').eq('date', candidate.date);
         const duplicates = existingEvents?.filter(ev => {
             const locA = (ev.location || '').toLowerCase().replace(/\s/g, '');
             const locB = (candidate.location || '').toLowerCase().replace(/\s/g, '');
@@ -263,12 +197,8 @@ const EventManager = ({ isMobile }) => {
 
         if (duplicates.length > 0) {
             const dupInfo = duplicates.map(d => `• ${d.title} @ ${d.location}`).join('\n');
-            const action = window.confirm(
-                `⚠️ 發現可能重複的活動（日期+地點相似）：\n\n${dupInfo}\n\n日期: ${candidate.date}\n地點: ${candidate.location}\n\n點擊「確定」覆蓋現有活動，點擊「取消」放棄儲存。`
-            );
-
+            const action = window.confirm(`⚠️ 發現可能重複的活動（日期+地點相似）：\n\n${dupInfo}\n\n日期: ${candidate.date}\n地點: ${candidate.location}\n\n點擊「確定」覆蓋現有活動，點擊「取消」放棄儲存。`);
             if (!action) return;
-
             for (const dup of duplicates) {
                 await supabase.from('events').delete().eq('id', dup.id);
             }
@@ -304,7 +234,6 @@ const EventManager = ({ isMobile }) => {
             <div style={{ marginBottom: '2rem', padding: '1.5rem', border: '2px dashed #ccc', borderRadius: '12px', textAlign: 'center', background: 'white' }}>
                 <h3>上傳活動海報</h3>
                 <p style={{ color: '#666' }}>AI 將自動辨識海報內容並填寫資訊</p>
-
                 <div style={{ marginBottom: '1rem' }}>
                     <input
                         type="password"
@@ -315,11 +244,8 @@ const EventManager = ({ isMobile }) => {
                     />
                     <small style={{ color: '#666' }}>若不輸入則使用系統預設 Key</small>
                 </div>
-
-                <input type="file" accept="image/*" onChange={handleFileUpload} disabled={uploading || analyzing || pendingImageUrl} />
-
+                <input type="file" accept="image/*" onChange={handleFileUpload} disabled={uploading || analyzing || !!pendingImageUrl} />
                 {uploading && <div style={{ marginTop: '1rem', color: '#007bff' }}>⏳ 上傳中...</div>}
-
                 {pendingImageUrl && !analyzing && (
                     <div style={{ marginTop: '1rem', padding: '1rem', background: '#f0f9ff', borderRadius: '8px', border: '1px solid #0284c7' }}>
                         <p style={{ marginBottom: '0.5rem' }}>✅ 已上傳: <strong>{pendingFileName}</strong></p>
@@ -334,7 +260,6 @@ const EventManager = ({ isMobile }) => {
                         </div>
                     </div>
                 )}
-
                 {analyzing && <div style={{ marginTop: '1rem', color: '#007bff' }}>🤖 {statusMessage}</div>}
             </div>
 
@@ -398,12 +323,12 @@ const EventManager = ({ isMobile }) => {
                     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                         <thead style={{ background: '#f1f1f1' }}>
                             <tr>
-                                <th style={{ padding: '1rem', textAlign: 'left', width: '80px', whiteSpace: 'nowrap' }}>圖片</th>
-                                <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>日期</th>
-                                <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>活動名稱/來源</th>
-                                <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>地點</th>
-                                <th style={{ padding: '1rem', textAlign: 'left', whiteSpace: 'nowrap' }}>縣市</th>
-                                <th style={{ padding: '1rem', textAlign: 'center', whiteSpace: 'nowrap' }}>操作</th>
+                                <th style={{ padding: '1rem', textAlign: 'left', width: '80px' }}>圖片</th>
+                                <th style={{ padding: '1rem', textAlign: 'left' }}>日期</th>
+                                <th style={{ padding: '1rem', textAlign: 'left' }}>活動名稱/來源</th>
+                                <th style={{ padding: '1rem', textAlign: 'left' }}>地點</th>
+                                <th style={{ padding: '1rem', textAlign: 'left' }}>縣市</th>
+                                <th style={{ padding: '1rem', textAlign: 'center' }}>操作</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -432,7 +357,7 @@ const EventManager = ({ isMobile }) => {
                                     </td>
                                     <td style={{ padding: '1rem' }}>{event.location}</td>
                                     <td style={{ padding: '1rem', whiteSpace: 'nowrap' }}>{event.city}</td>
-                                    <td style={{ padding: '1rem', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                                    <td style={{ padding: '1rem', textAlign: 'center' }}>
                                         <button onClick={() => handleDelete(event.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#e63946' }}>
                                             <Trash2 size={18} />
                                         </button>

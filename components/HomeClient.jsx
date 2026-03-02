@@ -1,10 +1,11 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import SearchBar from '../components/SearchBar';
-import EventList from '../components/EventList';
-import { supabase } from '../lib/supabase';
+import { useRouter } from 'next/navigation';
+import SearchBar from './SearchBar';
+import EventList from './EventList';
+import Modal from './Modal';
 import styles from './Home.module.css';
-import Modal from '../components/Modal';
 
 // Haversine 公式計算兩點間距離 (km)
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -19,48 +20,21 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-const Home = () => {
-    const navigate = useNavigate();
+const HomeClient = ({ initialEvents }) => {
+    const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedDistrict, setSelectedDistrict] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
-    const [events, setEvents] = useState([]);
-    const [filteredEvents, setFilteredEvents] = useState([]);
+    const [events] = useState(initialEvents || []);
+    const [filteredEvents, setFilteredEvents] = useState(initialEvents || []);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
-    const [loading, setLoading] = useState(true);
 
     // 距離排序相關
     const [userLocation, setUserLocation] = useState(null);
     const [sortByDistance, setSortByDistance] = useState(false);
     const [locationLoading, setLocationLoading] = useState(false);
-
-    useEffect(() => {
-        fetchEvents();
-    }, []);
-
-    const fetchEvents = async () => {
-        try {
-            setLoading(true);
-            const today = new Date().toISOString().split('T')[0];
-            const { data, error } = await supabase
-                .from('events')
-                .select('*')
-                .gte('date', today) // Only show events from today onwards
-                .order('date', { ascending: true }); // Sort by date ascending
-
-            if (error) {
-                console.error('Error fetching events:', error);
-            } else {
-                setEvents(data || []);
-            }
-        } catch (err) {
-            console.error('Unexpected error:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     // 台灣縣市標準排序
     const CITY_ORDER = [
@@ -74,7 +48,6 @@ const Home = () => {
         if (!searchTerm) return true;
         const term = searchTerm.toLowerCase();
 
-        // gift 可能是字串或物件，需要同時處理
         const giftText = typeof event.gift === 'string'
             ? event.gift
             : (event.gift?.name || '');
@@ -89,7 +62,6 @@ const Home = () => {
     };
 
     // 1. Calculate Available Cities & Districts (based on Date + Search)
-    // The location dropdowns should show options available on the selected date
     const eventsForLocationMenu = events.filter(event => {
         const matchesDate = selectedDate ? event.date === selectedDate : true;
         return matchesDate && filterBySearch(event);
@@ -110,11 +82,10 @@ const Home = () => {
 
     const handleCityChange = (e) => {
         setSelectedCity(e.target.value);
-        setSelectedDistrict(''); // 重置區域選擇
+        setSelectedDistrict('');
     };
 
     // 2. Calculate Available Dates & Counts (based on City + District + Search)
-    // The date menu should show dates available in the selected location
     const eventsForDateMenu = events.filter(event => {
         const matchesCity = selectedCity ? event.city === selectedCity : true;
         const matchesDistrict = selectedDistrict ? event.district === selectedDistrict : true;
@@ -130,7 +101,6 @@ const Home = () => {
     const uniqueDates = Object.keys(dateCounts).sort();
 
     // 3. Final Filtered Events (for the list)
-    // This is the intersection of ALL filters
     useEffect(() => {
         let results = events.filter(event => {
             const matchesSearch = filterBySearch(event);
@@ -143,7 +113,6 @@ const Home = () => {
 
         // 排序邏輯
         if (sortByDistance && userLocation) {
-            // 依距離排序（有經緯度的優先顯示）
             results = results.map(event => ({
                 ...event,
                 distance: event.latitude && event.longitude
@@ -152,7 +121,6 @@ const Home = () => {
             }));
             results.sort((a, b) => a.distance - b.distance);
         } else {
-            // 依照日期排序：由近到遠
             results.sort((a, b) => new Date(a.date) - new Date(b.date));
         }
 
@@ -162,18 +130,15 @@ const Home = () => {
     // 取得使用者位置並啟用距離排序
     const handleSortByDistance = () => {
         if (sortByDistance) {
-            // 關閉距離排序
             setSortByDistance(false);
             return;
         }
 
         if (userLocation) {
-            // 已有位置，直接啟用
             setSortByDistance(true);
             return;
         }
 
-        // 取得位置
         setLocationLoading(true);
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -233,8 +198,6 @@ const Home = () => {
                 </div>
             </div>
 
-
-            {/* Date Selection Menu */}
             {/* Date Selection Menu */}
             <div style={{
                 display: 'flex',
@@ -242,14 +205,12 @@ const Home = () => {
                 padding: '12px 16px',
                 background: '#fff',
                 gap: '12px',
-                // borderBottom: '1px solid #f0f0f0', // Clean look
                 marginBottom: '0.5rem',
                 whiteSpace: 'nowrap',
-                scrollbarWidth: 'none', // Hide scrollbar Firefox
-                msOverflowStyle: 'none'  // Hide scrollbar IE/Edge
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none'
             }}>
                 <style>{`
-                    /* Hide scrollbar for Chrome, Safari and Opera */
                     div::-webkit-scrollbar {
                         display: none;
                     }
@@ -332,7 +293,7 @@ const Home = () => {
                         </button>
                         <button
                             className={styles.actionButton}
-                            onClick={() => navigate('/map')}
+                            onClick={() => router.push('/map')}
                         >
                             🗺️ 查看地圖
                         </button>
@@ -358,7 +319,6 @@ const Home = () => {
                         <hr style={{ margin: '1rem 0', border: '0', borderTop: '1px solid #eee' }} />
                         <h4>贈品資訊</h4>
                         <p>
-                            {/* gift 可能是字串或物件，需要同時處理 */}
                             {typeof selectedEvent.gift === 'string' && selectedEvent.gift && selectedEvent.gift !== 'null'
                                 ? selectedEvent.gift
                                 : (selectedEvent.gift?.name || '以現場提供為主')}
@@ -370,7 +330,7 @@ const Home = () => {
                                     alt={selectedEvent.title}
                                     style={{
                                         maxWidth: '100%',
-                                        maxHeight: '400px', // Increased height for better view
+                                        maxHeight: '400px',
                                         borderRadius: '8px',
                                         cursor: 'zoom-in',
                                         objectFit: 'contain'
@@ -379,7 +339,6 @@ const Home = () => {
                                     title="點擊放大圖片"
                                 />
                             )}
-                            {/* Source Link Button if exists */}
                             {selectedEvent.source_url && (
                                 <div style={{ marginTop: '10px' }}>
                                     <a
@@ -398,62 +357,60 @@ const Home = () => {
             </Modal>
 
             {/* Lightbox Overlay */}
-            {
-                selectedImage && (
-                    <div
+            {selectedImage && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 2000,
+                        cursor: 'zoom-out'
+                    }}
+                    onClick={() => setSelectedImage(null)}
+                >
+                    <img
+                        src={selectedImage}
+                        alt="Full size"
                         style={{
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            width: '100vw',
-                            height: '100vh',
-                            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                            maxWidth: '95vw',
+                            maxHeight: '95vh',
+                            objectFit: 'contain',
+                            borderRadius: '4px'
+                        }}
+                    />
+                    <button
+                        style={{
+                            position: 'absolute',
+                            top: '20px',
+                            right: '20px',
+                            background: 'white',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '40px',
+                            height: '40px',
+                            fontSize: '20px',
+                            cursor: 'pointer',
                             display: 'flex',
                             justifyContent: 'center',
-                            alignItems: 'center',
-                            zIndex: 2000,
-                            cursor: 'zoom-out'
+                            alignItems: 'center'
                         }}
-                        onClick={() => setSelectedImage(null)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedImage(null);
+                        }}
                     >
-                        <img
-                            src={selectedImage}
-                            alt="Full size"
-                            style={{
-                                maxWidth: '95vw',
-                                maxHeight: '95vh',
-                                objectFit: 'contain',
-                                borderRadius: '4px'
-                            }}
-                        />
-                        <button
-                            style={{
-                                position: 'absolute',
-                                top: '20px',
-                                right: '20px',
-                                background: 'white',
-                                border: 'none',
-                                borderRadius: '50%',
-                                width: '40px',
-                                height: '40px',
-                                fontSize: '20px',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedImage(null);
-                            }}
-                        >
-                            ×
-                        </button>
-                    </div>
-                )
-            }
-        </div >
+                        ×
+                    </button>
+                </div>
+            )}
+        </div>
     );
 };
 
-export default Home;
+export default HomeClient;

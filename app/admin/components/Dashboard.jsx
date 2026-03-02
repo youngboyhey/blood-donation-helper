@@ -1,5 +1,7 @@
+﻿'use client';
+
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../../lib/supabase';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { Calendar, MapPin, TrendingUp, Globe, RefreshCw, Clock, CheckCircle, XCircle } from 'lucide-react';
 
@@ -7,8 +9,7 @@ const CITY_COLORS = ['#e63946', '#2a9d8f', '#e9c46a', '#264653', '#f4a261', '#a8
 const SOURCE_COLORS = { '官網': '#e63946', 'PTT': '#1e40af', '人工上傳': '#457b9d' };
 
 const Dashboard = ({ isMobile }) => {
-    // State for time range
-    const [statsRange, setStatsRange] = useState('week'); // 'week' | 'all'
+    const [statsRange, setStatsRange] = useState('week');
     const [loading, setLoading] = useState(true);
     const [crawlerStatus, setCrawlerStatus] = useState(null);
     const [stats, setStats] = useState({
@@ -17,12 +18,12 @@ const Dashboard = ({ isMobile }) => {
         byCity: [],
         weeklyDistribution: [],
         bySource: [],
-        dateLabel: "未來 7 天"
+        dateLabel: '未來 7 天'
     });
 
     useEffect(() => {
         fetchData();
-    }, [statsRange]); // Re-calculate when range changes
+    }, [statsRange]);
 
     const fetchData = async () => {
         setLoading(true);
@@ -30,7 +31,6 @@ const Dashboard = ({ isMobile }) => {
         const { data } = await supabase.from('events').select('*');
         const allEvents = data || [];
 
-        // Fetch crawler status
         const { data: crawlerData } = await supabase
             .from('settings')
             .select('value')
@@ -39,12 +39,11 @@ const Dashboard = ({ isMobile }) => {
 
         if (crawlerData) setCrawlerStatus(crawlerData.value);
 
-        // Date Filtering Logic
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
         let filteredEvents = allEvents;
-        let dateLabel = "所有時間";
+        let dateLabel = '所有時間';
 
         if (statsRange === 'week') {
             const oneWeekLater = new Date(today);
@@ -53,15 +52,11 @@ const Dashboard = ({ isMobile }) => {
                 const evDate = new Date(ev.date);
                 return evDate >= today && evDate < oneWeekLater;
             });
-            dateLabel = "未來 7 天";
-        } else {
-            // For 'all', we include everything currently in DB
-            filteredEvents = allEvents;
+            dateLabel = '未來 7 天';
         }
 
         const total = filteredEvents.length;
 
-        // City Stats
         const cityCount = {};
         filteredEvents.forEach(ev => {
             const city = ev.city || '未知';
@@ -71,64 +66,40 @@ const Dashboard = ({ isMobile }) => {
             .map(([name, value]) => ({ name, value }))
             .sort((a, b) => b.value - a.value);
 
-        // Source Stats
         const sourceCount = { '官網': 0, 'PTT': 0, '人工上傳': 0 };
         filteredEvents.forEach(ev => {
             const url = ev.source_url || ev.poster_url || '';
             const tag = ev.tags || [];
-
             if (tag.includes('手動上傳')) {
                 sourceCount['人工上傳']++;
             } else if (url.includes('blood.org.tw')) {
                 sourceCount['官網']++;
             } else {
-                // User confirmed everything else is PTT
                 sourceCount['PTT']++;
             }
         });
 
-        // Remove zero counts for cleaner chart
         const bySource = Object.entries(sourceCount)
             .map(([name, value]) => ({ name, value }))
             .filter(item => item.value > 0);
 
-        // Daily Distribution
         const weeklyDistribution = [];
-        if (statsRange === 'week') {
-            for (let i = 0; i < 7; i++) {
-                const date = new Date(today);
-                date.setDate(date.getDate() + i);
-                const dateStr = date.toISOString().split('T')[0];
-                const dayName = date.toLocaleDateString('zh-TW', { weekday: 'short' });
-                const count = allEvents.filter(ev => ev.date === dateStr).length; // Check against ALL events for accuracy on specific day
-                weeklyDistribution.push({
-                    date: `${date.getMonth() + 1}/${date.getDate()} ${dayName}`,
-                    活動數: count
-                });
-            }
-        } else {
-            // Let's make the Bar Chart follow the range logic but restrict 'all' to something readable.
-            // For simplicity in this iteration, keep displaying upcoming 7 days trend even in 'all' view, or top 7 days?
-            // Given the UI label says "未來 7 天趨勢" (Future 7 Days Trend) in the chart component below, 
-            // we should stick to generating 7 days data.
-            for (let i = 0; i < 7; i++) {
-                const date = new Date(today);
-                date.setDate(date.getDate() + i);
-                const dateStr = date.toISOString().split('T')[0];
-                const dayName = date.toLocaleDateString('zh-TW', { weekday: 'short' });
-                const count = allEvents.filter(ev => ev.date === dateStr).length;
-                weeklyDistribution.push({
-                    date: `${date.getMonth() + 1}/${date.getDate()} ${dayName}`,
-                    活動數: count
-                });
-            }
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(today);
+            date.setDate(date.getDate() + i);
+            const dateStr = date.toISOString().split('T')[0];
+            const dayName = date.toLocaleDateString('zh-TW', { weekday: 'short' });
+            const count = allEvents.filter(ev => ev.date === dateStr).length;
+            weeklyDistribution.push({
+                date: `${date.getMonth() + 1}/${date.getDate()} ${dayName}`,
+                活動數: count
+            });
         }
 
         setStats({ total, cityCount: byCity.length, byCity, weeklyDistribution, bySource, dateLabel });
         setLoading(false);
     };
 
-    // Helper for date formatting
     const formatDate = (isoString) => {
         if (!isoString) return '尚未執行';
         const date = new Date(isoString);
@@ -149,12 +120,10 @@ const Dashboard = ({ isMobile }) => {
         );
     }
 
-    // Derived value for top source
     const topSource = stats.bySource.length > 0 ? stats.bySource.reduce((a, b) => a.value > b.value ? a : b).name : '無';
 
     return (
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: isMobile ? '0' : '1rem' }}>
-            {/* Header with Toggle */}
             <div style={{
                 display: 'flex',
                 flexDirection: isMobile ? 'column' : 'row',
@@ -223,7 +192,6 @@ const Dashboard = ({ isMobile }) => {
                             <Clock size={24} color="#f59e0b" />
                         )}
                     </div>
-
                     <div>
                         <div style={{ fontWeight: '600', color: '#333' }}>
                             🕷️ 爬蟲狀態：{crawlerStatus ? '上次執行成功' : '尚未執行'}
@@ -241,7 +209,7 @@ const Dashboard = ({ isMobile }) => {
                         </div>
                     </div>
                 </div>
-                <a href="https://github.com/youngboyhey/blood-donation-helper/actions" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.85rem', color: '#2563eb', textDecoration: 'none', alignSelf: isMobile ? 'flex-end' : 'auto' }}>查看 Actions →</a>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.85rem', color: '#2563eb', textDecoration: 'none' }}>查看 Actions →</a>
             </div>
 
             {/* Stats Cards */}
@@ -266,14 +234,13 @@ const Dashboard = ({ isMobile }) => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                         <Globe size={20} /> <span style={{ opacity: 0.9 }}>主要來源</span>
                     </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{topSource}</div>
-                    <small style={{ opacity: 0.8 }}>{stats.bySource.map(s => `${s.name} ${Math.round(s.value / stats.total * 100)}%`).join(' / ')}</small>
+                    <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{topSource}</div>
+                    <small style={{ opacity: 0.8 }}>{stats.bySource.map(s => `${s.name} ${stats.total > 0 ? Math.round(s.value / stats.total * 100) : 0}%`).join(' / ')}</small>
                 </div>
             </div>
 
             {/* Charts Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-                {/* Bar Chart */}
                 <div style={{ background: 'white', padding: isMobile ? '1rem' : '1.5rem', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                     <h3 style={{ margin: '0 0 1rem 0' }}>未來 7 天趨勢</h3>
                     <ResponsiveContainer width="100%" height={250}>
@@ -287,7 +254,6 @@ const Dashboard = ({ isMobile }) => {
                     </ResponsiveContainer>
                 </div>
 
-                {/* City Pie Chart */}
                 <div style={{ background: 'white', padding: isMobile ? '1rem' : '1.5rem', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                     <h3 style={{ margin: '0 0 1rem 0' }}>縣市分佈 ({stats.dateLabel})</h3>
                     <ResponsiveContainer width="100%" height={250}>
@@ -303,7 +269,6 @@ const Dashboard = ({ isMobile }) => {
                     </ResponsiveContainer>
                 </div>
 
-                {/* Source Pie Chart */}
                 <div style={{ background: 'white', padding: isMobile ? '1rem' : '1.5rem', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                     <h3 style={{ margin: '0 0 1rem 0' }}>資料來源佔比 ({stats.dateLabel})</h3>
                     <ResponsiveContainer width="100%" height={250}>

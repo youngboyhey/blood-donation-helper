@@ -1,5 +1,7 @@
+﻿'use client';
+
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../../lib/supabase';
 import { Save, Eye, CheckCircle, Loader2 } from 'lucide-react';
 
 const SEOSettings = ({ isMobile }) => {
@@ -145,25 +147,9 @@ const SEOSettings = ({ isMobile }) => {
                     </button>
                     {saved && (
                         <span style={{ color: '#2a9d8f', display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', gap: '0.25rem' }}>
-                            <CheckCircle size={16} /> 已儲存！下次部署時生效
+                            <CheckCircle size={16} /> 已儲存！
                         </span>
                     )}
-                </div>
-
-                <div style={{
-                    marginTop: '1.5rem',
-                    padding: '1rem',
-                    background: '#f0fdf4',
-                    borderRadius: '8px',
-                    border: '1px solid #86efac',
-                    color: '#166534'
-                }}>
-                    <strong>✓ 設定流程：</strong>
-                    <ol style={{ margin: '0.5rem 0 0 1.5rem', lineHeight: 1.8 }}>
-                        <li>在此頁面修改 SEO 設定並儲存</li>
-                        <li>設定會儲存到 Supabase</li>
-                        <li>下次 GitHub Actions 部署時自動套用到 index.html</li>
-                    </ol>
                 </div>
             </div>
 
@@ -184,7 +170,7 @@ const SEOSettings = ({ isMobile }) => {
                         {seo.title}
                     </div>
                     <div style={{ color: '#006621', fontSize: '14px', marginBottom: '4px' }}>
-                        youngboyhey.github.io › blood-donation-helper
+                        your-domain.com
                     </div>
                     <div style={{ color: '#545454', fontSize: '14px' }}>
                         {seo.description.length > 160 ? seo.description.substring(0, 160) + '...' : seo.description}

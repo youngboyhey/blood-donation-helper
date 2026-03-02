@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+'use client';
 
-const Login = () => {
+import React, { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { useRouter } from 'next/navigation';
+
+export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const { signIn } = useAuth();
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -17,7 +19,7 @@ const Login = () => {
         try {
             const { error } = await signIn({ email, password });
             if (error) throw error;
-            navigate('/admin');
+            router.push('/admin');
         } catch (error) {
             setError(error.message);
         } finally {
@@ -52,6 +54,4 @@ const Login = () => {
             </form>
         </div>
     );
-};
-
-export default Login;
+}

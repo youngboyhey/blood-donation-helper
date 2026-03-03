@@ -1183,6 +1183,14 @@ async function updateEvents() {
     }
     console.log(`[Dedupe] Loaded ${existingEventsMap.size} unique future events, ${existingPosterUrlSet.size} unique poster URLs.`);
 
+    // 從 poster URL 提取 hash（檔名前 32 字元），用於 AI 分析前比對（省 token）
+    const existingHashSet = new Set();
+    for (const url of existingPosterUrlSet) {
+        const parts = url.split('/posters/');
+        if (parts[1]) existingHashSet.add(parts[1].split('.')[0].substring(0, 32));
+    }
+    console.log(`[Dedupe] Loaded ${existingHashSet.size} known image hashes for pre-AI dedup.`);
+
     const eventsToInsert = [];
     const eventsToUpdate = [];
 
@@ -1217,6 +1225,22 @@ async function updateEvents() {
             }
 
             console.log(`${imgLabel} 分析中: ${item.sourceUrl?.slice(0, 50) || item.url.slice(0, 50)}...`);
+
+            // 【優化】預先下載圖片並計算 hash，若已存在 Storage 則跳過 AI（省 token + 加速）
+            const imageCookies = await loadCookies();
+            const preBase64 = await fetchImageAsBase64(item.url, imageCookies);
+            if (!preBase64) {
+                console.log(`${imgLabel} Skip: 圖片下載失敗`);
+                continue;
+            }
+            const imageBuffer = Buffer.from(preBase64, 'base64');
+            const imageHash = crypto.createHash('sha256').update(imageBuffer).digest('hex').substring(0, 32);
+            if (existingHashSet.has(imageHash)) {
+                console.log(`${imgLabel} Skip: 圖片 hash 已存在 Storage（${imageHash.substring(0, 8)}...），跳過 AI 分析`);
+                existingUrlSet.add(item.url); // 下次不再重新下載
+                continue;
+            }
+            item.base64 = preBase64; // 讓 AI 直接使用，不需重複下載
 
             // AI Analyze
             await new Promise(r => setTimeout(r, 2000)); // Rate limit buffer
@@ -1387,7 +1411,8 @@ async function updateEvents() {
                     }
 
                     existingUrlSet.add(item.url); // Prevent URL reprocessing
-                    existingPosterUrlSet.add(storageUrl); // 跨來源去重：同一次執行中也要追蹤
+                    existingPosterUrlSet.add(storageUrl);
+                    existingHashSet.add(imageHash); // 同次執行中也追蹤新 hash，避免同一圖片被分析兩次
                     console.log(`[${isUpdate ? 'Update' : 'New'}] ${evt.date} ${evt.title} (${evt.city})`);
                 }
             } catch (e) {

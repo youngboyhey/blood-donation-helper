@@ -650,6 +650,10 @@ async function analyzeContentWithAI(item, sourceContext) {
     const localOffset = now.getTimezoneOffset();
     const taiwanTime = new Date(now.getTime() + (taiwanOffset + localOffset) * 60 * 1000);
     const today = taiwanTime.toISOString().split('T')[0];
+    // 3個月後的日期上限（超過通常是民國年轉換錯誤）
+    const maxFutureAI = new Date(taiwanTime);
+    maxFutureAI.setMonth(maxFutureAI.getMonth() + 3);
+    const maxFutureDateForAI = maxFutureAI.toISOString().split('T')[0];
 
     // Load cookies for social media image access
     const cookies = await loadCookies();
@@ -733,6 +737,7 @@ async function analyzeContentWithAI(item, sourceContext) {
 3. **日期檢查 (重要！)**：
    - 必須有明確的單一日期，且為未來日期（晚於 ${today}）。
    - 若是日期區間（如 12/1~12/31），視為 **INVALID**。
+   - ⚠️ **日期上限**：活動日期不能晚於 ${maxFutureDateForAI}（今天起3個月內）。若超過此日期，幾乎肯定是民國年轉換錯誤（如把「114年」誤讀為「1140年」），請視為 **INVALID**。
    - ⚠️ **民國年轉換**：台灣常用民國紀年，如「114年12月13日」。
      - 民國年 + 1911 = 西元年
      - 114 + 1911 = **2025** (不是 2114 或 2125！)
@@ -896,6 +901,22 @@ function generateEventKey(evt) {
     return `${evt.date}_${normalizeText(evt.city)}_${normalizeText(evt.location)}`;
 }
 
+// 將時間字串正規化為「分鐘數」，避免 "09:00" vs "9:00" 被視為不同時間
+function normalizeTime(timeStr) {
+    if (!timeStr) return null;
+    const match = timeStr.match(/(\d{1,2}):(\d{2})/);
+    if (!match) return null;
+    return parseInt(match[1]) * 60 + parseInt(match[2]);
+}
+
+// 以日期+縣市+開始時間為 key，用於偵測地點描述不同但實為同一活動的重複
+function generateTimeKey(evt) {
+    const timeStart = evt.time_start || (evt.time ? evt.time.split('-')[0].trim() : '') || '';
+    const minutes = normalizeTime(timeStart);
+    if (minutes === null) return null;
+    return `${evt.date}_${normalizeText(evt.city)}_${minutes}`;
+}
+
 function calculateEventScore(evt) {
     let score = 0;
     // gift 可能是 string 或 object
@@ -925,10 +946,32 @@ async function cleanupExistingDuplicates(supabase) {
     }
 
     const eventsToDelete = [];
-    const groupedByTitle = new Map();
+
+    // 0. Group by Time Key (date_city_startTime) - 捕捉因地點描述不同而漏網的重複
+    const groupedByTime = new Map();
+    for (const evt of events) {
+        const tk = generateTimeKey(evt);
+        if (!tk) continue;
+        if (!groupedByTime.has(tk)) groupedByTime.set(tk, []);
+        groupedByTime.get(tk).push(evt);
+    }
+    for (const [, candidates] of groupedByTime) {
+        if (candidates.length < 2) continue;
+        candidates.forEach(e => e._score = calculateEventScore(e));
+        candidates.sort((a, b) => b._score - a._score || a.id - b.id);
+        const winner = candidates[0];
+        for (const loser of candidates.slice(1)) {
+            if (!eventsToDelete.includes(loser.id)) {
+                console.log(`[Cleanup] Time Dup DEL (ID:${loser.id}): ${loser.date} ${loser.location} (kept ID:${winner.id})`);
+                eventsToDelete.push(loser.id);
+            }
+        }
+    }
 
     // 1. Group by Title Key First
+    const groupedByTitle = new Map();
     for (const evt of events) {
+        if (eventsToDelete.includes(evt.id)) continue; // 已在時間去重中標記，跳過
         const titleKey = `${evt.date}_${normalizeText(evt.city)}_${normalizeText(evt.title)}`;
         if (!groupedByTitle.has(titleKey)) {
             groupedByTitle.set(titleKey, []);
@@ -1046,6 +1089,10 @@ async function updateEvents() {
     const taiwanTime = new Date(now.getTime() + (taiwanOffset + localOffset) * 60 * 1000);
     taiwanTime.setHours(0, 0, 0, 0);
     const todayStr = taiwanTime.toISOString().split('T')[0];
+    // 超過 3 個月後的活動通常是辨識錯誤（如 2027 年），直接排除
+    const maxFutureDate = new Date(taiwanTime);
+    maxFutureDate.setMonth(maxFutureDate.getMonth() + 3);
+    const maxFutureDateStr = maxFutureDate.toISOString().split('T')[0];
 
     // 1. Auto-Delete Expired Events AND their Storage files
     console.log(`[Cleanup] Finding expired events before ${todayStr}...`);
@@ -1100,9 +1147,9 @@ async function updateEvents() {
     const { data: existingEventsData } = await supabase.from('events').select('*').gte('date', todayStr);
 
     // Map: Key -> { event, score }
-    // Map: Key -> { event, score }
     const existingEventsMap = new Map();
-    const existingEventsByTitle = new Map(); // New: For fuzzy title match
+    const existingEventsByTitle = new Map(); // For fuzzy title match
+    const existingEventsByTime = new Map();  // For time-based dedup (date_city_minutes)
     const existingUrlSet = new Set();        // 原始圖片 URL 去重
     const existingPosterUrlSet = new Set();  // poster_url（基於圖片內容 hash）去重 - 跨來源去重關鍵！
 
@@ -1126,6 +1173,12 @@ async function updateEvents() {
 
             if (e.original_image_url) existingUrlSet.add(e.original_image_url);
             if (e.poster_url) existingPosterUrlSet.add(e.poster_url);  // 加入 poster_url 去重
+            // 建立 time key index（用於偵測相同時間的重複活動）
+            const etk = generateTimeKey(e);
+            if (etk) {
+                if (!existingEventsByTime.has(etk)) existingEventsByTime.set(etk, []);
+                existingEventsByTime.get(etk).push({ ...e, _score: calculateEventScore(e) });
+            }
         }
     }
     console.log(`[Dedupe] Loaded ${existingEventsMap.size} unique future events, ${existingPosterUrlSet.size} unique poster URLs.`);
@@ -1201,6 +1254,12 @@ async function updateEvents() {
                         continue;
                     }
 
+                    // 排除超過 3 個月後的活動（通常是民國年轉換錯誤，如 2027 年）
+                    if (evt.date > maxFutureDateStr) {
+                        console.log(`${imgLabel} Skip: 日期過遠 (${evt.date} > ${maxFutureDateStr})，可能是辨識錯誤`);
+                        continue;
+                    }
+
                     // New or Better Version Found - Upload Image
                     const newEventScore = calculateEventScore(evt);
                     const eventKey = generateEventKey(evt);
@@ -1220,16 +1279,24 @@ async function updateEvents() {
                         // Potential Duplicate found by Title
                         const candidates = existingEventsByTitle.get(titleKey);
                         for (const candidate of candidates) {
-                            // Normalize locations for comparison
                             const locA = normalizeText(evt.location);
                             const locB = normalizeText(candidate.location);
-
-                            // Check if one location contains the other (e.g., "Park" vs "Park (Entrance A)")
-                            // Or if they are very similar (could add Levenshtein here if needed, but containment is safer for address)
                             if (locA.includes(locB) || locB.includes(locA)) {
                                 existing = candidate;
                                 console.log(`${imgLabel} Fuzzy Match: 標題相符且地點包含 - [${evt.location}] vs [${candidate.location}]`);
                                 break;
+                            }
+                        }
+                    }
+
+                    // 3. Check Time Key（同日期+縣市+開始時間 → 視為同一活動，即使地點描述不同）
+                    if (!existing) {
+                        const newTimeKey = generateTimeKey(evt);
+                        if (newTimeKey && existingEventsByTime.has(newTimeKey)) {
+                            const timeCandidates = existingEventsByTime.get(newTimeKey);
+                            if (timeCandidates.length > 0) {
+                                existing = timeCandidates[0];
+                                console.log(`${imgLabel} Time Match: 相同日期+縣市+時間，視為重複 [${evt.location}] vs [${existing.location}]`);
                             }
                         }
                     }
